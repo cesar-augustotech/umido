@@ -85,12 +85,13 @@ header {
 .main {
     padding-top: 75px;
     width: 100%;
-    height: calc(100vh);
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
 
     background-image: url(assets/background_1.png);
+    background-size: cover;
 }
 
 .main-content {
@@ -179,14 +180,14 @@ header {
 
 
 .card {
-    width: 370px;
+    width: 350px;
     height: 70vh;
 
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    gap: 20px;
+    gap: 5%;
 }
 
 .card-title {
@@ -210,7 +211,7 @@ header {
     background-size: cover;
     width: 100px;
     height: 90px;
-    margin-top: 30px;;
+    margin-top: 10%;
 }
 
 .card2 {
@@ -224,7 +225,7 @@ header {
     width: 100px;
     height: 100px;
 
-    margin-top: 30px;;
+    margin-top: 10%;
 }
 
 .card3 {
@@ -238,7 +239,7 @@ header {
     width: 80px;
     height: 100px;
 
-    margin-top: 30px;;
+    margin-top: 10%;
 }
 
 /* FOOTER */
@@ -295,4 +296,83 @@ footer {
     font-family: "Poppins", sans-serif;
     color: var(--green-text);
     font-weight: 500;
+}
+
+@media screen and (min-height: 730px) {
+    .card-title {
+        font-size: 2.5rem;
+    }
+
+    .card p {
+        width: 330px;
+        font-size: 2rem;
+    }
+
+    .card {
+        width: 420px;
+        height: 70vh;
+        gap: 5%;
+    }
+
+
+    .valores-title {
+        margin-bottom: 3%;
+    }
+}
+
+@media screen and (min-width: 2000px) {
+
+    header {
+        height: 110px;
+    }
+
+    .nav-item {
+        font-size: 1.5rem;
+    }
+
+    .nav-button {
+        width: 108px;
+        height: 42px;
+        font-weight: 800;
+        font-size: 1.2rem;
+    }
+
+    .logo-nav {
+        width: 140px;
+        height: 105px;
+    }
+
+    .main-content button {
+        width: 437px;
+        height: 117px;
+
+        font-size: 2rem;
+    }
+
+    .valores-title {
+        font-size: 4.4rem;
+        height: 110px;
+        width: 330px;
+    }
+
+    .main-content h1 {
+        font-size: 6.5rem;
+        width: 970px;
+    }
+
+    .card {
+        width: 620px;
+    }
+
+    .card p {
+        width: 470px;
+        font-size: 2.5rem;
+    }
+
+    .texto-bold {
+        font-size: 2rem;
+    }
+    .texto-bold-dark {
+        font-size: 2.4rem;
+    }
 }
