@@ -12,15 +12,15 @@ Melhorar a segurança dos agricultores com alertas preventivos.
 Otimizar o uso da água, contribuindo para uma agricultura mais sustentável.
 
 ## 🔧 Tecnologias Utilizadas
-Hardware: Arduino + Sensores DHT11
+Hardware:         Arduino + Sensores DHT11
 
-Software:   [link futuro]
+Software:         [link futuro]
 
-Backend: 
+Backend:          [link futuro]
 
-Banco de Dados: MySQL
+Banco de Dados:   MySQL
 
-Frontend: Interface Web [link futuro]
+Frontend:         Interface Web [link futuro]
 
 ## 📡 Como Funciona?
 Os sensores coletam dados de umidade do ar.
@@ -33,11 +33,14 @@ A interface exibe as métricas para o usuário, permitindo análise e tomada de 
 
 ## 📈 Impacto Esperado
 ✔ Menos queimadas e preservação do meio ambiente.
+
 ✔ Redução de prejuízos agrícolas causados por incêndios.
+
 ✔ Facilidade no monitoramento de grandes áreas rurais.
 
 ## 📌 Status do Projeto
-🔹 Fase atual: Sprint 2 – [Descrição breve do que está sendo desenvolvido]
+🔹 Fase atual: Sprint 2 – 
+
 🔹 Duração total do projeto: 6 meses
 
 ## 👥 Equipe
