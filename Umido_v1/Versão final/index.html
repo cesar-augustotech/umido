@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umido</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <!-- CABEÇALHO -->
+
+    <header>
+        <div id="logo" class="logo-nav"></div>
+        <div class="nav-links">
+            <a class="nav-item" href="#valores_id">
+                <p>Valores</p>
+            </a>
+            <a class="nav-item" href="#">
+                <p>Calculadora</p>
+            </a>
+            <a class="nav-item" href="#">
+                <p>Contato</p>
+            </a>
+            <a href="cadastro.html"><button class="nav-button">LOGIN</button></a>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+
+    <section class="main">
+        <div class="main-content">
+            <h1>A segurança que você merece!</h1>
+            <p>A <span class="texto-bold">Umido</span> nasceu com o propósito de fornecer mais controle e segurança ao
+                produtor rural, juntando o <span class="texto-verde">Agro</span> ao <span
+                    class="texto-azul">Tech</span>.</p>
+            <button><a href="#simulador_id">CALCULAR <i class="fas fa-caret-right"
+                        style="font-size: px;"></i></a></button>
+        </div>
+    </section>
+
+    <!-- VALORES -->
+
+    <section class="valores">
+        <h1 id="valores_id" class="valores-title">Valores</h1>
+        <!-- linha -->
+        <div class="cards-container">
+            <div class="card card1">
+                <div class="card1-image"></div>
+                <h1 class="card-title">Por quê?</h1>
+                <p>A <span class="texto-bold-dark">Umido</span> nasceu com o propósito de fornercer mais controle e
+                    segurança ao produtor juntando o <span class="texto-verde">Agro</span> ao <span
+                        id="texto-azul">Tech</span>.</p>
+            </div>
+            <div class="card card2">
+                <div class="card2-image"></div>
+                <h1 class="card-title">Como?</h1>
+                <p>Utilizando sensores de <span class="texto-azul">umidade</span> e <span
+                        class="texto-verde">temperatura</span>, será realizado o monitoramento constante de <span
+                        class="texto-bold-dark">suas</span> plantações.</p>
+            </div>
+            <div class="card card3">
+                <div class="card3-image"></div>
+                <h1 class="card-title">Onde?</h1>
+                <p>Os sensores seram instalados (Escopo)</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <section id="simulador" class="simulador ">
+            <h1 id="simulador_id" class="simulador-title">Simulador Financeiro</h1>
+
+            <!-- INPUTS -->
+
+            <div class="simulador-ipt" id="simulador_input">
+                <input class="simulador-caixa" id='ipt_tamanho' placeholder="Insira a quantidade de hectares da sua plantação">
+                <input class="simulador-caixa" id='ipt_tipo' placeholder="Insira o tipo da plantação">
+                <input class="simulador-caixa" id='ipt_preco' placeholder="Insira o preço da sua produção média por hectares">
+                <button class="simulador-calcular" onclick="calcular()">CALCULAR<i class="fas fa-caret-right" style="font-size: px;"></i></button>
+
+            </div>
+
+            <div id="simulador_output" class="simulador-resultado tela-inativa">
+                <div class="resultado-container">
+                    <div class="resultado-texto">
+                        <span>Valor total da plantação:</span>
+                        <span>Valor economizado com a prevenção:</span>
+                        <span>Valor economizado com impostos</span>
+                        <span>Economia total:</span>
+                        <span>Projeção de lucro de preços com certificação:</span>
+                        <span>O preço médio da venda de dados pode ser de até:</span>
+                    </div>
+                    <div class="resultado-valor">
+                        <div>R$<span id="print_resultado_valor">1000</span></div>
+                        <div>R$ <span id="print_resultado_prevencao" class="valor-lucro">22</span></div>
+                        <div>R$ <span id="print_resultado_isencao" class="valor-lucro">100</span></div>
+                        <div>R$ <span id="print_resultado_total" class="valor-lucro">10011111</span></div>
+                        <div>R$ <span id="print_resultado_certificacao" class="valor-lucro">1111</span></div>
+                        <div>R$ <span id="print_resultado_venda" class="valor-lucro">1111</span></div>
+
+
+
+
+                    </div>
+                </div>
+
+
+                <div class="resultado-botao">Entre em contato conosco</div>
+            </div>
+
+
+        </section>
+
+
+
+    </section>
+</body>
+
+</html>
