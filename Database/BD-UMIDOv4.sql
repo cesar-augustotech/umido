@@ -26,7 +26,7 @@ CREATE TABLE setor(
   telefone VARCHAR(15),
   fk_superior INT,
   nivelAcesso CHAR(1),
-  PRIMARY KEY (id, fk_setor),
+  PRIMARY KEY (id, fk_empresa),
   CONSTRAINT fk_usuario_empresa FOREIGN KEY (fk_empresa) REFERENCES empresa(id),
   CONSTRAINT fk_usuario_setor FOREIGN KEY (fk_setor) REFERENCES setor (id),
   CONSTRAINT fk_usuario_superior FOREIGN KEY (fk_superior) REFERENCES usuario (id)
