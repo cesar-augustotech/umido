@@ -10,7 +10,8 @@
     <script src="script.js"></script>
 </head>
 
-<body>
+
+<section id="tela_inicial" class="tela-inicial">
     <!-- CABEÇALHO -->
 
     <header>
@@ -25,7 +26,7 @@
             <a class="nav-item" href="#">
                 <p>Contato</p>
             </a>
-            <a href="cadastro.html"><button class="nav-button">LOGIN</button></a>
+            <a onclick="trocar_tela('tela_login')"><button class="nav-button">LOGIN</button></a>
         </div>
     </header>
 
@@ -69,19 +70,20 @@
             </div>
         </div>
     </section>
-
-
-    <section>
+    <section class="tela-simulador">
         <section id="simulador" class="simulador ">
             <h1 id="simulador_id" class="simulador-title">Simulador Financeiro</h1>
 
             <!-- INPUTS -->
 
             <div class="simulador-ipt" id="simulador_input">
-                <input class="simulador-caixa" id='ipt_tamanho' placeholder="Insira a quantidade de hectares da sua plantação">
+                <input class="simulador-caixa" id='ipt_tamanho'
+                    placeholder="Insira a quantidade de hectares da sua plantação">
                 <input class="simulador-caixa" id='ipt_tipo' placeholder="Insira o tipo da plantação">
-                <input class="simulador-caixa" id='ipt_preco' placeholder="Insira o preço da sua produção média por hectares">
-                <button class="simulador-calcular" onclick="calcular()">CALCULAR<i class="fas fa-caret-right" style="font-size: px;"></i></button>
+                <input class="simulador-caixa" id='ipt_preco'
+                    placeholder="Insira o preço da sua produção média por hectares">
+                <button class="simulador-calcular" onclick="calcular()">CALCULAR<i class="fas fa-caret-right"
+                        style="font-size: px;"></i></button>
 
             </div>
 
@@ -119,6 +121,95 @@
 
 
     </section>
+
+
+</section>
+
+
+<section class="cadastro">
+    <section id="tela_cadastro" class="main-cadastro tela-inativa">
+        <a onclick="trocar_tela('tela_inicial')"><button class="botaoVoltar"></button></a>
+
+        <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
+
+        <h2 class="second-titule">Cadastre-se</h2>
+
+        <section class="ipt-main">
+            <div class="ipt-main" id="div_caixaCadastro">
+                <input class="ipt-caixa ipt-icon1" type="text" id="ipt_nomeRegistro" placeholder="Nome registro">
+                <input class="ipt-caixa ipt-icon2" type="text" id="ipt_email" placeholder="E-mail">
+                <input class="ipt-caixa ipt-icon3" type="text" id="ipt_telefone" placeholder="Telefone">
+                <input class="ipt-caixa ipt-icon4" type="text" id="ipt_cnpj" placeholder="CNPJ">
+                <input class="ipt-caixa ipt-icon6" type="password" id="ipt_senha" placeholder="Senha">
+                <input class="ipt-caixa ipt-icon6" type="password" id="ipt_senhaConfirmada"
+                    placeholder="Repita sua senha">
+            </div>
+
+            <div class="confirme-main" id="div_logar">
+                <div class="botao-main">
+                    <button class="botaoCadastrar" onclick="cadastrar()">Cadastre-se</button>
+                </div>
+                <div class="login-main">
+                    <a class="text-login">Já possui login?</a>
+                    <a class="link-login" onclick="trocar_tela('tela_login')">
+                        <p>Clique aqui</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+
+    </section>
+
+    <section id="tela_login" class="tela-inativa main-cadastro ">
+        <a  onclick="trocar_tela('tela_inicial')"><button class="botaoVoltar"></button></a>
+
+        <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
+
+        <h2 class="second-titule">Efetue seu login</h2>
+        <br><br><br><br><br><br><br><br>
+        <section class="ipt-main">
+            <div class="ipt-main" id="div_caixaCadastro">
+                <input class="ipt-caixa ipt-icon1" type="text" id="ipt_login_email"
+                    placeholder="Insira o seu e-mail cadastrado">
+                <input class="ipt-caixa ipt-icon2" type="password" id="ipt_login_senha"
+                    placeholder="Insira a sua senha cadastrada">
+            </div>
+
+            <div class="confirme-main" id="div_logar">
+                <div class="botao-main">
+                    <button class="botaoCadastrar" onclick="acessar()">Acesse</button>
+                </div>
+                <div class="login-main">
+                    <a class="text-login">Não tem cadastro?</a>
+                    <a class="link-login" onclick="trocar_tela('tela_cadastro')">
+                        <p>Clique aqui</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+
+    </section>
+</section>
+
+<!-- RODAPÉ -->
+<footer>
+    <div class="logo-footer"></div>
+    <div class="footer-info footer-contato">
+        <h2>Nossos contatos</h2>
+        <p>umido.contato@sptech.school</p>
+    </div>
+    <div class="footer-info footer-sobre-nos">
+        <h2>Sobre nós</h2>
+    </div>
+    <div class="footer-mensagem">
+        <p>Obrigado por acessar!</p>
+        <p>&copy;UMIDO 2025</p>
+    </div>
+</footer>
 </body>
 
 </html>

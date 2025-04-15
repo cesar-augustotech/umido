@@ -8,6 +8,7 @@
     list-style: none;
     text-decoration: none;
     scroll-behavior: smooth;
+    
 }
 
 a {
@@ -22,7 +23,7 @@ button:hover{
     --green-text: #3cba54;
     --blue-text: #23a9df;
     --light-theme: white;
-    --footer-theme: #d9d9d9;
+    --footer-theme: #ffffff;
     --gray-theme: #2b2b2b;
     --light-gray-theme: #424242;
     --header-height: 75px;
@@ -447,8 +448,122 @@ header {
 
 
 
-.tela-inativa {
-    display: none;
+footer {
+    background-color: var(--footer-theme);
+    height: 120px;
+    display: flex;
+
+    justify-content: space-around;
+    align-items: center;
+
+    font-family: "Poppins", sans-serif;
+}
+
+.logo-footer {
+    background-image: url(assets/Logo-UMIDO.png);
+    background-size: cover;
+    width: 100px;
+    height:75px;
+}
+
+.footer-info {
+    height: 100%;
+    padding-top: 20px;
+}
+
+.footer-info h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+@media screen and (min-height: 730px) {
+    .card-title {
+        font-size: 2.5rem;
+    }
+
+    .card p {
+        width: 330px;
+        font-size: 2rem;
+    }
+
+    .card {
+        width: 420px;
+        height: 70vh;
+        gap: 5%;
+    }
+
+
+    .valores-title {
+        margin-bottom: 3%;
+    }
+}
+
+@media screen and (min-width: 2000px) {
+
+    header {
+        height: 110px;
+    }
+
+    .nav-item {
+        font-size: 1.5rem;
+    }
+
+    .nav-button {
+        width: 108px;
+        height: 42px;
+        font-weight: 800;
+        font-size: 1.2rem;
+    }
+
+    .logo-nav {
+        width: 140px;
+        height: 105px;
+    }
+
+    .main-content button {
+        width: 437px;
+        height: 117px;
+
+        font-size: 2rem;
+    }
+
+    .valores-title {
+        font-size: 4.4rem;
+        height: 110px;
+        width: 330px;
+    }
+
+    .main-content h1 {
+        font-size: 6.5rem;
+        width: 970px;
+    }
+
+    .card {
+        width: 620px;
+    }
+
+    .card p {
+        width: 470px;
+        font-size: 2.5rem;
+    }
+
+    .texto-bold {
+        font-size: 2rem;
+    }
+    .texto-bold-dark {
+        font-size: 2.4rem;
+    }
+}
+.texto-azul {
+    font-family: "Poppins", sans-serif;
+    color: var(--blue-text);
+    font-weight: 500;
+}
+
+.texto-verde {
+    font-family: "Poppins", sans-serif;
+    color: var(--green-text);
+    font-weight: 500;
 }
 
 
@@ -511,7 +626,7 @@ border-color: transparent;
     font-family: "Poppins", sans-serif;
     font-size: 50px;
     font-weight: 10;
-    width: 450px;
+    width: 500px;
     justify-content:center;
     align-self:center;
     margin-top: -3%;
@@ -643,6 +758,10 @@ font-style: normal;
 margin:0;
 }
 
+.link-login:hover{
+    cursor: pointer;
+}
+
 
 .botaoCadastrar{
 width: 300px;
@@ -658,3 +777,6 @@ border-color: transparent;
 
 
   
+.tela-inativa {
+    display: none;
+}

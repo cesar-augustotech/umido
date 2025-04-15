@@ -10,7 +10,7 @@
 </head>
 
 <body class="cadastro">
-    <section class="main-cadastro">
+    <section id="tela_cadastro" class="main-cadastro">
         <a href="index.html"><button class="botaoVoltar"></button></a>
 
         <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
@@ -35,8 +35,38 @@
                 </div>
                 <div class="login-main">
                     <a class="text-login">Já possui login?</a>
-                    <a class="link-login" href="#">
-                        <p>Click aqui</p>
+                    <a class="link-login" onclick="trocar_tela(tela_login)">
+                        <p>Clique aqui</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+
+    </section>
+
+    <section id="tela_login" class="tela-inativa main-cadastro ">
+        <a href="index.html"><button class="botaoVoltar"></button></a>
+        
+        <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
+
+        <h2 class="second-titule">Efetue seu login</h2>
+        <br><br><br><br><br><br><br><br>
+        <section class="ipt-main">
+            <div class="ipt-main" id="div_caixaCadastro">
+                <input class="ipt-caixa ipt-icon1" type="text" id="ipt_cadastro_email" placeholder="Insira o seu e-mail cadastrado">
+                <input class="ipt-caixa ipt-icon2" type="text" id="ipt_cadastro_senha" placeholder="Insira a sua senha cadastrada">
+            </div>
+
+            <div class="confirme-main" id="div_logar">
+                <div class="botao-main">
+                    <button class="botaoCadastrar" onclick="acessar()">Acessar</button>
+                </div>
+                <div class="login-main">
+                    <a class="text-login">Não tem cadastro?</a>
+                    <a class="link-login" onclick="trocar_tela(tela_cadastro)">
+                        <p>Clique aqui</p>
                     </a>
                 </div>
             </div>
