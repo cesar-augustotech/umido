@@ -136,6 +136,13 @@
     .conteudo_principal {
         padding: 20px;
         overflow: auto;
+        gap: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+    .principal_g{
+        display: flex;
+    flex-direction: column;
     }
     
 
@@ -256,6 +263,7 @@
         background-color: white;
     }
 
+
     .girar {
         transform: rotate(180deg);
         transition: transform 0.3s;
@@ -359,6 +367,20 @@
         cursor: pointer;
         font-size: 16px;
     }
+    .selecionar_unidade{
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px 0 0 4px;
+    }
+    .btn_add_unidade{
+        background-color: #00a8ff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 16px;
+    }
 </style>
 
 <header class="i_header">
@@ -395,7 +417,7 @@
                 <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
                 <span>Configurações</span>
             </li>
-            <li style="gap: 20px;">
+            <li style="gap: 20px;" onclick="exit()">
                 <img src="./assets/icons/sair.png" style="width: 30px; height: 30px;">
                 <span>Sair</span>
             </li>
@@ -403,12 +425,21 @@
     </div>
 
     <section class="conteudo_principal">
-        <div class="cartao">
+        <div>
+            <select class="selecionar_unidade" id="" onchange="select_unidade()">
+                <option value="Unidade 1">Unidade 1</option>
+                <option value="Unidade 2">Unidade 2</option>
+                <option value="Unidade 3">Unidade 3</option>
+                <option value="Unidade 4">Unidade 4</option>
+            </select>
+            <button class="btn_add_unidade" id="btn_add_unidade">Adicionar Unidade</button>
+        </div>
+        <div class="cartao principal_g">
             <div class="indicadores" id="indicadores"></div>
 
             <div class="secao_monitoramento">
                 <div class="cartao">
-                    <div class="titulo_grafico">Umidade por Período</div>
+                    <div class="titulo_grafico">Umidade media por Período</div>
                     <div class="container_grafico">
                         <canvas id="grafico_umidade"></canvas>
                     </div>
@@ -496,85 +527,33 @@
         menuLateral.classList.toggle('menu_expandido');
         botao_expandir.classList.toggle('girar');
     }
-
-    let contexto = document.getElementById('grafico_umidade').getContext('2d');
-    let graficoUmidade = new Chart(contexto, {
-        type: "line",
-        data: {
-            labels: ["Novembro","Dezembro","Janeiro", "Fevereiro", "Março", "Abril"],
-            datasets: [{
-                label: "Umidade (%)",
-                data: [65,60,85, 72, 65, 78],
-                backgroundColor: 'rgba(0, 168, 255, 0.2)',
-                borderColor: 'rgba(0, 168, 255, 1)',
-                borderWidth: 2,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+    let ultimo_grafico;
+    function grafico(){
+        let contexto = document.getElementById('grafico_umidade').getContext('2d');
+        if(ultimo_grafico){
+            ultimo_grafico.destroy();
         }
-    });
-
-
-    let dadosIndicadores = [
-        [4, "incidentes", "(Mês atual)"],
-        [30, "umidade média atual", ""],
-        [10, "sensores em funcionamento", ""],
-        [10, "dados exportados", "(Mês atual)"],
-        [13, "última atualização", ""]
-    ];
-
-
-    let elementoIndicadores = indicadores;
-    for (let i = 0; i < dadosIndicadores.length; i++) {
-        elementoIndicadores.innerHTML += `
-        <div class="cartao">
-            <div class="valor_indicador">${dadosIndicadores[i][0]}</div>
-            <div class="descricao_indicador">${dadosIndicadores[i][1]}</div>
-            <div class="info_adicional">${dadosIndicadores[i][2]}</div>
-        </div>`;
-    }
-
-    let dadosGraficos = [
-        ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [85, 72, 65, 78],"lengenda1"],
-        ["grafico_incidentes", "Incidentes por Área", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [1, 2, 0, 1],"lengenda2"],
-        ["grafico_desempenho", "Desempenho do Sistema", "Desempenho (%)", "radar", ["Precisão", "Resposta", "Tempo Ativo", "Conectividade", "Eficiência"], [95, 85, 99, 92, 88],"lengenda3"]
-    ];
-
-    let elementoGraficosMensais = graficos_mensais;
-    for (let i = 0; i < dadosGraficos.length; i++) {
-        elementoGraficosMensais.innerHTML += `
-        <div class="container_grafico_mensal">
-            <div class="cartao">
-                <div class="titulo_grafico">${dadosGraficos[i][1]}</div>
-                <div class="titulo_grafico">${dadosGraficos[i][6]}</div>
-                <div class="container_grafico">
-                    <canvas id="${dadosGraficos[i][0]}" style="height: 50%; width: 100%;"></canvas>
-                </div>
-            </div>
-        </div>`;
-    }
-
-    for (let i = 0; i < dadosGraficos.length; i++) {
-        let contexto = document.getElementById(dadosGraficos[i][0]).getContext('2d');
-        let grafico = new Chart(contexto, {
-            type: dadosGraficos[i][3],
+        ultimo_grafico = new Chart(contexto, {
+            type: "line",
             data: {
-                labels: dadosGraficos[i][4],
+                labels: ["Novembro","Dezembro","Janeiro", "Fevereiro", "Março", "Abril"],
                 datasets: [{
-                    label: dadosGraficos[i][2],
-                    data: dadosGraficos[i][5],
+                    label: "Umidade (%)",
+                    data: [(parseInt(Math.random()*70)+30),(parseInt(Math.random()*70)+30),(parseInt(Math.random()*70)+30), (parseInt(Math.random()*70)+30), (parseInt(Math.random()*70)+30), (parseInt(Math.random()*70)+30)],
                     backgroundColor: 'rgba(0, 168, 255, 0.2)',
                     borderColor: 'rgba(0, 168, 255, 1)',
                     borderWidth: 2,
                     fill: true
-                }]
+                },
+                {
+                    label: "MININO",
+                    data: [30,30,30,30,30,30],
+                    backgroundColor: 'rgba(255, 168, 255, 0.2)',
+                    borderColor: 'rgba(255, 168, 255, 1)',
+                    borderWidth: 2,
+                    fill: true
+                }
+            ]
             },
             options: {
                 responsive: true,
@@ -585,6 +564,7 @@
                 }
             }
         });
+
     }
 
     let dadosSensores = [
@@ -594,14 +574,34 @@
         ["Sensor 4", "Ativo", "48%", "65%", "Ativo", [25, 28, 26, 35, 28, 26, 29, 26, 28, 29, 30, 28]],
         ["Sensor 5", "Ativo", "58%", "87%", "Ativo", [27, 27, 24, 37, 26, 29, 25, 26, 28, 29, 30, 28]]
     ];
-
-    let elementoListaSensores = lista_sensores;
-    for (let i = 0; i < dadosSensores.length; i++) {
-        elementoListaSensores.innerHTML += `
-        <li>
-            <span class="nome_sensor">${dadosSensores[i][0]}</span>
-            <span class="status_sensor ativo" onclick="abrirPopupSensor(${i})">${dadosSensores[i][1]}</span>
-        </li>`;
+    function kpi(){
+        indicadores.innerHTML=""
+        lista_sensores.innerHTML=""
+        let data = new Date()
+        let dadosIndicadores = [
+            [parseInt(Math.random()*10), "incidentes", "(Mês atual)"],
+            [parseInt(Math.random()*70)+30, "umidade média atual", "(Mês atual)"],
+            [parseInt(Math.random()*100), "dados exportados", "(Mês atual)"],
+            [dadosSensores.length, "sensores em funcionamento", ""],
+            [`${data.getHours()}:${data.getMinutes()}`,`${data.getDate()}/${data.getMonth()+1}/${data.getFullYear()}`, "última atualização",]
+        ];
+        let elementoListaSensores = lista_sensores;
+        for (let i = 0; i < dadosSensores.length; i++) {
+            elementoListaSensores.innerHTML += `
+            <li>
+                <span class="nome_sensor">${dadosSensores[i][0]}</span>
+                <span class="status_sensor ativo" onclick="abrirPopupSensor(${i})">${dadosSensores[i][1]}</span>
+            </li>`;
+        }
+        let elementoIndicadores = indicadores;
+        for (let i = 0; i < dadosIndicadores.length; i++) {
+            elementoIndicadores.innerHTML += `
+            <div class="cartao">
+                <div class="valor_indicador">${dadosIndicadores[i][0]}</div>
+                <div class="descricao_indicador">${dadosIndicadores[i][1]}</div>
+                <div class="info_adicional">${dadosIndicadores[i][2]}</div>
+            </div>`;
+        }
     }
 
     function abrirPopupSensor(posicao) {
@@ -619,6 +619,67 @@
         popup.style.display = 'block';
 
         criarGraficoSensor(dadosSensores[posicao][5]);
+    }
+
+    let dadosGraficos = [
+        ["grafico_mensal"       , "Umidade"                 , "Umidade (%)"     , "bar"                 , ["Semana 1"   , "Semana 2"    , "Semana 3"    , "Semana 4"]                   , [(parseInt(Math.random()*70)+30)  , (parseInt(Math.random()*70)+30)   , (parseInt(Math.random()*70)+30)   , (parseInt(Math.random()*70)+30)],"Umidade do Mês atual"],
+        ["grafico_incidentes"   , "Incidentes por Área"     , "Incidentes"      , "pie"                 , ["Área A"     , "Área B"      , "Área C"      , "Área D"]                     , [(parseInt(Math.random()*10))     , (parseInt(Math.random()*10))      , (parseInt(Math.random()*10))      , (parseInt(Math.random()*10))      , (parseInt(Math.random()*10))],"Incidentes do Mês atual"],
+        ["grafico_desempenho"   , "Desempenho do Sistema"   , "Desempenho (%)"  , "radar"               , ["Precisão"   , "Resposta"    , "Tempo Ativo" , "Conectividade", "Eficiência"], [95, 85, 99, 92, 88],"lengenda3"]
+    ];
+
+    let elementoGraficosMensais = graficos_mensais;
+    let graficos =[]
+    async function formar_grafico(){
+        for (let i = 0; i < dadosGraficos.length; i++) {
+            console.log(dadosGraficos[i][0])
+            let contexto = document.getElementById(dadosGraficos[i][0]).getContext('2d');
+            console.log(contexto)
+            let grafico = new Chart(contexto, {
+                type: dadosGraficos[i][3],
+                data: {
+                    labels: dadosGraficos[i][4],
+                    datasets: [{
+                        label: dadosGraficos[i][2],
+                        data: dadosGraficos[i][5],
+                        backgroundColor: 'rgba(0, 168, 255, 0.2)',
+                        borderColor: 'rgba(0, 168, 255, 1)',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            graficos.push(grafico)
+        }
+    }
+    async function graficos_mes(){
+        graficos_mensais.innerHTML =""
+        if(graficos.length > 0){
+            for(let i=0;i<graficos.length;i++){
+                graficos[i].destroy()
+            }
+        }
+        let html = ""
+        for (let i = 0; i < dadosGraficos.length; i++) {
+            html += `
+            <div class="container_grafico_mensal">
+                <div class="cartao">
+                    <div class="titulo_grafico">${dadosGraficos[i][1]}</div>
+                    <div class="titulo_grafico">${dadosGraficos[i][6]}</div>
+                    <div class="container_grafico">
+                        <canvas id="${dadosGraficos[i][0]}" style="height: 50%; width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>`;
+        }
+        graficos_mensais.innerHTML = html
     }
 
     function criarGraficoSensor(dados) {
@@ -680,12 +741,20 @@
 
     function salvarFormulario() {
         const nome = nome_sensor.value;
-        lista_sensores.innerHTML += `
-        <li>
-            <span class="nome_sensor">${nome}</span>
-            <span class="status_sensor ativo" onclick="abrirPopupSensor(${dadosSensores.length})">Ativo</span>
-        </li>`;
+        dadosSensores.push([nome, "Ativo", "100%", "10%", "Ativo", [0]])
+        kpi()
         fecharModalSensor();
         return false;
     }
+    function exit(){
+        window.location.href = "index.html"
+    }
+    function select_unidade(){
+        grafico()
+        kpi()
+        graficos_mes()
+        formar_grafico()
+
+    }
+    select_unidade()
 </script>
