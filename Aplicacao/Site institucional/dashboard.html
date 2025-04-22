@@ -276,6 +276,7 @@
             transition: transform 0.3s;
         }
     
+        .popup_unidade,
         .popup_sensor,
         .modal {
             display: none;
@@ -429,13 +430,13 @@
     
         <section class="conteudo_principal">
             <div>
-                <select class="selecionar_unidade" id="" onchange="select_unidade()">
+                <select class="selecionar_unidade" id="selecionar_unidade" onchange="select_unidade()">
                     <option value="Unidade 1">Unidade 1</option>
                     <option value="Unidade 2">Unidade 2</option>
                     <option value="Unidade 3">Unidade 3</option>
                     <option value="Unidade 4">Unidade 4</option>
                 </select>
-                <button class="btn_add_unidade" id="btn_add_unidade">Adicionar Unidade</button>
+                <button class="btn_add_unidade" id="btn_add_unidade" onclick="abrirUnidade()">Adicionar Unidade</button>
             </div>
             <div class="cartao principal_g">
                 <div class="indicadores" id="indicadores"></div>
@@ -516,6 +517,23 @@
                     <button type="button" class="botao_cancelar" onclick="fecharModalSensor()"
                         id="botao_cancelar">Cancelar</button>
                     <button type="submit" class="botao_salvar" onclick="salvarFormulario()">Salvar Sensor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="popup_unidade" class="popup_unidade">
+        <div class="conteudo_popup">
+            <span class="fechar_popup" onclick="fecharPopupUnidade()">&times;</span>
+            <h2 id="titulo_popup_sensor">Adicionar nova Unidade</h2>
+            <form id="formulario_adicionar_unidade">
+                <div class="grupo_formulario">
+                    <label for="nome_sensor">Nome da Unidade</label>
+                    <input type="text" id="nome_unidade" required placeholder="Ex: Unidade">
+                </div>
+                <div class="botoes_formulario">
+                    <button type="button" class="botao_cancelar" onclick="fecharPopupUnidade()" id="botao_cancelar">Cancelar</button>
+                    <button type="button" class="botao_salvar" onclick="adicionarUnidade()">Adicionar Unidade</button>
                 </div>
             </form>
         </div>
@@ -731,8 +749,23 @@ function criarGraficoSensor(dados) {
     });
 }
 
+function fecharPopupUnidade(){
+    popup_unidade.style.display = 'none';
+}
+
+function abrirUnidade(){
+    popup_unidade.style.display = 'block';
+}
+
 function fecharPopup() {
     popup_sensor.style.display = 'none';
+}
+
+function adicionarUnidade(){
+    selecionar_unidade.innerHTML += `<option value="${nome_unidade.value}">${nome_unidade.value}</option>`
+    popup_unidade.style.display = 'none';
+    return false;
+
 }
 
 function mostrarModal() {
