@@ -79,7 +79,7 @@
             <div class="simulador-ipt" id="simulador_input">
                 <input class="simulador-caixa" id='ipt_tamanho'
                     placeholder="Insira a quantidade de hectares da sua plantação">
-                <input class="simulador-caixa" id='ipt_tipo' placeholder="Insira o tipo da plantação">
+            
                 <input class="simulador-caixa" id='ipt_preco'
                     placeholder="Insira o preço da sua produção média por hectares">
                 <button class="simulador-calcular" onclick="calcular()">CALCULAR<i class="fas fa-caret-right"
@@ -87,25 +87,17 @@
 
             </div>
 
-            <div id="simulador_output" class="simulador-resultado tela-inativa">
+            <div id="simulador_output" class="simulador-resultado tela-inativa" style="height: 400px;">
                 <div class="resultado-container">
                     <div class="resultado-texto">
-                        <span>Valor total da plantação:</span>
-                        <span>Valor economizado com a prevenção:</span>
-                        <span>Valor economizado com impostos</span>
-                        <span>Economia total:</span>
-                        <span>Projeção de lucro de preços com certificação:</span>
-                        <span>O preço médio da venda de dados pode ser de até:</span>
+                        <span>Valor medio da plantação:</span>
+                        <span>Economia com a prevenção de queimadas:</span>
+                        <span>O preço médio por venda de dados mensais será:</span>
                     </div>
                     <div class="resultado-valor">
                         <div>R$<span id="print_resultado_valor">1000</span></div>
                         <div>R$ <span id="print_resultado_prevencao" class="valor-lucro">22</span></div>
-                        <div>R$ <span id="print_resultado_isencao" class="valor-lucro">100</span></div>
-                        <div>R$ <span id="print_resultado_total" class="valor-lucro">10011111</span></div>
-                        <div>R$ <span id="print_resultado_certificacao" class="valor-lucro">1111</span></div>
-                        <div>R$ <span id="print_resultado_venda" class="valor-lucro">1111</span></div>
-
-
+                        <div>R$ <span id="print_resultado_venda" class="valor-lucro"></span></div>
 
 
                     </div>

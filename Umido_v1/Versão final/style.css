@@ -275,7 +275,7 @@ header {
 }
 
 .simulador-resultado {
-    width: auto;
+    width: auto;    
     height: var(--tamanho-simulador);
     display: flex;
     flex-direction: column;
