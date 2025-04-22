@@ -1,5 +1,10 @@
-CREATE DATABASE umidoTeste;
-use umidoTeste;
+CREATE DATABASE umido;
+
+use umido;
+
+CREATE USER umidoInsert IDENTIFIED BY '12345';
+GRANT INSERT ON medicao TO umidoInsert;
+FLUSH PRIVILEGES;
 
 -- Tabela de empresa
 CREATE TABLE empresa (
@@ -62,12 +67,12 @@ CREATE TABLE alerta (
 
 
 -- empresa
-INSERT INTO empresa (nome, cnpj) VALUES 
+INSERT INTO empresa (nome, cnpj) VALUE 
 ('AgroTech Brasil', '12.345.678/0001-99'),
 ('GreenFarms Ltda', '98.765.432/0001-11');
 
 -- Usuários
-INSERT INTO usuario (nome, email, senha, id_empresa) VALUES
+INSERT INTO usuario (nome, email, senha, id_empresa) VALUE
 ('Ana Silva', 'ana@agrotech.com', 'senha123', 1), -- Admin
 ('Carlos Souza', 'carlos@agrotech.com', 'senha123', 1), -- Supervisor de Ana
 ('João Oliveira', 'joao@greenfarms.com', 'senha123', 2); -- Admin da GreenFarms
@@ -76,16 +81,19 @@ INSERT INTO usuario (nome, email, senha, id_empresa) VALUES
 UPDATE usuario SET id_superior = 1 WHERE id = 2;
 
 -- unidade
-INSERT INTO unidade (id_usuario, nome) VALUES
+INSERT INTO unidade (id_usuario, nome) VALUE
 (1, 'unidade Sol Nascente'),
 (2, 'unidade Água Verde'),
 (3, 'unidade Santa Clara');
 
 -- sensor
-INSERT INTO sensor (id_unidade, identificador) VALUES
-(1, 'SENSOR_A1'),
-(1, 'SENSOR_A2'),
-(2, 'SENSOR_B1'),
-(3, 'SENSOR_C1');
+INSERT INTO sensor (id_unidade, identificador) VALUE
+(1, 'A1'),
+(1, 'A2'),
+(2, 'A1'),
+(2, 'A2'),
+(2, 'B1'),
+(3, 'A1'),
+(3, 'B1');
 
 
