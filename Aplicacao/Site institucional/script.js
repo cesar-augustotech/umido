@@ -16,8 +16,10 @@ function cadastrar() {
 
  
 
-
-    if ((ipt_senha.value).length > 6) {
+    if (ipt_email.value != '' && ipt_nomeRegistro.value != '' && ipt_telefone.value != '' 
+        && ipt_cnpj.value != '' && ipt_senha.value != '' && ipt_senhaConfirmada.value != '' )
+        {
+    if ((ipt_senha.value).length >= 6) {
         if (ipt_senha.value == ipt_senhaConfirmada.value) {
            
 
@@ -31,7 +33,7 @@ function cadastrar() {
         } else alert('As senhas não coincidem.');
      
     } else alert('A senha deve ter no mínimo 6 caracteres.');
-
+    } else alert ('Preencha todos os campos')
 
     /*    if(ipt_senha.value == undefined|| ipt_senhaConfirmada.value ==undefined || ipt_email.value == undefined || ipt_nomeRegistro.value == undefined ||ipt_cnpj.value == undefined|| ipt_telefone.value == undefined) {
 }else alert('Insira todos os dados') */
