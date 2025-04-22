@@ -9,6 +9,7 @@ function trocar_tela(id_tela) {
 }
 
 
+
 let email = ['aluno'];
 let senha = ['Sptech#2024'];
 function cadastrar() {
@@ -40,8 +41,16 @@ function acessar() {
      if (email.includes(ipt_login_email.value) && senha.includes(ipt_login_senha.value)) {
          /*document.getElementById(tela_dashboard).classList.remove('tela-inativa');*/
          console.log('Acesso concedido')
+
+         document.getElementById('tela_inicial').classList.add('tela-inativa');
+    document.getElementById('tela_login').classList.add('tela-inativa')
+    document.getElementById('tela_cadastro').classList.add('tela-inativa')
+    /* document.getElementById('tela_dashboard').classList.add('tela-inativa')*/
+
+    window.location.href = 'dashboard.html'
          
-     } else console.log('Accesso Negado')
+     } else {console.log('Accesso Negado')
+        alert('Accesso Negado')}
      
 
 
