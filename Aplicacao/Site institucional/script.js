@@ -2,7 +2,6 @@ function trocar_tela(id_tela) {
     document.getElementById('tela_inicial').classList.add('tela-inativa');
     document.getElementById('tela_login').classList.add('tela-inativa')
     document.getElementById('tela_cadastro').classList.add('tela-inativa')
-    /* document.getElementById('tela_dashboard').classList.add('tela-inativa')*/
     document.getElementById(id_tela).classList.remove('tela-inativa');
 
 

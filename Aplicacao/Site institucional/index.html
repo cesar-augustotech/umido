@@ -17,13 +17,13 @@
     <header>
         <div id="logo" class="logo-nav"></div>
         <div class="nav-links">
-            <a class="nav-item" href="#valores_id">
-                <p>Valores</p>
+            <a class="nav-item" href="#sobre_id">
+                <p class="texto-azul">Sobre +</p>
             </a>
-            <a class="nav-item" href="#">
+            <a class="nav-item" href="#simulador_id">
                 <p>Calculadora</p>
             </a>
-            <a class="nav-item" href="#">
+            <a class="nav-item" href="#contato_id">
                 <p>Contato</p>
             </a>
             <a onclick="trocar_tela('tela_login')"><button class="nav-button">LOGIN</button></a>
@@ -43,30 +43,54 @@
         </div>
     </section>
 
-    <!-- VALORES -->
 
-    <section class="valores">
-        <h1 id="valores_id" class="valores-title">Valores</h1>
+    <!--PROBLEMA-->
+    <section class="problema">
+
+
+
+
+
+    </section>
+
+
+    <!--SOLUCAO-->
+
+    <section class="solucao">
+        <section class="solucao-card">
+
+
+
+
+
+        </section>
+    </section>
+    <!-- SOBRE -->
+
+    <section class="sobre">
+        <h1 id="sobre_id" class="sobre-title">Sobre +</h1>
         <!-- linha -->
         <div class="cards-container">
             <div class="card card1">
                 <div class="card1-image"></div>
                 <h1 class="card-title">Por quê?</h1>
-                <p>A <span class="texto-bold-dark">Umido</span> nasceu com o propósito de fornercer mais controle e
-                    segurança ao produtor juntando o <span class="texto-verde">Agro</span> ao <span
-                        id="texto-azul">Tech</span>.</p>
+                <p>O <span class="texto-bold-dark">Umido</span> é uma resposta inteligente para o baixo monitoramento de
+                    <span class="texto-azul">umidade no ar </span> no <span class="texto-verde">agro,</span>
+                    guiando você em boas deciosões.
+                </p>
             </div>
             <div class="card card2">
                 <div class="card2-image"></div>
                 <h1 class="card-title">Como?</h1>
-                <p>Utilizando sensores de <span class="texto-azul">umidade</span> e <span
-                        class="texto-verde">temperatura</span>, será realizado o monitoramento constante de <span
-                        class="texto-bold-dark">suas</span> plantações.</p>
+                <p>Utilizando sensores de <span class="texto-azul">umidade</span>
+                    altamente capazes para o monitoramento constante da umidade do ar <span class="texto-bold-dark">em
+                        suas</span> plantações.</p>
             </div>
             <div class="card card3">
                 <div class="card3-image"></div>
                 <h1 class="card-title">Onde?</h1>
-                <p>Os sensores seram instalados (Escopo)</p>
+                <p>Em qualquer <span class="texto-verde">unidade</span> que seja de possível impacto das queimadas
+                    dentro do territorio nacional.</p>
             </div>
         </div>
     </section>
@@ -79,7 +103,7 @@
             <div class="simulador-ipt" id="simulador_input">
                 <input class="simulador-caixa" id='ipt_tamanho'
                     placeholder="Insira a quantidade de hectares da sua plantação">
-            
+
                 <input class="simulador-caixa" id='ipt_preco'
                     placeholder="Insira o preço da sua produção média por hectares">
                 <button class="simulador-calcular" onclick="calcular()">CALCULAR<i class="fas fa-caret-right"
@@ -114,12 +138,26 @@
 
     </section>
 
-
+<!-- RODAPÉ -->
+<footer>
+    <div class="logo-footer"></div>
+    <div id="contato_id" class="footer-info footer-contato">
+        <h2>Nossos contatos</h2>
+        <p>umido.contato@sptech.school</p>
+    </div>
+    <div class="footer-info footer-sobre-nos">
+        <h2>Sobre nós</h2>
+    </div>
+    <div class="footer-mensagem">
+        <p>Obrigado por acessar!</p>
+        <p>&copy;UMIDO 2025</p>
+    </div>
+</footer>
 </section>
 
 
-<section class="cadastro">
-    <section id="tela_cadastro" class="main-cadastro tela-inativa">
+<section id="tela_cadastro" class="cadastro tela-inativa">
+    <section class="main-cadastro">
         <a onclick="trocar_tela('tela_inicial')"><button class="botaoVoltar"></button></a>
 
         <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
@@ -149,13 +187,16 @@
                 </div>
             </div>
         </section>
+    </section>
 
 
 
     </section>
 
-    <section id="tela_login" class="tela-inativa main-cadastro ">
-        <a  onclick="trocar_tela('tela_inicial')"><button class="botaoVoltar"></button></a>
+    <section id="tela_login" class="cadastro tela-inativa">
+    
+    <section  class="main-cadastro ">
+        <a onclick="trocar_tela('tela_inicial')"><button class="botaoVoltar"></button></a>
 
         <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
 
@@ -181,27 +222,9 @@
                 </div>
             </div>
         </section>
-
-
-
     </section>
-</section>
+    </section>
 
-<!-- RODAPÉ -->
-<footer>
-    <div class="logo-footer"></div>
-    <div class="footer-info footer-contato">
-        <h2>Nossos contatos</h2>
-        <p>umido.contato@sptech.school</p>
-    </div>
-    <div class="footer-info footer-sobre-nos">
-        <h2>Sobre nós</h2>
-    </div>
-    <div class="footer-mensagem">
-        <p>Obrigado por acessar!</p>
-        <p>&copy;UMIDO 2025</p>
-    </div>
-</footer>
 </body>
 
 </html>

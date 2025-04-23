@@ -152,9 +152,8 @@ header {
     box-shadow: 0 0 15px 1px var(--blue-text);
 }
 
-/* VALORES */
-
-.valores {
+/*PROBLEMA*/
+.problema{
     width: 100%;
     height: calc(100vh - 75px);
 
@@ -162,7 +161,51 @@ header {
     flex-direction: column;
 }
 
-.valores-title {
+
+
+
+
+
+
+/*SOLUCAO*/
+
+.solucao{
+    border-width: 10px;
+    width: 100%;
+    height: calc(100vh - 75px);
+    background-position: 10%;
+    background-size: cover;
+    background-image:url(assets/background_3.jpg) ;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.solucao-card{
+    width: 80%;
+    height: 80%;
+    background-color:rgba(0, 0, 0, 0.80);
+    border-radius: 20px;
+    border-color: #23a9df;
+    border-width: 10px;
+}
+
+
+
+/* SOBRE */
+
+.sobre {
+    width: 100%;
+    height: calc(100vh - 75px);
+
+    display: flex;
+    flex-direction: column;
+}
+
+.sobre-title {
     width: 250px;
     height: 70px;
 
@@ -178,7 +221,7 @@ header {
     border-bottom: solid 2.5px var(--light-gray-theme);
 }
 
-/* VALORES CARD */
+/* SOBRE CARD */
 
 .cards-container {
 
@@ -269,7 +312,7 @@ header {
     background-image: url(assets/background_2.png);
     background-size: cover;
     align-items: center;
-
+    
 
 
 }
