@@ -548,11 +548,7 @@ let dadosSensores = [
     ["Sensor 5", "Ativo", "58%", "87%", "Ativo", [27, 27, 24, 37, 26, 29, 25, 26, 28, 29, 30, 28]]
 ];
 
-let dadosGraficos = [
-    ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)], "Umidade do Mês atual"],
-    ["grafico_incidentes", "Incidentes por Área", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [(parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10))], "Incidentes do Mês atual"],
-    ["grafico_desempenho", "Desempenho do Sistema", "Desempenho (%)", "radar", ["Precisão", "Resposta", "Tempo Ativo", "Conectividade", "Eficiência"], [95, 85, 99, 92, 88], "lengenda3"]
-];
+let dadosGraficos = [];
 
 let graficos = []
 
@@ -656,31 +652,66 @@ function abrirPopupSensor(posicao) {
 
 function formar_grafico() {
     for (let i = 0; i < dadosGraficos.length; i++) {
-        console.log(dadosGraficos[i][0])
         let contexto = document.getElementById(dadosGraficos[i][0]).getContext('2d');
-        console.log(contexto)
-        let grafico = new Chart(contexto, {
-            type: dadosGraficos[i][3],
-            data: {
-                labels: dadosGraficos[i][4],
-                datasets: [{
-                    label: dadosGraficos[i][2],
-                    data: dadosGraficos[i][5],
-                    backgroundColor: 'rgba(0, 168, 255, 0.2)',
-                    borderColor: 'rgba(0, 168, 255, 1)',
-                    borderWidth: 2,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
+        let cor1 = parseInt(Math.random()*256)
+        let cor2 = parseInt(Math.random()*256)
+        let cor3 = parseInt(Math.random()*256)
+        if(dadosGraficos[i][3] == "pie"){
+            let cores =[]
+            let bordas =[]
+            for(let a=0;a<dadosGraficos[i][4].length;a++){
+                let cor1 = parseInt(Math.random()*256)
+                let cor2 = parseInt(Math.random()*256)
+                let cor3 = parseInt(Math.random()*256)
+                cores.push(`rgba(${cor1}, ${cor2}, ${cor3}, 0.2)`)
+                bordas.push(`rgba(${cor1}, ${cor2}, ${cor3}, 1)`)
+            }
+            let grafico = new Chart(contexto, {
+                type: dadosGraficos[i][3],
+                data: {
+                    labels: dadosGraficos[i][4],
+                    datasets: [{
+                        label: dadosGraficos[i][2],
+                        data: dadosGraficos[i][5],
+                        backgroundColor: cores,
+                        borderColor: bordas,
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
+            });
+        }else{
+            let grafico = new Chart(contexto, {
+                type: dadosGraficos[i][3],
+                data: {
+                    labels: dadosGraficos[i][4],
+                    datasets: [{
+                        label: dadosGraficos[i][2],
+                        data: dadosGraficos[i][5],
+                        backgroundColor: `rgba(${cor1}, ${cor2}, ${cor3}, 0.2)`,
+                        borderColor: `rgba(${cor1}, ${cor2}, ${cor3}, 1)`,
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
         graficos.push(grafico)
     }
 }
@@ -689,7 +720,9 @@ function graficos_mes() {
     graficos_mensais.innerHTML = ""
     if (graficos.length > 0) {
         for (let i = 0; i < graficos.length; i++) {
-            graficos[i].destroy()
+            try {
+                graficos[i].destroy()                
+            } catch (e) {}
         }
     }
     let html = ""
@@ -790,6 +823,11 @@ function exit() {
 }
 
 function select_unidade() {
+    dadosGraficos = [
+        ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)], "Umidade do Mês atual"],
+        ["grafico_incidentes", "Incidentes por Área", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [(parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10))], "Incidentes do Mês atual"],
+        ["grafico_desempenho", "Desempenho do Sistema", "Desempenho (%)", "radar", ["Precisão", "Resposta", "Tempo Ativo", "Conectividade", "Eficiência"], [95, 85, 99, 92, 88], "lengenda3"]
+    ];
     grafico()
     kpi()
     graficos_mes()
