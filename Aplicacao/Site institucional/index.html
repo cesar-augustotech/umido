@@ -26,6 +26,8 @@
             <a class="nav-item" href="#contato_id">
                 <p>Contato</p>
             </a>
+            
+           
             <a onclick="trocar_tela('tela_login')"><button class="nav-button">LOGIN</button></a>
         </div>
     </header>
@@ -46,25 +48,58 @@
 
     <!--PROBLEMA-->
     <section class="problema">
+        <section class="problema-card">
+            <img style="height:100px;" src="assets/icons/fogo.png">
+            <h1>Queimadas</h1>
+            <p> A baixa umidade do ar é um dos principais fatores que contribuem para a
+                propagação de <span class="texto-verde">queimadas</span> em áreas agrícolas. No Brasil,
+                onde incêndios florestais e rurais são recorrentes,
+                a falta de umidade no ar e na vegetação cria condições altamente inflamáveis,
+                aumentando o risco de incêndios descontrolados. </p>
+        </section>
+        <section class="problema-list">
+            <div class="problema-card-economico">
+                <h2>Econômicos</h2>
+                <p> Aumento dos custos de produção agrícola e prejuízos financeiros para produtores e consumidores.
 
+                    Restrição nas exportações devido a sanções ambientais.
 
+                    Aumento nos preços dos alimentos, com o Índice Nacional de Preços ao Consumidor Amplo (IPCA) de 2024
+                    registrando um aumento de 7,69% em alimentos e bebidas, em parte devido às queimadas. </p>
+            </div>
+            <div class="problema-card-ambietal">
+                <h2>Ambientais</h2>
+                <p> Degradação do solo, reduzindo sua fertilidade e acelerando a erosão.
 
+                    Poluição de rios e nascentes, afetando o abastecimento de água.
 
+                    Agravamento do efeito estufa, com o aumento da liberação de gases poluentes.
 
+                    Redução da biodiversidade, com a perda de habitats naturais. </p>
+            </div>
+
+            <div class="problema-card-social">
+                <h2>Sociais</h2>
+                <p> Comprometimento da segurança alimentar, com a perda de colheitas essenciais para o abastecimento
+                    interno.
+
+                    Piora da qualidade do ar, afetando diretamente a saúde da população, especialmente grupos
+                    vulneráveis, como crianças e idosos. </p>
+            </div>
+        </section>
     </section>
 
 
     <!--SOLUCAO-->
 
-    <section class="solucao">
+    <section id="solucao_id" class="solucao">
         <section class="solucao-card">
-
-
-
-
-
+            <h1 class="solucao-text"> Diagrama solução </h1>
+            <img src="assets/diagrama.jpg">
         </section>
+
     </section>
+
     <!-- SOBRE -->
 
     <section class="sobre">
@@ -94,9 +129,9 @@
             </div>
         </div>
     </section>
-    <section class="tela-simulador">
+    <section id="simulador_id" class="tela-simulador">
         <section id="simulador" class="simulador ">
-            <h1 id="simulador_id" class="simulador-title">Simulador Financeiro</h1>
+            <h1 class="simulador-title">Simulador Financeiro</h1>
 
             <!-- INPUTS -->
 
@@ -138,21 +173,21 @@
 
     </section>
 
-<!-- RODAPÉ -->
-<footer>
-    <div class="logo-footer"></div>
-    <div id="contato_id" class="footer-info footer-contato">
-        <h2>Nossos contatos</h2>
-        <p>umido.contato@sptech.school</p>
-    </div>
-    <div class="footer-info footer-sobre-nos">
-        <h2>Sobre nós</h2>
-    </div>
-    <div class="footer-mensagem">
-        <p>Obrigado por acessar!</p>
-        <p>&copy;UMIDO 2025</p>
-    </div>
-</footer>
+    <!-- RODAPÉ -->
+    <footer>
+        <div class="logo-footer"></div>
+        <div id="contato_id" class="footer-info footer-contato">
+            <h2>Nossos contatos</h2>
+            <p>umido.contato@sptech.school</p>
+        </div>
+        <div class="footer-info footer-sobre-nos">
+            <h2>Sobre nós</h2>
+        </div>
+        <div class="footer-mensagem">
+            <p>Obrigado por acessar!</p>
+            <p>&copy;UMIDO 2025</p>
+        </div>
+    </footer>
 </section>
 
 
@@ -191,11 +226,11 @@
 
 
 
-    </section>
+</section>
 
-    <section id="tela_login" class="login tela-inativa">
-    
-    <section  class="main-cadastro ">
+<section id="tela_login" class="login tela-inativa">
+
+    <section class="main-cadastro ">
         <a onclick="trocar_tela('tela_inicial')"><button class="botaoVoltar"></button></a>
 
         <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
@@ -223,7 +258,7 @@
             </div>
         </section>
     </section>
-    </section>
+</section>
 
 </body>
 

@@ -155,15 +155,105 @@ header {
 /*PROBLEMA*/
 .problema{
     width: 100%;
-    height: calc(100vh - 75px);
+    height: calc(100vh - 170px);
 
     display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+      
+}
+
+.problema-card{
+    width: 700px;
+    height: 90%;
+    margin-left: 2%;
+    border-radius: 20px;
+    border: solid 5px var(--green-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
+}
+
+.problema-list{
+    width: 70%;
+    height: 90%;
+    margin-right: 2%;
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+}
+.problema  h1{
+    margin: 5px;
+    color: #000000;
+    font-family: "Poppins", sans-serif;
+    font-size: 3rem;
+    font-style: italic;
+    font-weight: 800;    
+    width: 70%;
+    text-align: center;
+
+}
+.problema  h2{
+    margin: 2px;
+    margin-left: 20px;
+    color: #000000;
+    font-family: "Poppins", sans-serif;
+    font-size: 2.5rem;
+    font-style: italic;
+    font-weight: 800;    
+    width: 70%;
+    text-align: start;
+
+}
+
+.problema p {
+    margin: 10px;
+    color: #000000;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    font-weight: 500;    
+    width: 90%;
+    text-align: center;
+}
+.problema-list p {
+    margin: 10px;
+    color: #000000;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 500;    
+    width: 90%;
+    text-align: center;
 }
 
 
 
+.problema-card-economico{
+    width: 90%;
+    height: 30%;
+    border-radius: 20px;
+    border: solid 5px var(--blue-text);
 
+}
+.problema-card-ambietal{
+    width: 90%;
+    height: 30%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border-radius: 20px;
+    border: solid 5px var(--green-text);
+
+}
+.problema-card-social{
+    width: 90%;
+    height: 30%;
+    border-radius: 20px;
+    border: solid 5px var(--blue-text);
+
+}
 
 
 
@@ -171,28 +261,42 @@ header {
 
 .solucao{
     border-width: 10px;
-    width: 100%;
+    width: 99vw;
     height: calc(100vh - 75px);
     background-position: 10%;
     background-size: cover;
     background-image:url(assets/background_3.jpg) ;
-
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-
-
 .solucao-card{
     width: 80%;
-    height: 80%;
-    background-color:rgba(0, 0, 0, 0.80);
-    border-radius: 20px;
-    border-color: #23a9df;
-    border-width: 10px;
+    height: 70%;
+    border-radius: 50px;
+   
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+
 }
 
+.solucao-text{
+    text-align: center;
+
+    margin-left: 5%;
+    margin-bottom: 20px;
+    padding-top: 10px;  
+    font-weight: 500;
+    color: #FFFFFF;
+    font-family: "Poppins", sans-serif;
+    font-size: 6rem;
+    font-style: italic;
+}
 
 
 /* SOBRE */
