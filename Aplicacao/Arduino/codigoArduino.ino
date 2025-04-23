@@ -1,4 +1,4 @@
-  #include "DHT.h"                      // importando a biblioteca
+#include "DHT.h"                      // importando a biblioteca
 #define TIPO_SENSOR DHT11
 const int PINO_SENSOR_DHT11 = A0;     // defnindo a porta de captura - variavel do tipo inteiro
 

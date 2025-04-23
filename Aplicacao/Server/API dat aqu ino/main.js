@@ -60,13 +60,25 @@ const serial = async (
         if (HABILITAR_OPERACAO_INSERIR) {
 
             // este insert irá inserir os dados na tabela "medida"
-            await poolBancoDados.execute(
-                
-                ` INSERT INTO medicao (umidade,fk_sensor, alerta) VALUES (?,1,${(sensorAnalogico < 30)?"1":"0"})`,
-                [sensorAnalogico]
-                
+            if (sensorAnalogico < 30) {
+    await poolBancoDados.execute(
+        `insert into medicao (umidade, fk_sensor, alerta) VALUES (?, 1, 1)`,
+        [sensorAnalogico]
+    )
+} else if (sensorAnalogico >= 30 && sensorAnalogico <= 50) {
+    await poolBancoDados.execute(
+        `insert into medicao (umidade, fk_sensor, alerta) VALUES (?, 1, 0)`,
+        [sensorAnalogico]
+    )
+} else {
+    await poolBancoDados.execute(
+        `insert into medicao (umidade, fk_sensor, alerta) VALUES (?, 1, null)`,
+        [sensorAnalogico]
+    )
+}
 
-            );
+// No codigo acima, caso a umidade seja < 30, insere 1, alerta maximo, se não e <= 50, 0, alerta medio, caso contraio, null, sem alerta
+
             console.log("valores inseridos no banco: ", sensorAnalogico);
         }
 
