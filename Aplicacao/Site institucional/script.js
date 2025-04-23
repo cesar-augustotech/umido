@@ -9,8 +9,9 @@ function trocar_tela(id_tela) {
 
 
 
-let email = ['aluno'];
-let senha = ['Sptech#2024'];
+let usuario = [
+['aluno','Sptech#2024']    
+]
 function cadastrar() {
 
  
@@ -22,10 +23,9 @@ function cadastrar() {
         if (ipt_senha.value == ipt_senhaConfirmada.value) {
            
 
-                email.push(ipt_email.value);
-                senha.push(ipt_senha.value);
-                console.log(email);
-                console.log(senha);
+                
+                usuario.push([ipt_email.value,ipt_senha.value]);
+                console.log(usuario);
                 console.log(trocar_tela('tela_login'))
                 trocar_tela('tela_login');
             
@@ -34,24 +34,24 @@ function cadastrar() {
     } else alert('A senha deve ter no mínimo 6 caracteres.');
     } else alert ('Preencha todos os campos')
 
-    /*    if(ipt_senha.value == undefined|| ipt_senhaConfirmada.value ==undefined || ipt_email.value == undefined || ipt_nomeRegistro.value == undefined ||ipt_cnpj.value == undefined|| ipt_telefone.value == undefined) {
-}else alert('Insira todos os dados') */
 }
 
 function acessar() {
-     if (email.includes(ipt_login_email.value) && senha.includes(ipt_login_senha.value)) {
-         /*document.getElementById(tela_dashboard).classList.remove('tela-inativa');*/
-         console.log('Acesso concedido')
+    var loginEmail = ipt_login_email.value
+    var loginSenha = ipt_login_senha.value
 
-         document.getElementById('tela_inicial').classList.add('tela-inativa');
-    document.getElementById('tela_login').classList.add('tela-inativa')
-    document.getElementById('tela_cadastro').classList.add('tela-inativa')
-    /* document.getElementById('tela_dashboard').classList.add('tela-inativa')*/
+     for(let i = 0; i < usuario.length; i++){
+        var acessoPermitido = false
+        if (usuario[i][0] == loginEmail  && usuario[i][1] == loginSenha){
+            window.location.href = 'dashboard.html'
+            acessoPermitido = true
+        }
 
-    window.location.href = 'dashboard.html'
-         
-     } else {console.log('Accesso Negado')
-        alert('Accesso Negado')}
+    } 
+    if (acessoPermitido == false){
+        alert('Accesso Negado')
+    }
+     
      
 
 
