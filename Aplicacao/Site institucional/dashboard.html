@@ -226,7 +226,7 @@
     
         .lista_sensores {
             list-style: none;
-            height: 300px;
+            height: 100%;
             overflow-y: auto;
         }
     
@@ -475,10 +475,6 @@
                     <div class="valor_metrica" id="umidade_sensor">--</div>
                 </div>
                 <div class="cartao_metrica">
-                    <h3>Bateria</h3>
-                    <div class="valor_metrica" id="bateria_sensor">--</div>
-                </div>
-                <div class="cartao_metrica">
                     <h3>Status</h3>
                     <div class="valor_metrica" id="status_sensor">--</div>
                 </div>
@@ -500,19 +496,10 @@
                     <input type="text" id="nome_sensor" required placeholder="Ex: Sensor 11">
                 </div>
                 <div class="grupo_formulario">
-                    <label for="localizacao_sensor">Localização:</label>
-                    <input type="text" id="localizacao_sensor" required placeholder="Ex: Área E">
-                </div>
-                <div class="grupo_formulario">
                     <label for="tipo_sensor">Tipo de Sensor:</label>
                     <select id="tipo_sensor" required>
-                        <option value="">Selecione um tipo</option>
                         <option value="umidade">Umidade</option>
                     </select>
-                </div>
-                <div class="grupo_formulario">
-                    <label for="intervalo_sensor">Intervalo de Leitura (minutos):</label>
-                    <input type="number" id="intervalo_sensor" min="1" max="60" value="15">
                 </div>
                 <div class="botoes_formulario">
                     <button type="button" class="botao_cancelar" onclick="fechar_modal_adicionar_sensor()"
@@ -795,12 +782,10 @@ function mostrar_modal_sensor(posicao) {
     const modal = modal_sensor;
     const titulomodal = titulo_modal_sensor;
     const umidadeSensor = umidade_sensor;
-    const bateriaSensor = bateria_sensor;
     const statusSensor = status_sensor;
 
     titulomodal.textContent = dadosSensores[posicao][0];
-    umidadeSensor.textContent = dadosSensores[posicao][2];
-    bateriaSensor.textContent = dadosSensores[posicao][3];
+    umidadeSensor.textContent = dadosSensores[posicao][2];  
     statusSensor.textContent = dadosSensores[posicao][4];
 
     modal.style.display = 'block';
