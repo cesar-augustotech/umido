@@ -276,8 +276,8 @@
             transition: transform 0.3s;
         }
     
-        .popup_unidade,
-        .popup_sensor,
+        .modal_unidade,
+        .modal_sensor,
         .modal {
             display: none;
             position: fixed;
@@ -290,7 +290,7 @@
             overflow: auto;
         }
     
-        .conteudo_popup,
+        .conteudo_modal,
         .conteudo_modal {
             background-color: white;
             margin: 10% auto;
@@ -302,7 +302,7 @@
             height: 550px;
         }
     
-        .conteudo_popup {
+        .conteudo_modal {
             max-width: 800px;
             max-height: 500px;
         }
@@ -311,7 +311,7 @@
             max-width: 500px;
         }
     
-        .fechar_popup,
+        .fechar_modal,
         .fechar_modal {
             position: absolute;
             top: 15px;
@@ -409,7 +409,7 @@
     </header>
     <div class="layout_principal">
         <div class="menu_lateral menu_expandido">
-            <div class="botao_expandir" id="botao_expandir" onclick="abrir_fechar_menu()">
+            <div class="botao_expandir" id="botao_expandir" onclick="botao_abrir_fechar_menu()">
                 <img src="./assets/icons/seta.png" style="width: 20px; height: 20px;">
             </div>
             <ul class="itens_menu">
@@ -421,7 +421,7 @@
                     <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
                     <span>Configurações</span>
                 </li>
-                <li style="gap: 20px;" onclick="exit()">
+                <li style="gap: 20px;" onclick="botao_exit()">
                     <img src="./assets/icons/sair.png" style="width: 30px; height: 30px;">
                     <span>Sair</span>
                 </li>
@@ -436,7 +436,8 @@
                     <option value="Unidade 3">Unidade 3</option>
                     <option value="Unidade 4">Unidade 4</option>
                 </select>
-                <button class="btn_add_unidade" id="btn_add_unidade" onclick="abrirUnidade()">Adicionar Unidade</button>
+                <button class="btn_add_unidade" id="btn_add_unidade" onclick="mostrar_modal_unidade()">Adicionar Unidade</button>
+                <button class="btn_add_unidade" id="" onclick="">Exportar dados da Unidade</button>
             </div>
             <div class="cartao principal_g">
                 <div class="indicadores" id="indicadores"></div>
@@ -449,7 +450,7 @@
                     </div>
                     <div class="cartao">
                         <div class="titulo_sensores">Lista de sensores
-                            <button id="botao_adicionar_sensor" onclick="mostrarModal()" class="botao_adicionar">Novo Sensor</button>
+                            <button id="botao_adicionar_sensor" onclick="mostrar_modal_adicionar_sensor()" class="botao_adicionar">Novo Sensor</button>
                         </div>
                         <div class="lista_botoes">
                             <ul class="lista_sensores" id="lista_sensores"></ul>
@@ -457,17 +458,17 @@
                     </div>
                 </div>
                 <div style="width: 100%; height: 100%; display: grid ; grid-template-rows: 20px 1fr;">
-                    <div class="titulo_grafico">ESTATÍSTICAS DO MÊS</div>
+                    <div class="titulo_grafico">ESTATÍSTICAS E ALERTAS DO MÊS</div>
                     <div class="graficos_mensais" id="graficos_mensais"></div>
                 </div>
             </div>
         </section>
     </div>
     
-    <div id="popup_sensor" class="popup_sensor">
-        <div class="conteudo_popup">
-            <span class="fechar_popup" onclick="fecharPopup()">&times;</span>
-            <h2 id="titulo_popup_sensor">Sensor X</h2>
+    <div id="modal_sensor" class="modal_sensor">
+        <div class="conteudo_modal">
+            <span class="fechar_modal" onclick="fechar_modal()">&times;</span>
+            <h2 id="titulo_modal_sensor">Sensor X</h2>
             <div class="metricas_sensor">
                 <div class="cartao_metrica">
                     <h3>Umidade Atual</h3>
@@ -491,7 +492,7 @@
     
     <div id="modal_adicionar_sensor" class="modal">
         <div class="conteudo_modal">
-            <span class="fechar_modal" id="fechar_modal" onclick="fecharModalSensor()">&times;</span>
+            <span class="fechar_modal" id="fechar_modal" onclick="fechar_modal_adicionar_sensor()">&times;</span>
             <h2>Adicionar Novo Sensor</h2>
             <form id="formulario_adicionar_sensor">
                 <div class="grupo_formulario">
@@ -514,26 +515,26 @@
                     <input type="number" id="intervalo_sensor" min="1" max="60" value="15">
                 </div>
                 <div class="botoes_formulario">
-                    <button type="button" class="botao_cancelar" onclick="fecharModalSensor()"
+                    <button type="button" class="botao_cancelar" onclick="fechar_modal_adicionar_sensor()"
                         id="botao_cancelar">Cancelar</button>
-                    <button type="submit" class="botao_salvar" onclick="salvarFormulario()">Salvar Sensor</button>
+                    <button type="submit" class="botao_salvar" onclick="botao_salvar_formulario()">Salvar Sensor</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="popup_unidade" class="popup_unidade">
-        <div class="conteudo_popup">
-            <span class="fechar_popup" onclick="fecharPopupUnidade()">&times;</span>
-            <h2 id="titulo_popup_sensor">Adicionar nova Unidade</h2>
+    <div id="modal_unidade" class="modal_unidade">
+        <div class="conteudo_modal">
+            <span class="fechar_modal" onclick="fechar_modal_unidade()">&times;</span>
+            <h2 id="titulo_modal_sensor">Adicionar nova Unidade</h2>
             <form id="formulario_adicionar_unidade">
                 <div class="grupo_formulario">
                     <label for="nome_sensor">Nome da Unidade</label>
                     <input type="text" id="nome_unidade" required placeholder="Ex: Unidade">
                 </div>
                 <div class="botoes_formulario">
-                    <button type="button" class="botao_cancelar" onclick="fecharPopupUnidade()" id="botao_cancelar">Cancelar</button>
-                    <button type="button" class="botao_salvar" onclick="adicionarUnidade()">Adicionar Unidade</button>
+                    <button type="button" class="botao_cancelar" onclick="fechar_modal_unidade()" id="botao_cancelar">Cancelar</button>
+                    <button type="button" class="botao_salvar" onclick="botao_salvar_unidade()">Adicionar Unidade</button>
                 </div>
             </form>
         </div>
@@ -558,13 +559,34 @@ const modalAdicionarSensor = modal_adicionar_sensor;
 
 const formularioAdicionarSensor = formulario_adicionar_sensor;
 
-function abrir_fechar_menu() {
-    const menuLateral = document.querySelector('.menu_lateral');
-    menuLateral.classList.toggle('menu_expandido');
-    botao_expandir.classList.toggle('girar');
+function criar_lista_alertas(){
+    let html_lista =""
+    for(let i =0;i<quantidade_alerta+5;i++){
+        html_lista += `
+        <li style="display: grid; grid-template-columns: 1fr 1fr;  border-bottom: 1px solid black;">
+            <div>Sensor ${parseInt((Math.random()*dadosSensores.length) + 1) }</div>
+            <div>${parseInt(Math.random()*29)+1}/${parseInt(Math.random()*11)+1}/2024</div>
+        </li>
+        ` 
+    }
+    let html = `
+    <div class="container_grafico_mensal">
+        <div class="cartao">
+            <div class="titulo_grafico">ALERTAS</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                <div class="titulo_grafico">Sensor</div>
+                <div class="titulo_grafico">Data</div>
+            </div>
+            <ul>
+                ${html_lista}
+            </ul>
+        </div>
+    </div>
+    `
+    return html
 }
 
-function grafico() {
+function criar_grafico_geral() {
     let contexto = document.getElementById('grafico_umidade').getContext('2d');
     if (ultimo_grafico) {
         ultimo_grafico.destroy();
@@ -602,13 +624,14 @@ function grafico() {
     });
 
 }
-
-function kpi() {
+let quantidade_alerta =0
+function criar_kpis() {
     indicadores.innerHTML = ""
     lista_sensores.innerHTML = ""
     let data = new Date()
+    quantidade_alerta = parseInt(Math.random() * 10)
     let dadosIndicadores = [
-        [parseInt(Math.random() * 10), "incidentes", "(Mês atual)"],
+        [quantidade_alerta, "incidentes", "(Mês atual)"],
         [parseInt(Math.random() * 70) + 30, "umidade média atual", "(Mês atual)"],
         [parseInt(Math.random() * 100), "dados exportados", "(Mês atual)"],
         [dadosSensores.length, "sensores em funcionamento", ""],
@@ -619,7 +642,7 @@ function kpi() {
         elementoListaSensores.innerHTML += `
         <li>
             <span class="nome_sensor">${dadosSensores[i][0]}</span>
-            <span class="status_sensor ativo" onclick="abrirPopupSensor(${i})">${dadosSensores[i][1]}</span>
+            <span class="status_sensor ativo" onclick="mostrar_modal_sensor(${i})">${dadosSensores[i][1]}</span>
         </li>`;
     }
     let elementoIndicadores = indicadores;
@@ -633,29 +656,13 @@ function kpi() {
     }
 }
 
-function abrirPopupSensor(posicao) {
-    const popup = popup_sensor;
-    const tituloPopup = titulo_popup_sensor;
-    const umidadeSensor = umidade_sensor;
-    const bateriaSensor = bateria_sensor;
-    const statusSensor = status_sensor;
-
-    tituloPopup.textContent = dadosSensores[posicao][0];
-    umidadeSensor.textContent = dadosSensores[posicao][2];
-    bateriaSensor.textContent = dadosSensores[posicao][3];
-    statusSensor.textContent = dadosSensores[posicao][4];
-
-    popup.style.display = 'block';
-
-    criarGraficoSensor(dadosSensores[posicao][5]);
-}
-
-function formar_grafico() {
+function criar_grafico_estatisticas_mes() {
     for (let i = 0; i < dadosGraficos.length; i++) {
         let contexto = document.getElementById(dadosGraficos[i][0]).getContext('2d');
         let cor1 = parseInt(Math.random()*256)
         let cor2 = parseInt(Math.random()*256)
         let cor3 = parseInt(Math.random()*256)
+        let grafico;
         if(dadosGraficos[i][3] == "pie"){
             let cores =[]
             let bordas =[]
@@ -666,7 +673,7 @@ function formar_grafico() {
                 cores.push(`rgba(${cor1}, ${cor2}, ${cor3}, 0.2)`)
                 bordas.push(`rgba(${cor1}, ${cor2}, ${cor3}, 1)`)
             }
-            let grafico = new Chart(contexto, {
+            grafico = new Chart(contexto, {
                 type: dadosGraficos[i][3],
                 data: {
                     labels: dadosGraficos[i][4],
@@ -689,7 +696,7 @@ function formar_grafico() {
                 }
             });
         }else{
-            let grafico = new Chart(contexto, {
+            grafico = new Chart(contexto, {
                 type: dadosGraficos[i][3],
                 data: {
                     labels: dadosGraficos[i][4],
@@ -716,7 +723,7 @@ function formar_grafico() {
     }
 }
 
-function graficos_mes() {
+function criar_html_estatisticas_mes() {
     graficos_mensais.innerHTML = ""
     if (graficos.length > 0) {
         for (let i = 0; i < graficos.length; i++) {
@@ -738,10 +745,12 @@ function graficos_mes() {
             </div>
         </div>`;
     }
+    let lista_alerta = criar_lista_alertas()
+    html += lista_alerta
     graficos_mensais.innerHTML = html
 }
 
-function criarGraficoSensor(dados) {
+function criar_grafico_modal_sensor(dados) {
     const contexto = document.getElementById('grafico_historico_sensor').getContext('2d');
     if (window.graficoHistoricoSensor) {
         window.graficoHistoricoSensor.destroy();
@@ -782,58 +791,81 @@ function criarGraficoSensor(dados) {
     });
 }
 
-function fecharPopupUnidade(){
-    popup_unidade.style.display = 'none';
+function mostrar_modal_sensor(posicao) {
+    const modal = modal_sensor;
+    const titulomodal = titulo_modal_sensor;
+    const umidadeSensor = umidade_sensor;
+    const bateriaSensor = bateria_sensor;
+    const statusSensor = status_sensor;
+
+    titulomodal.textContent = dadosSensores[posicao][0];
+    umidadeSensor.textContent = dadosSensores[posicao][2];
+    bateriaSensor.textContent = dadosSensores[posicao][3];
+    statusSensor.textContent = dadosSensores[posicao][4];
+
+    modal.style.display = 'block';
+
+    criar_grafico_modal_sensor(dadosSensores[posicao][5]);
 }
 
-function abrirUnidade(){
-    popup_unidade.style.display = 'block';
+function mostrar_modal_unidade(){
+    modal_unidade.style.display = 'block';
 }
 
-function fecharPopup() {
-    popup_sensor.style.display = 'none';
-}
-
-function adicionarUnidade(){
-    selecionar_unidade.innerHTML += `<option value="${nome_unidade.value}">${nome_unidade.value}</option>`
-    popup_unidade.style.display = 'none';
-    return false;
-
-}
-
-function mostrarModal() {
+function mostrar_modal_adicionar_sensor() {
     modalAdicionarSensor.style.display = 'block';
 }
 
-function fecharModalSensor() {
+function fechar_modal() {
+    modal_sensor.style.display = 'none';
+}
+
+function fechar_modal_unidade(){
+    modal_unidade.style.display = 'none';
+}
+
+function fechar_modal_adicionar_sensor() {
     modalAdicionarSensor.style.display = 'none';
     formularioAdicionarSensor.reset();
 }
 
-function salvarFormulario() {
+function botao_salvar_unidade(){
+    selecionar_unidade.innerHTML += `<option value="${nome_unidade.value}">${nome_unidade.value}</option>`
+    modal_unidade.style.display = 'none';
+    return false;
+
+}
+
+function botao_salvar_formulario() {
     const nome = nome_sensor.value;
     dadosSensores.push([nome, "Ativo", "100%", "10%", "Ativo", [0]])
-    kpi()
-    fecharModalSensor();
+    criar_kpis()
+    fechar_modal_adicionar_sensor();
     return false;
 }
 
-function exit() {
+function botao_abrir_fechar_menu() {
+    const menuLateral = document.querySelector('.menu_lateral');
+    menuLateral.classList.toggle('menu_expandido');
+    botao_expandir.classList.toggle('girar');
+}
+
+function botao_exit() {
     window.location.href = "index.html"
 }
 
 function select_unidade() {
     dadosGraficos = [
-        ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)], "Umidade do Mês atual"],
-        ["grafico_incidentes", "Incidentes por Área", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [(parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10))], "Incidentes do Mês atual"],
-        ["grafico_desempenho", "Desempenho do Sistema", "Desempenho (%)", "radar", ["Precisão", "Resposta", "Tempo Ativo", "Conectividade", "Eficiência"], [95, 85, 99, 92, 88], "lengenda3"]
+        ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)], "Umidade Media Por Semana Do Mês Atual"],
+        ["grafico_incidentes", "Incidentes", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [(parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10))], "Incidentes Por Área Do Mês Atual"],
     ];
-    grafico()
-    kpi()
-    graficos_mes()
-    formar_grafico()
+    criar_grafico_geral()
+    criar_kpis()
+    criar_html_estatisticas_mes()
+    criar_grafico_estatisticas_mes()
 
 }
+
 select_unidade()
 </script>
 </html>
