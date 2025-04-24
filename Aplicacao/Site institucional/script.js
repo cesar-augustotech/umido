@@ -8,14 +8,12 @@ function trocar_tela(id_tela) {
 }
 
 
-
 let usuario = [
 ['aluno','Sptech#2024']    
 ]
 function cadastrar() {
 
  
-
     if (ipt_email.value != '' && ipt_nomeRegistro.value != '' && ipt_telefone.value != '' 
         && ipt_cnpj.value != '' && ipt_senha.value != '' && ipt_senhaConfirmada.value != '' )
         {
@@ -51,20 +49,13 @@ function acessar() {
     if (acessoPermitido == false){
         alert('Accesso Negado')
     }
-     
-     
-
-
 
 }
-
 
 function calcular() {
     var area = Number(ipt_tamanho.value);
     var preconormal = Number(ipt_preco.value)
     var resultado_valor = preconormal * area;
-    var precosct = preconormal * resultado_valor
-    var total = 0;
     var resultado_prevencao = 0;
     var imposto = 0;
     var resultado_total = 0;
@@ -76,14 +67,8 @@ function calcular() {
     }
 
 
-
-
     resultado_prevencao = resultado_valor * 0.3;
-    resultado_isencao = resultado_valor * imposto;
-
-    resultado_total = resultado_prevencao + resultado_isencao;
-
-
+   
     print_resultado_valor.innerHTML = `${resultado_valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     print_resultado_prevencao.innerHTML = `${resultado_prevencao.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     print_resultado_venda.innerHTML = `${(area *52500).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
