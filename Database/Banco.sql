@@ -87,6 +87,6 @@ INSERT INTO sensor (fk_unidade, identificador) VALUE
 (3, 'B1');
 
 DROP USER IF EXISTS umidoInsert;
-CREATE USER umidoInsert IDENTIFIED BY '12345';
+CREATE USER umidoInsert IDENTIFIED BY 'Sptech#2024';
 GRANT INSERT ON umido.medicao TO umidoInsert;
 FLUSH PRIVILEGES;
