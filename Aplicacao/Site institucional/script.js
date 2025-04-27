@@ -23,8 +23,7 @@ function cadastrar() {
 
                 
                 usuario.push([ipt_email.value,ipt_senha.value]);
-                console.log(usuario);
-                console.log(trocar_tela('tela_login'))
+                alert('Acesso criado! Realize o login')
                 trocar_tela('tela_login');
             
         } else alert('As senhas não coincidem.');
@@ -37,9 +36,9 @@ function cadastrar() {
 function acessar() {
     var loginEmail = ipt_login_email.value
     var loginSenha = ipt_login_senha.value
-
+    var acessoPermitido = false
      for(let i = 0; i < usuario.length; i++){
-        var acessoPermitido = false
+       
         if (usuario[i][0] == loginEmail  && usuario[i][1] == loginSenha){
             window.location.href = 'dashboard.html'
             acessoPermitido = true
@@ -47,7 +46,7 @@ function acessar() {
 
     } 
     if (acessoPermitido == false){
-        alert('Accesso Negado')
+        alert('Accesso Negado ou inexistente')
     }
 
 }
