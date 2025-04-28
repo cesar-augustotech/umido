@@ -517,7 +517,7 @@
             <form id="formulario_adicionar_unidade">
                 <div class="grupo_formulario">
                     <label for="nome_sensor">Nome da Unidade</label>
-                    <input type="text" id="nome_unidade" required placeholder="Ex: Unidade">
+                    <input type="text" id="nome_unidade"  placeholder="Ex: Unidade">
                 </div>
                 <div class="botoes_formulario">
                     <button type="button" class="botao_cancelar" onclick="fechar_modal_unidade()" id="botao_cancelar">Cancelar</button>
@@ -611,7 +611,7 @@ function criar_grafico_geral() {
     });
 
 }
-let quantidade_alerta =0
+let quantidade_alerta = 0
 function criar_kpis() {
     indicadores.innerHTML = ""
     lista_sensores.innerHTML = ""
@@ -620,7 +620,7 @@ function criar_kpis() {
     let dadosIndicadores = [
         [quantidade_alerta, "incidentes", "(Mês atual)"],
         [parseInt(Math.random() * 70) + 30, "umidade média atual", "(Mês atual)"],
-        [parseInt(Math.random() * 100), "dados exportados", "(Mês atual)"],
+        [parseInt(Math.random() * 100), "exportações realizadas", "(Mês atual)"],
         [dadosSensores.length, "sensores em funcionamento", ""],
         [`${data.getHours()}:${data.getMinutes()}`, `${data.getDate()}/${data.getMonth() + 1}/${data.getFullYear()}`, "última atualização",]
     ];
