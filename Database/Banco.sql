@@ -12,6 +12,8 @@ CREATE TABLE empresa (
 
 -- Tabela de usuários
 CREATE TABLE usuario (
+	telefone varchar(20), 
+    cnpj varchar(20),
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
