@@ -7,51 +7,6 @@ function trocar_tela(id_tela) {
 
 }
 
-
-let usuario = [
-['aluno','Sptech#2024']    
-]
-function cadastrar() {
-
- 
-    if (ipt_email.value != '' && ipt_nomeRegistro.value != '' && ipt_telefone.value != '' 
-        && ipt_cnpj.value != '' && ipt_senha.value != '' && ipt_senhaConfirmada.value != '' )
-        {
-    if ((ipt_senha.value).length >= 6) {
-        if (ipt_senha.value == ipt_senhaConfirmada.value) {
-           
-
-                
-                usuario.push([ipt_email.value,ipt_senha.value]);
-                console.log(usuario);
-                console.log(trocar_tela('tela_login'))
-                trocar_tela('tela_login');
-            
-        } else alert('As senhas não coincidem.');
-     
-    } else alert('A senha deve ter no mínimo 6 caracteres.');
-    } else alert ('Preencha todos os campos')
-
-}
-
-function acessar() {
-    var loginEmail = ipt_login_email.value
-    var loginSenha = ipt_login_senha.value
-
-     for(let i = 0; i < usuario.length; i++){
-        var acessoPermitido = false
-        if (usuario[i][0] == loginEmail  && usuario[i][1] == loginSenha){
-            window.location.href = 'dashboard.html'
-            acessoPermitido = true
-        }
-
-    } 
-    if (acessoPermitido == false){
-        alert('Accesso Negado')
-    }
-
-}
-
 function calcular() {
     var area = Number(ipt_tamanho.value);
     var preconormal = Number(ipt_preco.value)
@@ -78,4 +33,49 @@ function calcular() {
 
 
 }
+
+let usuario = [
+['aluno','Sptech#2024']    
+]
+function cadastrar() {
+
+ 
+    if (ipt_email.value != '' && ipt_nomeRegistro.value != '' && ipt_telefone.value != '' 
+        && ipt_cnpj.value != '' && ipt_senha.value != '' && ipt_senhaConfirmada.value != '' )
+        {
+    if ((ipt_senha.value).length >= 6) {
+        if (ipt_senha.value == ipt_senhaConfirmada.value) {
+           
+
+                
+                usuario.push([ipt_email.value,ipt_senha.value]);
+                alert('Acesso criado! Realize o login')
+                trocar_tela('tela_login');
+            
+        } else alert('As senhas não coincidem.');
+     
+    } else alert('A senha deve ter no mínimo 6 caracteres.');
+    } else alert ('Preencha todos os campos')
+
+}
+
+function acessar() {
+    var loginEmail = ipt_login_email.value
+    var loginSenha = ipt_login_senha.value
+    var acessoPermitido = false
+     for(let i = 0; i < usuario.length; i++){
+       
+        if (usuario[i][0] == loginEmail  && usuario[i][1] == loginSenha){
+            window.location.href = 'dashboard.html'
+            acessoPermitido = true
+        }
+
+    } 
+    if (acessoPermitido == false){
+        alert('Accesso Negado ou inexistente')
+    }
+
+}
+
+
 

@@ -1,8 +1,20 @@
+-- Remoção do banco de dados para efeito de demonstração de execução do script (Apagar sessão após apresentação)
+DROP DATABASE IF EXISTS umido;
 
+-- Criar Database
 CREATE DATABASE umido;
 use umido;
 
 
+-- Remoção das tabelas para efeito de demonstração de execução do script(Apagar sessão após apresentação)
+drop table if exists medicao;
+drop table if exists sensor;
+drop table if exists unidade;
+drop table if exists usuario;
+drop table if exists empresa;
+
+
+-- Criação das tabelas
 -- Tabela de empresa
 CREATE TABLE empresa (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -88,7 +100,9 @@ INSERT INTO sensor (fk_unidade, identificador) VALUE
 (3, 'A1'),
 (3, 'B1');
 
+
+-- Criação do usuário para inserção das medições realizadas
 DROP USER IF EXISTS umidoInsert;
-CREATE USER umidoInsert IDENTIFIED BY '12345';
+CREATE USER umidoInsert IDENTIFIED BY 'Sptech#2024';
 GRANT INSERT ON umido.medicao TO umidoInsert;
 FLUSH PRIVILEGES;
