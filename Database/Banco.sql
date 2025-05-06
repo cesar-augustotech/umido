@@ -105,4 +105,12 @@ INSERT INTO sensor (id_unidade, identificador) VALUES
 DROP USER IF EXISTS 'umidoInsert'@'%';
 CREATE USER 'umidoInsert'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT INSERT ON umidoteste.medicao TO 'umidoInsert'@'%';
-FLUSH PRIVILEGES;
+
+drop user if exists 'umidoCadastro'@'%';
+CREATE USER 'umidoCadastro'@'%' IDENTIFIED BY 'Sptech#2024';
+GRANT INSERT ON umidoteste.empresa TO 'umidoCadastro'@'%' with grant option;
+
+drop user if exists 'umidoLogin'@'%';
+CREATE USER 'umidoLogin'@'%' IDENTIFIED BY 'Sptech#2024';
+GRANT select ON umidoteste.usuario TO 'umidoLogin'@'%';
+GRANT select ON umidoteste.empresa TO 'umidoLogin'@'%';
