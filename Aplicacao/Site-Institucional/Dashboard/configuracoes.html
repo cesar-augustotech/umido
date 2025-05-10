@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umido - Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./style-dash.css">
+</head>
+
+<body>
+
+
+    <header class="i_header">
+        <div class="container">
+            <div class="logo"></div>
+            <nav>
+                <input type="text" placeholder="Buscar...">
+                <button class="botao_buscar">Buscar</button>
+            </nav>
+            <div class="div_perfil">
+                <div>
+                    <h4>FERNANDO BRANDÃO</h4>
+                    <h5>Administrador</h5>
+                </div>
+                <img src="./icons/user.png" style="width: 40px; height: 40px;" alt="perfil">
+            </div>
+        </div>
+    </header>
+    <div class="layout_principal">
+        <div class="menu_lateral menu_expandido">
+            <div class="botao_expandir" id="botao_expandir" onclick="botao_abrir_fechar_menu()">
+                <img src="./icons/seta.png" style="width: 20px; height: 20px;">
+            </div>
+            <ul class="itens_menu">
+                 <li style="gap: 20px;" onclick = "window.location.href = 'geral.html'">
+                    <img src="./icons/grafico.png" style="width: 30px; height: 30px;">
+                    <span>Painel</span>
+                </li>
+                <li style="gap: 20px;" onclick = "window.location.href = 'relatorio.html'">
+                    <img src="./icons/grafico.png" style="width: 30px; height: 30px;">
+                    <span>Relatórios</span>
+                </li>
+                <li style="gap: 20px;" onclick = "window.location.href = 'configuracoes.html'" class="ativo">
+                    <img src="./icons/configuracao.png" style="width: 30px; height: 30px;">
+                    <span>Configurações</span>
+                </li>
+                <li style="gap: 20px;" onclick="window.location.href = '../index.html'">
+                    <img src="./icons/sair.png" style="width: 30px; height: 30px;">
+                    <span>Sair</span>
+            </ul>
+        </div>
+
+        <section class="conteudo_principal">
+            <div class="cartao">
+                <div class="titulo_grafico">
+                    <span>Gerenciamento de Usuários</span>
+                    <button class="botao_adicionar" onclick="abrirModalUsuario()">+ Adicionar Usuário</button>
+                </div>
+                <table style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align:left; border-bottom: 2px solid #00a8ff;">
+                            <th style="padding: 10px;">Nome</th>
+                            <th>Email</th>
+                            <th>Nível</th>
+                            <th>Unidades</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela_usuarios"></tbody>
+                </table>
+            </div>
+
+            <div class="modal" id="modalUsuario">
+                <div class="conteudo_modal">
+                    <span class="fechar_modal" onclick="fecharModalUsuario()">&times;</span>
+                    <h2>Cadastro de Funcionário</h2>
+                    <div class="grupo_formulario">
+                        <label>Nome</label>
+                        <input type="text" id="ipt_nome">
+                    </div>
+                    <div class="grupo_formulario">
+                        <label>Email</label>
+                        <input type="email" id="ipt_email">
+                    </div>
+                    <div class="grupo_formulario">
+                        <label>Senha</label>
+                        <input type="password" id="ipt_senha">
+                    </div>
+                    <div class="grupo_formulario">
+                        <label>Nível de Acesso</label>
+                        <select id="sel_nivel">
+                            <option value="comum">Comum</option>
+                            <option value="supervisor">Supervisor</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="grupo_formulario">
+                        <label>Unidades Vinculadas</label>
+                        <div id="checkboxes_unidades"></div>
+                    </div>
+                    <button class="botao_salvar" onclick="salvarUsuario()">Salvar</button>
+                    <button class="botao_cancelar" onclick="fecharModalUsuario()">Cancelar</button>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    
+    
+
+    
+</body>
+<script>
+let usuarios = [];
+let unidadesDisponiveis = ['Unidade 1', 'Unidade 2', 'Unidade 3'];
+let idEditando ;
+
+function atualizarTabelaUsuarios() {
+  const tbody = document.getElementById("tabela_usuarios");
+  tbody.innerHTML = "";
+
+  usuarios.forEach((usuario, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${usuario.nome}</td>
+      <td>${usuario.email}</td>
+      <td>${usuario.nivel}</td>
+      <td>${usuario.unidades.join(', ')}</td>
+      <td>
+        <button class="botao_buscar" onclick="editarUsuario(${index})">Editar</button>
+        <button class="botao_cancelar" onclick="removerUsuario(${index})">Remover</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function abrirModalUsuario() {
+  idEditando = 1;
+  document.getElementById("ipt_nome").value = "";
+  document.getElementById("ipt_email").value = "";
+  document.getElementById("ipt_senha").value = "";
+  document.getElementById("sel_nivel").value = "comum";
+  gerarCheckboxes([]);
+  document.getElementById("modalUsuario").style.display = "block";
+}
+
+function fecharModalUsuario() {
+  document.getElementById("modalUsuario").style.display = "none";
+}
+
+function salvarUsuario() {
+  const nome = document.getElementById("ipt_nome").value;
+  const email = document.getElementById("ipt_email").value;
+  const senha = document.getElementById("ipt_senha").value;
+  const nivel = document.getElementById("sel_nivel").value;
+
+  const unidadesSelecionadas = Array.from(document.querySelectorAll("#checkboxes_unidades input:checked"))
+    .map(checkbox => checkbox.value);
+
+  const usuario = { nome, email, senha, nivel, unidades: unidadesSelecionadas };
+
+  if (idEditando !== null) {
+    usuarios[idEditando] = usuario;
+  } else {
+    usuarios.push(usuario);
+  }
+
+  fecharModalUsuario();
+  atualizarTabelaUsuarios();
+}
+
+function editarUsuario(index) {
+  const usuario = usuarios[index];
+  idEditando = index;
+  document.getElementById("ipt_nome").value = usuario.nome;
+  document.getElementById("ipt_email").value = usuario.email;
+  document.getElementById("ipt_senha").value = usuario.senha;
+  document.getElementById("sel_nivel").value = usuario.nivel;
+  gerarCheckboxes(usuario.unidades);
+  document.getElementById("modalUsuario").style.display = "block";
+}
+
+function removerUsuario(index) {
+  if (confirm("Deseja realmente remover este usuário?")) {
+    usuarios.splice(index, 1);
+    atualizarTabelaUsuarios();
+  }
+}
+
+function gerarCheckboxes(selecionadas) {
+  const container = document.getElementById("checkboxes_unidades");
+  container.innerHTML = "";
+  unidadesDisponiveis.forEach(unidade => {
+    const id = `chk_${unidade.replace(/\s+/g, "_")}`;
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = id;
+    checkbox.value = unidade;
+    checkbox.checked = selecionadas.includes(unidade);
+
+    const label = document.createElement("label");
+    label.htmlFor = id;
+    label.innerText = unidade;
+    label.style.marginRight = "15px";
+
+    const div = document.createElement("div");
+    div.appendChild(checkbox);
+    div.appendChild(label);
+
+    container.appendChild(div);
+  });
+}
+
+atualizarTabelaUsuarios();
+</script>
+
+</html>
