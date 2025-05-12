@@ -1,9 +1,9 @@
-var aquarioModel = require("../models/aquarioModel");
+var unidadeModel = require("../models/unidadeModel");
 
 function buscarAquariosPorEmpresa(req, res) {
   var idUsuario = req.params.idUsuario;
 
-  aquarioModel.buscarAquariosPorEmpresa(idUsuario).then((resultado) => {
+  unidadeModel.buscarAquariosPorEmpresa(idUsuario).then((resultado) => {
     if (resultado.length > 0) {
       res.status(200).json(resultado);
     } else {

@@ -1,46 +1,40 @@
 var empresaModel = require("../models/empresaModel");
 
-function buscarPorCnpj(req, res) {
-  var cnpj = req.query.cnpj;
+function cadastrarEmpresa(req, res) {
+    // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
+    var nomeRegistrado = req.body.nomeRegistradoServer;
+    var cnpj = req.body.cnpjServer;
+    var telefone = req.body.telefoneServer;
 
-  empresaModel.buscarPorCnpj(cnpj).then((resultado) => {
-    res.status(200).json(resultado);
-  });
-}
-
-function listar(req, res) {
-  empresaModel.listar().then((resultado) => {
-    res.status(200).json(resultado);
-  });
-}
-
-function buscarPorId(req, res) {
-  var id = req.params.id;
-
-  empresaModel.buscarPorId(id).then((resultado) => {
-    res.status(200).json(resultado);
-  });
-}
-
-function cadastrar(req, res) {
-  var cnpj = req.body.cnpj;
-
-  empresaModel.buscarPorCnpj(cnpj).then((resultado) => {
-    if (resultado.length > 0) {
-      res
-        .status(401)
-        .json({ mensagem: `a empresa com o cnpj ${cnpj} já existe` });
+    // Faça as validações dos valores
+    if (nomeRegistrado == undefined) {
+        res.status(400).send("Seu nome registrado está undefined!");
+    } else if (cnpj == undefined) {
+        res.status(400).send("Seu cnpj está undefined!");
+    } else if (telefone == undefined) {
+        res.status(400).send("Seu telefone está undefined!");
     } else {
-      empresaModel.cadastrar(razaoSocial, cnpj).then((resultado) => {
-        res.status(201).json(resultado);
-      });
+
+        // Passe os valores como parâmetro e vá para o arquivo empresaModel.js
+        empresaModel.cadastrarEmpresa(nomeRegistrado,cnpj,telefone)
+            .then(
+                function (resultado) {
+                    res.json(resultado);
+                }
+            ).catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log(
+                        "\nHouve um erro ao realizar o cadastro! Erro: ",
+                        erro.sqlMessage
+                    );
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );
     }
-  });
 }
 
 module.exports = {
-  buscarPorCnpj,
-  buscarPorId,
-  cadastrar,
-  listar,
-};
+    cadastrarEmpresa
+
+}
