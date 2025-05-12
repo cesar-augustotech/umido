@@ -21,6 +21,7 @@ var avisosRouter = require("./src/routes/avisos");
 var medidasRouter = require("./src/routes/medidas");
 var unidadeRouter = require("./src/routes/unidade");
 var empresaRouter = require("./src/routes/empresa");
+var relatorioRouter = require("./src/routes/relatoriosRoute")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -34,6 +35,7 @@ app.use("/avisos", avisosRouter);
 app.use("/medidas", medidasRouter);
 app.use("/unidade", unidadeRouter);
 app.use("/empresa", empresaRouter);
+app.use("/relatorios", relatorioRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`
