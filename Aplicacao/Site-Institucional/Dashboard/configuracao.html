@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Umido - Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="./style-dash.css">
+    <link rel="stylesheet" href="..\css\dashboard.css">
 </head>
 
 <body>
@@ -24,30 +24,30 @@
                     <h4>FERNANDO BRANDÃO</h4>
                     <h5>Administrador</h5>
                 </div>
-                <img src="./icons/user.png" style="width: 40px; height: 40px;" alt="perfil">
+                <img src="../assets/icons/user.png" style="width: 40px; height: 40px;" alt="perfil">
             </div>
         </div>
     </header>
     <div class="layout_principal">
         <div class="menu_lateral menu_expandido">
             <div class="botao_expandir" id="botao_expandir" onclick="botao_abrir_fechar_menu()">
-                <img src="./icons/seta.png" style="width: 20px; height: 20px;">
+                <img src="../assets/icons/seta.png" style="width: 20px; height: 20px;">
             </div>
             <ul class="itens_menu">
                  <li style="gap: 20px;" onclick = "window.location.href = 'geral.html'">
-                    <img src="./icons/grafico.png" style="width: 30px; height: 30px;">
+                    <img src="../assets/icons/grafico.png" style="width: 30px; height: 30px;">
                     <span>Painel</span>
                 </li>
                 <li style="gap: 20px;" onclick = "window.location.href = 'relatorio.html'">
-                    <img src="./icons/grafico.png" style="width: 30px; height: 30px;">
+                    <img src="../assets/icons/grafico.png" style="width: 30px; height: 30px;">
                     <span>Relatórios</span>
                 </li>
-                <li style="gap: 20px;" onclick = "window.location.href = 'configuracoes.html'" class="ativo">
-                    <img src="./icons/configuracao.png" style="width: 30px; height: 30px;">
+                <li style="gap: 20px;" onclick = "window.location.href = 'configuracao.html'" class="ativo">
+                    <img src="../assets/icons/configuracao.png" style="width: 30px; height: 30px;">
                     <span>Configurações</span>
                 </li>
                 <li style="gap: 20px;" onclick="window.location.href = '../index.html'">
-                    <img src="./icons/sair.png" style="width: 30px; height: 30px;">
+                    <img src="../assets/icons/sair.png" style="width: 30px; height: 30px;">
                     <span>Sair</span>
             </ul>
         </div>
@@ -114,6 +114,13 @@
     
 </body>
 <script>
+
+  function botao_abrir_fechar_menu() {
+    const menuLateral = document.querySelector('.menu_lateral');
+    menuLateral.classList.toggle('menu_expandido');
+    botao_expandir.classList.toggle('girar');
+}
+
 let usuarios = [];
 let unidadesDisponiveis = ['Unidade 1', 'Unidade 2', 'Unidade 3'];
 let idEditando ;

@@ -39,16 +39,30 @@ let usuario = [
 ]
 function cadastrar() {
 
+    var nomeVar = ipt_nomeRegistro.value;
+    var emailVar = ipt_email.value;
+    var senhaVar = ipt_senha.value;
+    var cnpjVar = ipt_cnpj.value;
+    var confirmacaoSenhaVar = ipt_senhaConfirmada.value;
+    var telefoneVar = ipt_telefone.value;
+    
+    
  
-    if (ipt_email.value != '' && ipt_nomeRegistro.value != '' && ipt_telefone.value != '' 
-        && ipt_cnpj.value != '' && ipt_senha.value != '' && ipt_senhaConfirmada.value != '' )
+    if (emailVar != '' && nomeVar != '' && telefoneVar != '' 
+        && cnpjVar != '' && senhaVar != '' && confirmacaoSenhaVar != '' )
         {
-    if ((ipt_senha.value).length >= 6) {
-        if (ipt_senha.value == ipt_senhaConfirmada.value) {
-           
+    if ((senhaVar).length >= 6) {
+        if (senhaVar == confirmacaoSenhaVar) {
 
-                
-                usuario.push([ipt_email.value,ipt_senha.value]);
+                // Verifica se o email já existe
+                for (let i = 0; i < usuario.length; i++) {
+                    if (usuario[i][0] == emailVar) {
+                        alert('Email já cadastrado');
+                        return;
+                    }
+                }
+                // Se o email não existe, adiciona o novo usuário
+                usuario.push([emailVar,senhaVar]);
                 alert('Acesso criado! Realize o login')
                 trocar_tela('tela_login');
             
@@ -59,14 +73,26 @@ function cadastrar() {
 
 }
 
+
 function acessar() {
-    var loginEmail = ipt_login_email.value
-    var loginSenha = ipt_login_senha.value
+    var loginEmailVar = ipt_login_email.value
+    var loginSenhaVar = ipt_login_senha.value
     var acessoPermitido = false
+
+    if (loginEmailVar == "root" && loginSenhaVar == "root") {
+        window.location.href = '../private/pendentes.html'
+        acessoPermitido = true
+    }
+
+    if (loginEmailVar == '' || loginSenhaVar == '') {
+            alert('Preencha todos os campos')
+            return;
+        }
      for(let i = 0; i < usuario.length; i++){
        
-        if (usuario[i][0] == loginEmail  && usuario[i][1] == loginSenha){
-            window.location.href = 'dashboard.html'
+        
+        if (usuario[i][0] == loginEmailVar  && usuario[i][1] == loginSenhaVar){
+            window.location.href = 'Dashboard/geral.html'
             acessoPermitido = true
         }
 

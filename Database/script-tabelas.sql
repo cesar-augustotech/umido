@@ -1,9 +1,9 @@
 -- Remoção do banco de dados para efeito de demonstração de execução do script (Apagar sessão após apresentação)
-DROP DATABASE IF EXISTS umidoteste;
+DROP DATABASE IF EXISTS umido;
 
 -- Criação do banco de dados
-CREATE DATABASE umidoteste;
-USE umidoteste;
+CREATE DATABASE umido;
+USE umido;
 
 -- Remoção das tabelas para efeito de demonstração de execução do script (Apagar sessão após apresentação)
 DROP TABLE IF EXISTS unidade_usuario;
@@ -19,8 +19,9 @@ DROP TABLE IF EXISTS empresa;
 CREATE TABLE empresa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    cnpj VARCHAR(20) UNIQUE
-);
+    cnpj VARCHAR(20) UNIQUE,
+    status ENUM('pendente', 'aprovada') DEFAULT 'pendente'
+); 
 
 -- Tabela de usuários
 CREATE TABLE usuario (
@@ -28,7 +29,7 @@ CREATE TABLE usuario (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     senha VARCHAR(100) NOT NULL,
-    `nivel_de_acesso` CHAR(1)
+    nivel_de_acesso CHAR(1)
 );
 
 -- Tabela de unidade
@@ -104,13 +105,17 @@ INSERT INTO sensor (id_unidade, identificador) VALUES
 -- Criação do usuário com permissão de inserção de medições
 DROP USER IF EXISTS 'umidoInsert'@'%';
 CREATE USER 'umidoInsert'@'%' IDENTIFIED BY 'Sptech#2024';
-GRANT INSERT ON umidoteste.medicao TO 'umidoInsert'@'%';
+GRANT INSERT ON umido.medicao TO 'umidoInsert'@'%';
 
 drop user if exists 'umidoCadastro'@'%';
 CREATE USER 'umidoCadastro'@'%' IDENTIFIED BY 'Sptech#2024';
-GRANT INSERT ON umidoteste.empresa TO 'umidoCadastro'@'%' with grant option;
+GRANT INSERT ON umido.empresa TO 'umidoCadastro'@'%' with grant option;
 
 drop user if exists 'umidoLogin'@'%';
 CREATE USER 'umidoLogin'@'%' IDENTIFIED BY 'Sptech#2024';
-GRANT select ON umidoteste.usuario TO 'umidoLogin'@'%';
-GRANT select ON umidoteste.empresa TO 'umidoLogin'@'%';
+GRANT select ON umido.usuario TO 'umidoLogin'@'%';
+GRANT select ON umido.empresa TO 'umidoLogin'@'%';
+
+DROP USER IF EXISTS 'umido'@'%';
+CREATE USER 'umido'@'%' IDENTIFIED BY 'Sptech#2024';
+GRANT ALL PRIVILEGES ON umido.* TO 'umido'@'%';

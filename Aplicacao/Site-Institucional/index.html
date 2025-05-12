@@ -5,268 +5,201 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Umido</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <script src="script.js"></script>
+    <script src="./js/script.js"></script>
 </head>
 
+<body>
+    <section id="tela_inicial" class="tela-inicial">
+        <!-- CABEÇALHO -->
 
-<section id="tela_inicial" class="tela-inicial">
-    <!-- CABEÇALHO -->
-
-    <header>
-        <div id="logo" class="logo-nav"></div>
-        <div class="nav-links">
-            <a class="nav-item" href="#sobre_id">
-                <p class="texto-azul">Sobre +</p>
-            </a>
-            <a class="nav-item" href="#simulador_id">
-                <p>Calculadora</p>
-            </a>
-            <a class="nav-item" href="#contato_id">
-                <p>Contato</p>
-            </a>
-            
-           
-            <a onclick="trocar_tela('tela_login')"><button class="nav-button">LOGIN</button></a>
-        </div>
-    </header>
-
-    <!-- MAIN -->
-
-    <section class="main">
-        <div class="main-content">
-            <h1>A segurança que você merece!</h1>
-            <p>A <span class="texto-bold">Umido</span> nasceu com o propósito de fornecer mais controle e segurança ao
-                produtor rural, juntando o <span class="texto-verde">Agro</span> ao <span
-                    class="texto-azul">Tech</span>.</p>
-                    
-                    <a href="#simulador_id"><button>CALCULAR <i class="fas fa-caret-right"
-                        style="font-size: px;"></i></a></button>
-        </div>
-    </section>
+        <header>
+            <div id="logo" class="logo-nav"></div>
+            <div class="nav-links">
+                <a class="nav-item" href="#sobre_id">
+                    <p class="texto-azul">Sobre +</p>
+                </a>
+                <a class="nav-item" href="#simulador_id">
+                    <p>Calculadora</p>
+                </a>
+                <a class="nav-item" href="#contato_id">
+                    <p>Contato</p>
+                </a>
 
 
-    <!--PROBLEMA-->
-    <section class="problema">
-        <section class="problema-card">
-            <img style="height:100px;" src="assets/icons/fogo.png">
-            <h1>Queimadas</h1>
-            <p> A baixa umidade do ar é um dos principais fatores que contribuem para a
-                propagação de <span class="texto-verde">queimadas</span> em áreas agrícolas. No Brasil,
-                onde incêndios florestais e rurais são recorrentes,
-                a falta de umidade no ar e na vegetação cria condições altamente inflamáveis,
-                aumentando o risco de incêndios descontrolados. </p>
-        </section>
-        <section class="problema-list">
-            <div class="problema-card-economico">
-                <h2>Econômicos</h2>
-                <p> Aumento dos custos de produção agrícola e prejuízos financeiros para produtores e consumidores.
-
-                    Restrição nas exportações devido a sanções ambientais.
-
-                    Aumento nos preços dos alimentos, com o Índice Nacional de Preços ao Consumidor Amplo (IPCA) de 2024
-                    registrando um aumento de 7,69% em alimentos e bebidas, em parte devido às queimadas. </p>
+                <a onclick="href='login.html'"><button class="nav-button">LOGIN</button></a>
             </div>
-            <div class="problema-card-ambietal">
-                <h2>Ambientais</h2>
-                <p> Degradação do solo, reduzindo sua fertilidade e acelerando a erosão.
+        </header>
 
-                    Poluição de rios e nascentes, afetando o abastecimento de água.
+        <!-- MAIN -->
 
-                    Agravamento do efeito estufa, com o aumento da liberação de gases poluentes.
+        <section class="main">
+            <div class="main-content">
+                <h1>A segurança que você merece!</h1>
+                <p>A <span class="texto-bold">Umido</span> nasceu com o propósito de fornecer mais controle e segurança
+                    ao
+                    produtor rural, juntando o <span class="texto-verde">Agro</span> ao <span
+                        class="texto-azul">Tech</span>.</p>
 
-                    Redução da biodiversidade, com a perda de habitats naturais. </p>
-            </div>
-
-            <div class="problema-card-social">
-                <h2>Sociais</h2>
-                <p> Comprometimento da segurança alimentar, com a perda de colheitas essenciais para o abastecimento
-                    interno.
-
-                    Piora da qualidade do ar, afetando diretamente a saúde da população, especialmente grupos
-                    vulneráveis, como crianças e idosos. </p>
+                <a href="#simulador_id"><button>CALCULAR <i class="fas fa-caret-right"
+                            style="font-size: px;"></i></a></button>
             </div>
         </section>
-    </section>
 
 
-    <!--SOLUCAO-->
+        <!--PROBLEMA-->
+        <section class="problema">
+            <section class="problema-card">
+                <img style="height:100px;" src="assets/icons/fogo.png">
+                <h1>Queimadas</h1>
+                <p> A baixa umidade do ar é um dos principais fatores que contribuem para a
+                    propagação de <span class="texto-verde">queimadas</span> em áreas agrícolas. No Brasil,
+                    onde incêndios florestais e rurais são recorrentes,
+                    a falta de umidade no ar e na vegetação cria condições altamente inflamáveis,
+                    aumentando o risco de incêndios descontrolados. </p>
+            </section>
+            <section class="problema-list">
+                <div class="problema-card-economico">
+                    <h2>Econômicos</h2>
+                    <p> Aumento dos custos de produção agrícola e prejuízos financeiros para produtores e consumidores.
 
-    <section id="solucao_id" class="solucao">
-        <section class="solucao-card">
-            <h1 class="solucao-text"> Diagrama solução </h1>
-            <img src="assets/diagrama.jpg">
+                        Restrição nas exportações devido a sanções ambientais.
+
+                        Aumento nos preços dos alimentos, com o Índice Nacional de Preços ao Consumidor Amplo (IPCA) de
+                        2024
+                        registrando um aumento de 7,69% em alimentos e bebidas, em parte devido às queimadas. </p>
+                </div>
+                <div class="problema-card-ambietal">
+                    <h2>Ambientais</h2>
+                    <p> Degradação do solo, reduzindo sua fertilidade e acelerando a erosão.
+
+                        Poluição de rios e nascentes, afetando o abastecimento de água.
+
+                        Agravamento do efeito estufa, com o aumento da liberação de gases poluentes.
+
+                        Redução da biodiversidade, com a perda de habitats naturais. </p>
+                </div>
+
+                <div class="problema-card-social">
+                    <h2>Sociais</h2>
+                    <p> Comprometimento da segurança alimentar, com a perda de colheitas essenciais para o abastecimento
+                        interno.
+
+                        Piora da qualidade do ar, afetando diretamente a saúde da população, especialmente grupos
+                        vulneráveis, como crianças e idosos. </p>
+                </div>
+            </section>
         </section>
 
-    </section>
 
-    <!-- SOBRE -->
+        <!--SOLUCAO-->
 
-    <section class="sobre">
-        <h1 id="sobre_id" class="sobre-title">Sobre +</h1>
-        <!-- linha -->
-        <div class="cards-container">
-            <div class="card card1">
-                <div class="card1-image"></div>
-                <h1 class="card-title">Por quê?</h1>
-                <p>O <span class="texto-bold-dark">Umido</span> é uma resposta inteligente para o baixo monitoramento de
-                    <span class="texto-azul">umidade no ar </span> no <span class="texto-verde">agro,</span>
-                    guiando você em boas deciosões.
-                </p>
+        <section id="solucao_id" class="solucao">
+            <section class="solucao-card">
+                <h1 class="solucao-text"> Diagrama solução </h1>
+                <img src="assets/diagrama.jpg">
+            </section>
+
+        </section>
+
+        <!-- SOBRE -->
+
+        <section class="sobre">
+            <h1 id="sobre_id" class="sobre-title">Sobre +</h1>
+            <!-- linha -->
+            <div class="cards-container">
+                <div class="card card1">
+                    <div class="card1-image"></div>
+                    <h1 class="card-title">Por quê?</h1>
+                    <p>O <span class="texto-bold-dark">Umido</span> é uma resposta inteligente para o baixo
+                        monitoramento de
+                        <span class="texto-azul">umidade no ar </span> no <span class="texto-verde">agro,</span>
+                        guiando você em boas deciosões.
+                    </p>
+                </div>
+                <div class="card card2">
+                    <div class="card2-image"></div>
+                    <h1 class="card-title">Como?</h1>
+                    <p>Utilizando sensores de <span class="texto-azul">umidade</span>
+                        altamente capazes para o monitoramento constante da umidade do ar <span
+                            class="texto-bold-dark">em
+                            suas</span> plantações.</p>
+                </div>
+                <div class="card card3">
+                    <div class="card3-image"></div>
+                    <h1 class="card-title">Onde?</h1>
+                    <p>Em qualquer <span class="texto-verde">unidade</span> que seja de possível impacto das queimadas
+                        dentro do territorio nacional.</p>
+                </div>
             </div>
-            <div class="card card2">
-                <div class="card2-image"></div>
-                <h1 class="card-title">Como?</h1>
-                <p>Utilizando sensores de <span class="texto-azul">umidade</span>
-                    altamente capazes para o monitoramento constante da umidade do ar <span class="texto-bold-dark">em
-                        suas</span> plantações.</p>
-            </div>
-            <div class="card card3">
-                <div class="card3-image"></div>
-                <h1 class="card-title">Onde?</h1>
-                <p>Em qualquer <span class="texto-verde">unidade</span> que seja de possível impacto das queimadas
-                    dentro do territorio nacional.</p>
-            </div>
-        </div>
-    </section>
-    <section id="simulador_id" class="tela-simulador">
-        <section id="simulador" class="simulador ">
-            <h1 class="simulador-title">Simulador Financeiro</h1>
+        </section>
+        <section id="simulador_id" class="tela-simulador">
+            <section id="simulador" class="simulador ">
+                <h1 class="simulador-title">Simulador Financeiro</h1>
 
-            <!-- INPUTS -->
+                <!-- INPUTS -->
 
-            <div class="simulador-ipt" id="simulador_input">
-                <input class="simulador-caixa" id='ipt_tamanho'
-                    placeholder="Insira a quantidade de hectares da sua plantação">
+                <div class="simulador-ipt" id="simulador_input">
+                    <input class="simulador-caixa" id='ipt_tamanho'
+                        placeholder="Insira a quantidade de hectares da sua plantação">
 
-                <input class="simulador-caixa" id='ipt_preco'
-                    placeholder="Insira o preço da sua produção média por hectares">
-                <button class="simulador-calcular" onclick="calcular()">CALCULAR<i class="fas fa-caret-right"
-                        style="font-size: px;"></i></button>
+                    <input class="simulador-caixa" id='ipt_preco'
+                        placeholder="Insira o preço da sua produção média por hectares">
+                    <button class="simulador-calcular" onclick="calcular()">CALCULAR<i class="fas fa-caret-right"
+                            style="font-size: px;"></i></button>
 
-            </div>
+                </div>
 
-            <div id="simulador_output" class="simulador-resultado tela-inativa" style="height: 400px;">
-                <div class="resultado-container">
-                    <div class="resultado-texto">
-                        <span>Valor medio da plantação:</span>
-                        <span>Economia com a prevenção de queimadas:</span>
-                        <span>O preço médio por venda de dados mensais será:</span>
+                <div id="simulador_output" class="simulador-resultado tela-inativa" style="height: 400px;">
+                    <div class="resultado-container">
+                        <div class="resultado-texto">
+                            <span>Valor medio da plantação:</span>
+                            <span>Economia com a prevenção de queimadas:</span>
+                            <span>O preço médio por venda de dados mensais será:</span>
+                        </div>
+                        <div class="resultado-valor">
+                            <div>R$<span id="print_resultado_valor">1000</span></div>
+                            <div>R$ <span id="print_resultado_prevencao" class="valor-lucro">22</span></div>
+                            <div>R$ <span id="print_resultado_venda" class="valor-lucro"></span></div>
+
+
+                        </div>
                     </div>
-                    <div class="resultado-valor">
-                        <div>R$<span id="print_resultado_valor">1000</span></div>
-                        <div>R$ <span id="print_resultado_prevencao" class="valor-lucro">22</span></div>
-                        <div>R$ <span id="print_resultado_venda" class="valor-lucro"></span></div>
 
 
-                    </div>
+                    <div class="resultado-botao">Entre em contato conosco</div>
                 </div>
 
 
-                <div class="resultado-botao">Entre em contato conosco</div>
-            </div>
+            </section>
+
 
 
         </section>
 
-
-
+        <!-- RODAPÉ -->
+        <footer>
+            <div class="logo-footer"></div>
+            <div id="contato_id" class="footer-info footer-contato">
+                <h2>Nossos contatos</h2>
+                <p>umido.contato@sptech.school</p>
+            </div>
+            <div class="footer-info footer-sobre-nos">
+                <h2>Sobre nós</h2>
+                <p style="font-size: 13px;">
+                    Bill Hebert Pereira da Rocha Choi<br>
+                    César Augusto Araujo Miguel <br>
+                    Dereck Murillo Baksa <br>
+                    Erick Araujo Ferreira <br>
+                    Gustavo Ziliotto Bello </p>
+            </div>
+            <div class="footer-mensagem">
+                <p>Obrigado por acessar!</p>
+                <p>&copy;UMIDO 2025</p>
+            </div>
+        </footer>
     </section>
-
-    <!-- RODAPÉ -->
-    <footer>
-        <div class="logo-footer"></div>
-        <div id="contato_id" class="footer-info footer-contato">
-            <h2>Nossos contatos</h2>
-            <p>umido.contato@sptech.school</p>
-        </div>
-        <div class="footer-info footer-sobre-nos">
-            <h2>Sobre nós</h2>
-             <p style="font-size: 13px;">
-                Bill Hebert Pereira da Rocha Choi<br>
-                César Augusto Araujo Miguel <br>
-                Dereck Murillo Baksa <br>
-                Erick Araujo Ferreira <br>
-                Gustavo Ziliotto Bello </p>
-        </div>
-        <div class="footer-mensagem">
-            <p>Obrigado por acessar!</p>
-            <p>&copy;UMIDO 2025</p>
-        </div>
-    </footer>
-</section>
-
-
-<section id="tela_cadastro" class="cadastro tela-inativa">
-    <section class="main-cadastro">
-        <a onclick="trocar_tela('tela_inicial')"><button class="botaoVoltar"></button></a>
-
-        <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
-
-        <h2 class="second-titule">Cadastre-se</h2>
-
-        <section class="ipt-main">
-            <div class="ipt-main" id="div_caixaCadastro">
-                <input class="ipt-caixa ipt-icon1" type="text" id="ipt_nomeRegistro" placeholder="Nome registro">
-                <input class="ipt-caixa ipt-icon2" type="text" id="ipt_email" placeholder="E-mail">
-                <input class="ipt-caixa ipt-icon3" type="text" id="ipt_telefone" placeholder="Telefone">
-                <input class="ipt-caixa ipt-icon4" type="text" id="ipt_cnpj" placeholder="CNPJ">
-                <input class="ipt-caixa ipt-icon6" type="password" id="ipt_senha" placeholder="Senha">
-                <input class="ipt-caixa ipt-icon6" type="password" id="ipt_senhaConfirmada"
-                    placeholder="Repita sua senha">
-            </div>
-
-            <div class="confirme-main" id="div_logar">
-                <div class="botao-main">
-                    <button class="botaoCadastrar" onclick="cadastrar()">Cadastre-se</button>
-                </div>
-                <div class="login-main">
-                    <a class="text-login">Já possui login?</a>
-                    <a class="link-login" onclick="trocar_tela('tela_login')">
-                        <p>Clique aqui</p>
-                    </a>
-                </div>
-            </div>
-        </section>
-    </section>
-
-
-
-</section>
-
-<section id="tela_login" class="login tela-inativa">
-
-    <section class="main-cadastro ">
-        <a onclick="trocar_tela('tela_inicial')"><button class="botaoVoltar"></button></a>
-
-        <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
-
-        <h2 class="second-titule">Efetue seu login</h2>
-        <br><br><br><br><br><br><br><br>
-        <section class="ipt-main">
-            <div class="ipt-main" id="div_caixaCadastro">
-                <input class="ipt-caixa ipt-icon1" type="text" id="ipt_login_email"
-                    placeholder="Insira o seu e-mail cadastrado">
-                <input class="ipt-caixa ipt-icon2" type="password" id="ipt_login_senha"
-                    placeholder="Insira a sua senha cadastrada">
-            </div>
-
-            <div class="confirme-main" id="div_logar">
-                <div class="botao-main">
-                    <button class="botaoCadastrar" onclick="acessar()">Acesse</button>
-                </div>
-                <div class="login-main">
-                    <a class="text-login">Não tem cadastro?</a>
-                    <a class="link-login" onclick="trocar_tela('tela_cadastro')">
-                        <p>Clique aqui</p>
-                    </a>
-                </div>
-            </div>
-        </section>
-    </section>
-</section>
-
 </body>
 
 </html>

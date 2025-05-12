@@ -84,7 +84,7 @@ header {
 }
 
 .logo-nav {
-    background-image: url(assets/Logo-UMIDO.png);
+    background-image: url(../assets/Logo-UMIDO.png);
     background-size: cover;
     width: 100px;
     height: 75px;
@@ -102,7 +102,7 @@ header {
     align-items: center;
     justify-content: center;
 
-    background-image: url(assets/background_1.png);
+    background-image: url(../assets/background_1.png);
     background-size: cover;
 }
 
@@ -265,7 +265,7 @@ header {
     height: calc(100vh - 75px);
     background-position: 10%;
     background-size: cover;
-    background-image:url(assets/background_3.jpg) ;
+    background-image:url(../assets/background_3.jpg) ;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -366,7 +366,7 @@ header {
 }
 
 .card1-image {
-    background-image: url(assets/planta_icon.png);
+    background-image: url(../assets/planta_icon.png);
     background-size: cover;
     width: 100px;
     height: 90px;
@@ -379,7 +379,7 @@ header {
 }
 
 .card2-image {
-    background-image: url(assets/selo_icon.png);
+    background-image: url(../assets/selo_icon.png);
     background-size: cover;
     width: 100px;
     height: 100px;
@@ -393,7 +393,7 @@ header {
 }
 
 .card3-image {
-    background-image: url(assets/local_icon.png);
+    background-image: url(../assets/local_icon.png);
     background-size: cover;
     width: 80px;
     height: 100px;
@@ -413,7 +413,7 @@ header {
     height: var(--tamanho-simulador);
     display: flex;
     flex-direction: column;
-    background-image: url(assets/background_2.png);
+    background-image: url(../assets/background_2.png);
     background-size: cover;
     align-items: center;
     
@@ -426,7 +426,7 @@ header {
     height: var(--tamanho-simulador);
     display: flex;
     flex-direction: column;
-    background-image: url(assets/background_2.png);
+    background-image: url(../assets/background_2.png);
     background-size: cover;
     align-items: center;
 
@@ -462,7 +462,7 @@ header {
 
     display: block;
     /*icone*/
-    background-image: url(assets/planta_icon.png);
+    background-image: url(../assets/planta_icon.png);
     background-repeat: no-repeat;
     background-position: 25px center;
     background-size: 30px;
@@ -607,7 +607,7 @@ footer {
 }
 
 .logo-footer {
-    background-image: url(assets/Logo-UMIDO.png);
+    background-image: url(../assets/Logo-UMIDO.png);
     background-size: cover;
     width: 100px;
     height:75px;
@@ -726,7 +726,7 @@ footer {
 padding: 70px;
 height: 100%;
 width: cover;
-background-image:url(assets/background_1.png);
+background-image:url(../assets/background_1.png);
 background-size:cover;
 
 
@@ -735,7 +735,7 @@ background-size:cover;
 width: 100px; ;
 height:100px;
 align-self: flex-start;
-background-image: url(assets/Chevronsleft.png);
+background-image: url(../assets/Chevronsleft.png);
 background-size: cover;
 background-color: transparent;
 border-color: transparent;
@@ -780,6 +780,19 @@ border-color: transparent;
 
 }
 
+.second-titule-cadastro{
+    padding-left: 3%;
+    color: var(--light-theme);
+    font-family: "Poppins", sans-serif;
+    font-size: 50px;
+    font-weight: 10;
+    width: 1000px;
+    justify-content:center;
+    align-self:center;
+    margin-top: -2.5%;
+
+}
+
 .ipt-main{
 width:80%;
 height:100%;
@@ -793,7 +806,7 @@ flex-direction: column;
 .ipt-icon1{
     display: block;
     
-    background-image: url(assets/Chevronsleft.png);
+    background-image: url(../assets/Chevronsleft.png);
     background-repeat: no-repeat;
     background-position: 5px center;
     background-size:30px;
@@ -801,7 +814,7 @@ flex-direction: column;
 .ipt-icon2{
     display: block;
 
-    background-image: url(assets/Chevronsleft.png);
+    background-image: url(../assets/Chevronsleft.png);
     background-repeat: no-repeat;
     background-position: 5px center;
     background-size:30px;
@@ -809,7 +822,7 @@ flex-direction: column;
 .ipt-icon3{
     display: block;
 
-    background-image: url(assets/Chevronsleft.png);
+    background-image: url(../assets/Chevronsleft.png);
     background-repeat: no-repeat;
     background-position: 5px center;
     background-size:30px;
@@ -817,7 +830,7 @@ flex-direction: column;
 .ipt-icon4{
     display: block;
 
-    background-image: url(assets/Chevronsleft.png);
+    background-image: url(../assets/Chevronsleft.png);
     background-repeat: no-repeat;
     background-position: 5px center;
     background-size:30px;
@@ -825,7 +838,7 @@ flex-direction: column;
 .ipt-icon5{
     display: block;
 
-    background-image: url(assets/Chevronsleft.png);
+    background-image: url(../assets/Chevronsleft.png);
     background-repeat: no-repeat;
     background-position: 5px center;
     background-size:30px;
@@ -833,7 +846,7 @@ flex-direction: column;
 .ipt-icon6{
     display: block;
 
-    background-image: url(assets/Chevronsleft.png);
+    background-image: url(../assets/Chevronsleft.png);
     background-repeat: no-repeat;
     background-position: 5px center;
     background-size:30px;
@@ -881,7 +894,7 @@ flex-direction: row;
     padding: 5%;
     height: 100vh;
     width: 100vw;
-    background-image:url(assets/background_1.png);
+    background-image:url(../assets/background_1.png);
     background-size:cover;
 }
 
