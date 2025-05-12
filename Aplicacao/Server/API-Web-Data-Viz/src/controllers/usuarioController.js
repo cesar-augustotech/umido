@@ -1,5 +1,5 @@
 var usuarioModel = require("../models/usuarioModel");
-var aquarioModel = require("../models/unidadeModel");
+var unidadeModel = require("../models/unidadeModel");
 
 function autenticar(req, res) {
     var email = req.dash.emailServer;
@@ -20,7 +20,7 @@ function autenticar(req, res) {
                     if (resultadoAutenticar.length == 1) {
                         console.log(resultadoAutenticar);
 
-                        aquarioModel.buscarAquariosPorEmpresa(resultadoAutenticar[0].empresaId)
+                        unidadeModelModel.buscarAquariosPorEmpresa(resultadoAutenticar[0].empresaId)
                             .then((resultadoAquarios) => {
                                 if (resultadoAquarios.length > 0) {
                                     res.json({
@@ -31,7 +31,7 @@ function autenticar(req, res) {
 
                                     });
                                 } else {
-                                    res.status(204).json({ aquarios: [] });
+                                    res.status(204).json({ unidade: [] });
                                 }
                             })
                     } else if (resultadoAutenticar.length == 0) {
@@ -53,10 +53,10 @@ function autenticar(req, res) {
 
 function cadastrar(req, res) {
     // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
-    var nome = req.body.nomeServer;
-    var email = req.body.emailServer;
-    var senha = req.body.senhaServer;
-    var idUnidade = req.body.idEmpresaVincularServer;
+    var nome = req.dash.nomeServer;
+    var email = req.dash.emailServer;
+    var senha = req.dash.senhaServer;
+    var id_Unidade = req.body.idEmpresaVincularServer;
 
     // Faça as validações dos valores
     if (nome == undefined) {

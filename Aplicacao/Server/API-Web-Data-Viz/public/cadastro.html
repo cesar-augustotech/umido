@@ -7,7 +7,6 @@
     <title>Umido</title>
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <script src="./js/script.js"></script>
 </head>
 
 <body>
@@ -52,11 +51,7 @@
 
 <script>
 
-    // Array para armazenar empresas cadastradas para validação de código de ativação 
-    let listaEmpresasCadastradas = [];
-
     function cadastrar() {
-        // aguardar();
 
         //Recupere o valor da nova input pelo nome do id
         // Agora vá para o método fetch logo abaixo
@@ -66,14 +61,9 @@
         var cnpjVar = ipt_cnpj.value;
         var senhaVar = ipt_senha.value;
         var confirmacaoSenhaVar = ipt_senhaConfirmada.value;
-        var nivelDeAcessoVar = 0
+        //var nivelDeAcessoVar = 0
 
 
-           console.log('1',nomeRegistroVar,
-            emailVar,
-            cnpjVar,
-            senhaVar,
-            confirmacaoSenhaVar)
         // Verificando se há algum campo em branco
         if (
             nomeRegistroVar == "" ||
@@ -81,16 +71,9 @@
             cnpjVar == "" ||
             senhaVar == "" ||
             confirmacaoSenhaVar == ""
-        ) {
-            cardErro.style.display = "block";
-            mensagem_erro.innerHTML =
-                "(Mensagem de erro para todos os campos em branco)";
-            finalizarAguardar();
+        ) { alert('Mensagem de erro para todos os campos em branco');
             return false;
-        } else {
-            setInterval(sumirMensagem, 5000);
-        }
-
+        } 
         // // Enviando o valor da nova input
         // fetch("/usuario/cadastrar", {
         //     method: "POST",
@@ -99,7 +82,7 @@
         //     },
         //     dash: JSON.stringify({
         //         // crie um atributo que recebe o valor recuperado aqui
-        //         // Agora vá para o arquivo routes/empresa.js
+        //         // Agora vá para o arquivo routes/usuario.js
         //         nomeRegistradoServer: nomeRegistroVar,
         //         emailServer: emailVar,
         //         senhaServer: senhaVar,
@@ -108,55 +91,38 @@
         // })
 
         // Enviando o valor da nova input
+        // Agora vá para o arquivo routes/empresa.js 
+        // crie um atributo que recebe o valor recuperado aqui
         fetch("/empresa/cadastrar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                // crie um atributo que recebe o valor recuperado aqui
-                // Agora vá para o arquivo routes/empresa.js
                 nomeRegistradoServer: nomeRegistroVar,
                 telefoneServer: telefoneVar,
                 cnpjServer: cnpjVar,
-
+                
             }),
-        })
-
-
-
-            .then(function (resposta) {
+        }).then(function (resposta) {
                 console.log("resposta: ", resposta);
 
                 if (resposta.ok) {
-                    cardErro.style.display = "block";
-
-                    mensagem_erro.innerHTML =
-                        "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
 
                     setTimeout(() => {
                         window.location = "login.html";
                     }, "2000");
 
-                    limparFormulario();
-                    finalizarAguardar();
                 } else {
                     throw "Houve um erro ao tentar realizar o cadastro!";
                 }
             })
             .catch(function (resposta) {
                 console.log(`#ERRO: ${resposta}`);
-                finalizarAguardar();
             });
-
         return false;
     }
 
-
-
-    function sumirMensagem() {
-        cardErro.style.display = "none";
-    }
 </script>
 
 </html>
