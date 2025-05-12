@@ -91,22 +91,21 @@
             setInterval(sumirMensagem, 5000);
         }
 
-        console.log('2') 
-        // Enviando o valor da nova input
-        fetch("/usuario/cadastrar", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            dash: JSON.stringify({
-                // crie um atributo que recebe o valor recuperado aqui
-                // Agora vá para o arquivo routes/empresa.js
-                nomeRegistradoServer: nomeRegistroVar,
-                emailServer: emailVar,
-                senhaServer: senhaVar,
-                nivelDeAcessoServer: nivelDeAcessoVar
-            }), 
-        })
+        // // Enviando o valor da nova input
+        // fetch("/usuario/cadastrar", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     dash: JSON.stringify({
+        //         // crie um atributo que recebe o valor recuperado aqui
+        //         // Agora vá para o arquivo routes/empresa.js
+        //         nomeRegistradoServer: nomeRegistroVar,
+        //         emailServer: emailVar,
+        //         senhaServer: senhaVar,
+        //         nivelDeAcessoServer: nivelDeAcessoVar
+        //     }), 
+        // })
 
         // Enviando o valor da nova input
         fetch("/empresa/cadastrar", {
