@@ -24,7 +24,6 @@ function buscarPorId(req, res) {
 
 function cadastrar(req, res) {
   var cnpj = req.body.cnpj;
-  var razaoSocial = req.body.razaoSocial;
 
   empresaModel.buscarPorCnpj(cnpj).then((resultado) => {
     if (resultado.length > 0) {
