@@ -8,9 +8,11 @@ var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
  // require("dotenv").config({ path: caminho_env });
 
 var database = require("../database/config");
-var vetorMes = []
 
-import {select_unidade} from '../../public/Dashboard/relatorio.html';
+var vetorMes = []
+var relatorio = require ('../../public/Dashboard/relatorio.html');
+
+var select_unidade = require( '../../public/Dashboard/relatorio.html');
 
 function buscarUltimasMedidas() {
 
@@ -18,7 +20,7 @@ function buscarUltimasMedidas() {
     var mesAtual = dataAtual.getMonth();
     var anoAtual = dataAtual.getFullYear();
     var unidadeAtual = select_unidade();
-
+    return relatorio.executar(instrucaoSql);
 
     var instrucaoSql = `select avg (umidade)
 from sensor
