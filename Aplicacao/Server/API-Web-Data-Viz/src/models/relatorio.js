@@ -10,28 +10,37 @@ var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 var database = require("../database/config");
 
 var vetorMes = []
-var relatorio = require ('../../public/Dashboard/relatorio.html');
 
-var select_unidade = require( '../../public/Dashboard/relatorio.html');
 
-function buscarUltimasMedidas() {
-
+function buscarUltimasMedidas(unidadeAtual) {
     var dataAtual = new Date();
-    var mesAtual = dataAtual.getMonth();
+    var mesAtual = dataAtual.getMonth() + 1; // +1 porque getMonth() retorna 0-11
     var anoAtual = dataAtual.getFullYear();
-    var unidadeAtual = select_unidade();
-    return relatorio.executar(instrucaoSql);
 
-    var instrucaoSql = `select avg (umidade)
-from sensor
-inner join medicao on id_sensor = sensor.id
-where id_unidade = ${unidadeAtual} and
-AND DATE(data_hora) BETWEEN '${anoAtual}-${mesAtual}-01' 
-AND 'LAST_DAY(${anoAtual}-${mesAtual}-01')`;
+    // Formatação para dois dígitos
+    if (mesAtual < 10) mesAtual = `0${mesAtual}`;
 
-vetorMes[mesAtual] = instrucaoSql
+    var instrucaoSql = `
+        SELECT AVG(umidade) AS umidade
+        FROM sensor
+        INNER JOIN medicao ON sensor.id = medicao.id_sensor
+        WHERE sensor.id_unidade = ${unidadeAtual}
+        AND data_hora BETWEEN '${anoAtual}-${mesAtual}-01' AND LAST_DAY('${anoAtual}-${mesAtual}-01')
+    `;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+function buscarUmidadeMedia(idUnidade) {
+    var instrucaoSql = `
+        SELECT AVG(umidade) AS umidade_media
+        FROM medicao
+        INNER JOIN sensor ON medicao.id_sensor = sensor.id
+        WHERE sensor.id_unidade = ${idUnidade}
+    `;
+
+    console.log("Executando a instrução SQL para média de umidade: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
 
@@ -52,4 +61,5 @@ function buscarMedidasEmTempoReal(idAquario) {
 
 module.exports = {
     buscarUltimasMedidas,
+    buscarUmidadeMedia,
 }

@@ -1,9 +1,12 @@
-var express = require("express");
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var relatorios =  require ('../controllers/relatorioController.js')
-router.get("/", function (req, res) {
-    relatorios.buscarUltimasMedidas(req, res);
-});
+const relatorioController = require('../controllers/relatorioController');
+
+router.get('/', relatorioController.listarUmidadeMedia);
+
+router.get('/ultimas', relatorioController.buscarUltimasMedidas);
+
+router.get('/dados', relatorioController.obterDados);
 
 module.exports = router;

@@ -1,12 +1,37 @@
 var medidaModel = require("../models/relatorio.js");
 
-async function buscarUltimasMedidas(req, res) {
-    
-    var select = await medidaModel.buscarUltimasMedidas()
-   res.send(JSON.stringify(select))
-    
-    console.log(select)
+async function listarUmidadeMedia(req, res) {
+    try {
+        const idUnidade = req.query.unidade;
+        const resultado = await medidaModel.buscarUmidadeMedia(idUnidade); // ou relatorioModel, se for o caso
+        res.status(200).json(resultado);
+    } catch (erro) {
+        console.error("Erro ao buscar médias:", erro);
+        res.status(500).json({ erro: "Erro ao buscar dados de umidade" });
+    }
 }
+
+async function buscarUltimasMedidas(req, res) {
+    try {
+        var select = await medidaModel.buscarUltimasMedidas();
+        res.send(JSON.stringify(select));
+        console.log(select);
+    } catch (erro) {
+        console.error("Erro ao buscar últimas medidas:", erro);
+        res.status(500).json({ erro: "Erro ao buscar últimas medidas" });
+    }
+}
+
+async function obterDados(req, res) {
+    try {
+        const dados = await medidaModel.obterDados();
+        res.status(200).json(dados);
+    } catch (erro) {
+        console.error("Erro ao obter dados:", erro);
+        res.status(500).json({ erro: "Erro ao obter dados" });
+    }
+}
+
 
 /*
     const limite_linhas = 7;
@@ -49,6 +74,8 @@ function buscarMedidasEmTempoReal(req, res) {
 }
 */
 module.exports = {
+    listarUmidadeMedia,
     buscarUltimasMedidas,
+    obterDados
 
 } 

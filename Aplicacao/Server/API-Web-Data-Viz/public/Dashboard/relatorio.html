@@ -497,5 +497,14 @@ function select_unidade() {
 export {select_unidade}
 
 select_unidade()
+
+
+async function funcao() {
+    let unidadeSelecionada = document.getElementById("selecionar_unidade").value;
+    let resposta = await fetch(`http://localhost:3333/relatorios?unidade=${unidadeSelecionada}`);
+    let dados = await resposta.json();
+
+    return dados.map(d => d.umidade);
+}
 </script>
 </html>
