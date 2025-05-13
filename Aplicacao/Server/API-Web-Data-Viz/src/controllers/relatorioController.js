@@ -3,7 +3,7 @@ var medidaModel = require("../models/relatorio.js");
 async function buscarUltimasMedidas(req, res) {
     
     var select = await medidaModel.buscarUltimasMedidas()
-    res.send(JSON.stringify(select))
+   res.send(JSON.stringify(select))
     
     console.log(select)
 }
