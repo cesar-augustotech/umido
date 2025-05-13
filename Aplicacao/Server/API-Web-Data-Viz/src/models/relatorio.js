@@ -9,9 +9,27 @@ var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 
 var database = require("../database/config");
 
+var vetorMes = []
+var relatorio = require ('../../public/Dashboard/relatorio.html');
+
+var select_unidade = require( '../../public/Dashboard/relatorio.html');
+
 function buscarUltimasMedidas() {
 
-    var instrucaoSql = `select umidade from medicao;`;
+    var dataAtual = new Date();
+    var mesAtual = dataAtual.getMonth();
+    var anoAtual = dataAtual.getFullYear();
+    var unidadeAtual = select_unidade();
+    return relatorio.executar(instrucaoSql);
+
+    var instrucaoSql = `select avg (umidade)
+from sensor
+inner join medicao on id_sensor = sensor.id
+where id_unidade = ${unidadeAtual} and
+AND DATE(data_hora) BETWEEN '${anoAtual}-${mesAtual}-01' 
+AND 'LAST_DAY(${anoAtual}-${mesAtual}-01')`;
+
+vetorMes[mesAtual] = instrucaoSql
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);

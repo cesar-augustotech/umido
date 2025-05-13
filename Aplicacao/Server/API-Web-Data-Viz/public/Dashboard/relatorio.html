@@ -53,10 +53,10 @@
         <section class="conteudo_principal">
             <div>
                 <select class="selecionar_unidade" id="selecionar_unidade" onchange="select_unidade()">
-                    <option value="Unidade 1">Unidade 1</option>
-                    <option value="Unidade 2">Unidade 2</option>
-                    <option value="Unidade 3">Unidade 3</option>
-                    <option value="Unidade 4">Unidade 4</option>
+                    <option value="1">Unidade 1</option>
+                    <option value="2">Unidade 2</option>
+                    <option value="3">Unidade 3</option>
+                    <option value="4">Unidade 4</option>
                 </select>
                 <button class="btn_add_unidade" id="btn_add_unidade" onclick="mostrar_modal_unidade()">Adicionar Unidade</button>
                 <button class="btn_add_unidade" id="" onclick="">Exportar dados da Unidade</button>
@@ -152,7 +152,7 @@
 <script>
 
  async function função() {
-            var select = await fetch("http://localhost:3333/relatorios/", {
+    var select = await fetch("http://localhost:3333/relatorios/", {
   "headers": { },
   "body": null,
   "method": "GET"
@@ -223,8 +223,8 @@ async function criar_grafico_geral() {
     
     ultimo_grafico = new Chart(contexto, {
         type: "line",
-        data: {
-            labels: ["Novembro", "Dezembro", "Janeiro", "Fevereiro", "Março", "Abril"],
+        data: { dados,
+            labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
             datasets: [
                 {
                     label: "MININO",
@@ -490,9 +490,12 @@ function select_unidade() {
     criar_html_estatisticas_mes()
     criar_grafico_estatisticas_mes()
 
+    var unidadeAtual = selecionar_unidade.value;
+    return unidadeAtual
 }
+
+export {select_unidade}
 
 select_unidade()
 </script>
 </html>
-
