@@ -106,35 +106,8 @@ DROP USER IF EXISTS 'umidoInsert'@'%';
 CREATE USER 'umidoInsert'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT INSERT ON umido.medicao TO 'umidoInsert'@'%';
 
-drop user if exists 'umidoDashAdm'@'%';
-CREATE USER 'umidoDashboardAdm'@'%' IDENTIFIED BY 'Sptech#2024';
-GRANT INSERT ON umido.unidade TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT INSERT ON umido.sensor TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT INSERT ON umido.usuario TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT INSERT ON umido.unidade_usuario TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT select ON umido.viewDash TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT update ON umido.unidade TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT update ON umido.sensor TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT update ON umido.usuario TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT update ON umido.unidade_usuario TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT delete ON umido.unidade TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT delete ON umido.sensor TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT delete ON umido.usuario TO 'umidoDashboardAdm'@'%'with grant option;
-GRANT delete ON umido.unidade_usuario TO 'umidoDashboardAdm'@'%'with grant option;
+DROP USER IF EXISTS 'umido'@'%';
+CREATE USER 'umido'@'%' IDENTIFIED BY 'Sptech#2024';
+GRANT INSERT ON umido.* TO 'umido'@'%';
+FLUSH PRIVILEGES;
 
-
-drop user if exists 'umidoDashComun'@'%';
-CREATE USER 'umidoDashboardComun'@'%' IDENTIFIED BY 'Sptech#2024';
-GRANT select ON umido.medicao TO 'umidoDashboardComun'@'%';
-GRANT select ON umido.unidade TO 'umidoDashboardComun'@'%';
-GRANT select ON umido.sensor TO 'umidoDashboardComun'@'%';
-GRANT select ON umido.usuario TO 'umidoDashboardComun'@'%';
-GRANT select ON umido.unidade_usuario TO 'umidoDashboardComun'@'%';
-
-
-drop user if exists 'umidoCadastro'@'%';
-CREATE USER 'umidoCadastro'@'%' IDENTIFIED BY 'Sptech#2024';
-GRANT select ON umido.usuario TO 'umidoCadastro'@'%';
-GRANT select ON umido.empresa TO 'umidoCadastro'@'%';
-GRANT insert ON umido.usuario TO 'umidoCadastro'@'%';
-GRANT insert ON umido.empresa TO 'umidoCadastro'@'%';
