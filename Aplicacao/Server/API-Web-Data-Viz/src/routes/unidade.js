@@ -7,8 +7,8 @@ router.get("/:empresaId", function (req, res) {
   unidadeController.buscarUnidadePorEmpresa(req, res);
 });
 
-router.post("/cadastrar", function (req, res) {
-  unidadeController.cadastrar(req, res);
+router.post("/cadastrarUnidade", function (req, res) {
+  unidadeController.cadastrarUnidade(req, res);
 })
 
 module.exports = router;

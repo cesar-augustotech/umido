@@ -117,3 +117,14 @@ GRANT INSERT ON umido.* TO 'umido'@'%';
 GRANT SELECT ON umido.* TO 'umido'@'%';
 FLUSH PRIVILEGES;
 
+
+select usu.*, uu.id_unidade, uni.empresa_id
+from usuario as usu
+inner join unidade_usuario as uu on uu.id_usuario = usu.id
+inner join unidade as uni on uni.id = uu.id_unidade
+where usu.email = "" and usu.senha = ""; 
+
+
+select * from usuario;
+select * from empresa;
+

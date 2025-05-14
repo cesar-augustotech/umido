@@ -125,24 +125,44 @@ let usuarios = [];
 let unidadesDisponiveis = ['Unidade 1', 'Unidade 2', 'Unidade 3'];
 let idEditando ;
 
-function atualizarTabelaUsuarios() {
-  const tbody = document.getElementById("tabela_usuarios");
-  tbody.innerHTML = "";
 
-  usuarios.forEach((usuario, index) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${usuario.nome}</td>
-      <td>${usuario.email}</td>
-      <td>${usuario.nivel}</td>
-      <td>${usuario.unidades.join(', ')}</td>
-      <td>
-        <button class="botao_buscar" onclick="editarUsuario(${index})">Editar</button>
-        <button class="botao_cancelar" onclick="removerUsuario(${index})">Remover</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
+
+
+
+
+
+function obterDados() {
+
+    fetch('/usuarios/obterDados')
+    .then(function(response){
+        usuarios = response.json().then(function(response){
+            console.log(response)
+            response.forEach((usuario, index) => {
+                console.log(usuario.nome)
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+            <td>${usuario.nome}</td>
+            <td>${usuario.email}</td>
+            <td>${usuario.nivel}</td>
+
+            <td>
+                <button class="botao_buscar" onclick="editarUsuario(${index})">Editar</button>
+                <button class="botao_cancelar" onclick="removerUsuario(${index})">Remover</button>
+            </td>
+            `;
+            tabela_usuarios.appendChild(tr);
+            return response
+        });
+        }).catch(function(err){
+            console.log(err)
+        })
+
+        return response.json();
+    })
+    .catch(function(err){
+        console.log(err);
+    })
+
 }
 
 function abrirModalUsuario() {
@@ -160,24 +180,42 @@ function fecharModalUsuario() {
 }
 
 function salvarUsuario() {
-  const nome = document.getElementById("ipt_nome").value;
-  const email = document.getElementById("ipt_email").value;
-  const senha = document.getElementById("ipt_senha").value;
-  const nivel = document.getElementById("sel_nivel").value;
-
-  const unidadesSelecionadas = Array.from(document.querySelectorAll("#checkboxes_unidades input:checked"))
-    .map(checkbox => checkbox.value);
-
-  const usuario = { nome, email, senha, nivel, unidades: unidadesSelecionadas };
-
-  if (idEditando !== null) {
-    usuarios[idEditando] = usuario;
-  } else {
-    usuarios.push(usuario);
-  }
+  var nomeFetch = ipt_nome.value
+  var emailFetch = ipt_email.value
+  var senhaFetch = ipt_senha.value
+  var nivel_de_acessoFetch = sel_nivel.value
 
   fecharModalUsuario();
   atualizarTabelaUsuarios();
+
+  fetch("/usuarios/salvarUsuario", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                nomeServer: nomeFetch,
+                emailServer: emailFetch,
+                senhaServer: senhaFetch,
+                nivel_de_acessoServer: nivel_de_acessoFetch
+                
+            }),
+        }).then(function (resposta) {
+                console.log("resposta: ", resposta);
+
+                if (resposta.ok) {
+
+                    console.log('a')
+
+                } else {
+                    throw "Houve um erro ao tentar realizar o cadastro!";
+                }
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+        return false;
+
 }
 
 function editarUsuario(index) {
@@ -222,7 +260,6 @@ function gerarCheckboxes(selecionadas) {
   });
 }
 
-atualizarTabelaUsuarios();
+obterDados();
 </script>
-
 </html>

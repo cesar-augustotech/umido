@@ -26,8 +26,7 @@
                     <input class="ipt-caixa ipt-icon3" type="text" id="ipt_telefone" placeholder="Telefone">
                     <input class="ipt-caixa ipt-icon4" type="text" id="ipt_cnpj" placeholder="CNPJ">
                     <input class="ipt-caixa ipt-icon6" type="password" id="ipt_senha" placeholder="Senha">
-                    <input class="ipt-caixa ipt-icon6" type="password" id="ipt_senhaConfirmada"
-                        placeholder="Repita sua senha">
+                    <input class="ipt-caixa ipt-icon6" type="password" id="ipt_senhaConfirmada" placeholder="Repita sua senha">
                 </div>
 
                 <div class="confirme-main" id="div_logar">
@@ -50,79 +49,135 @@
 </body>
 
 <script>
-
-    function cadastrar() {
-
-        //Recupere o valor da nova input pelo nome do id
-        // Agora vá para o método fetch logo abaixo
-        var nomeRegistroVar = ipt_nomeRegistro.value;
-        var emailVar = ipt_email.value;
-        var telefoneVar = ipt_telefone.value;
-        var cnpjVar = ipt_cnpj.value;
-        var senhaVar = ipt_senha.value;
-        var confirmacaoSenhaVar = ipt_senhaConfirmada.value;
-        //var nivelDeAcessoVar = 0
+    function cadastrar(){
 
 
-        // Verificando se há algum campo em branco
-        if (
-            nomeRegistroVar == "" ||
-            emailVar == "" ||
-            cnpjVar == "" ||
-            senhaVar == "" ||
-            confirmacaoSenhaVar == ""
-        ) { alert('Mensagem de erro para todos os campos em branco');
-            return false;
-        } 
-        // // Enviando o valor da nova input
-        // fetch("/usuario/cadastrar", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     dash: JSON.stringify({
-        //         // crie um atributo que recebe o valor recuperado aqui
-        //         // Agora vá para o arquivo routes/usuario.js
-        //         nomeRegistradoServer: nomeRegistroVar,
-        //         emailServer: emailVar,
-        //         senhaServer: senhaVar,
-        //         nivelDeAcessoServer: nivelDeAcessoVar
-        //     }), 
-        // })
+        function cadastrarEmpresa(){
 
-        // Enviando o valor da nova input
-        // Agora vá para o arquivo routes/empresa.js 
-        // crie um atributo que recebe o valor recuperado aqui
-        fetch("/empresa/cadastrar", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                nomeRegistradoServer: nomeRegistroVar,
-                telefoneServer: telefoneVar,
-                cnpjServer: cnpjVar,
-                
-            }),
-        }).then(function (resposta) {
+            //Recupere o valor da nova input pelo nome do id
+            // Agora vá para o método fetch logo abaixo
+            var nomeRegistroVar = ipt_nomeRegistro.value;
+            var emailVar = ipt_email.value;
+            var telefoneVar = ipt_telefone.value;
+            var cnpjVar = ipt_cnpj.value;
+            var senhaVar = ipt_senha.value;
+            var confirmacaoSenhaVar = ipt_senhaConfirmada.value;
+            var nivelDeAcessoVar = 'A'
+            
+            
+            // Verificando se há algum campo em branco
+            if (
+                nomeRegistroVar == "" ||
+                emailVar == "" ||
+                cnpjVar == "" ||
+                senhaVar == "" ||
+                confirmacaoSenhaVar == ""
+            ) {
+                alert('Mensagem de erro para todos os campos em branco');
+                return false;
+            }
+            
+            fetch("/empresa/cadastrarEmpresa", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nomeRegistradoServer: nomeRegistroVar,
+                    telefoneServer: telefoneVar,
+                    cnpjServer: cnpjVar,
+                    emailServer: emailVar,
+                    senhaServer: senhaVar,
+                    nivelDeAcessoServer: nivelDeAcessoVar
+                    
+                }),
+            }).then(function (resposta) {
                 console.log("resposta: ", resposta);
-
+                
                 if (resposta.ok) {
-
+                    
                     setTimeout(() => {
                         window.location = "login.html";
                     }, "2000");
-
+                    
                 } else {
                     throw "Houve um erro ao tentar realizar o cadastro!";
                 }
-            })
-            .catch(function (resposta) {
-                console.log(`#ERRO: ${resposta}`);
-            });
+        })
+        .catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+        });
         return false;
-    }
+    } 
+        function cadastrarUsuarioEmpresa(){
 
+            //Recupere o valor da nova input pelo nome do id
+            // Agora vá para o método fetch logo abaixo
+            var nomeRegistroVar = ipt_nomeRegistro.value;
+            var emailVar = ipt_email.value;
+            var telefoneVar = ipt_telefone.value;
+            var cnpjVar = ipt_cnpj.value;
+            var senhaVar = ipt_senha.value;
+            var confirmacaoSenhaVar = ipt_senhaConfirmada.value;
+            var nivelDeAcessoVar = 'A'
+            
+            
+            // Verificando se há algum campo em branco
+            if (
+                nomeRegistroVar == "" ||
+                emailVar == "" ||
+                cnpjVar == "" ||
+                senhaVar == "" ||
+                confirmacaoSenhaVar == ""
+            ) {
+                alert('Mensagem de erro para todos os campos em branco');
+                return false;
+            }
+            
+            fetch("/empresa/cadastrarUsuarioEmpresa", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nomeRegistradoServer: nomeRegistroVar,
+                    telefoneServer: telefoneVar,
+                    cnpjServer: cnpjVar,
+                    emailServer: emailVar,
+                    senhaServer: senhaVar,
+                    nivelDeAcessoServer: nivelDeAcessoVar
+                    
+                }),
+            }).then(function (resposta) {
+                console.log("resposta: ", resposta);
+                
+                if (resposta.ok) {
+                    
+                    setTimeout(() => {
+                        window.location = "login.html";
+                    }, "2000");
+                    
+                } else {
+                    throw "Houve um erro ao tentar realizar o cadastro!";
+                }
+        })
+        .catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+        });
+        return false;
+
+
+
+
+
+
+
+        }
+
+        cadastrarEmpresa()
+        cadastrarUsuarioEmpresa()
+    }
+    
 </script>
 
 </html>

@@ -1,9 +1,9 @@
 var unidadeModel = require("../models/unidadeModel");
 
-function buscarAquariosPorEmpresa(req, res) {
+function buscarUnidadePorEmpresa(req, res) {
   var idUsuario = req.params.idUsuario;
 
-  unidadeModel.buscarAquariosPorEmpresa(idUsuario).then((resultado) => {
+  unidadeModel.buscarUnidadePorEmpresa(idUsuario).then((resultado) => {
     if (resultado.length > 0) {
       res.status(200).json(resultado);
     } else {
@@ -17,7 +17,7 @@ function buscarAquariosPorEmpresa(req, res) {
 }
 
 
-function cadastrar(req, res) {
+function cadastrarUnidade(req, res) {
   var descricao = req.body.descricao;
   var idUsuario = req.body.idUsuario;
 
@@ -44,6 +44,6 @@ function cadastrar(req, res) {
 }
 
 module.exports = {
-  buscarAquariosPorEmpresa,
-  cadastrar
+  buscarUnidadePorEmpresa,
+  cadastrarUnidade
 }

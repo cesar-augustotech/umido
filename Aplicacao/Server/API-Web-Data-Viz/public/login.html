@@ -45,4 +45,93 @@
 
 </body>
 
+<script>
+let usuarios = [];
+
+    function entrar() {
+
+     function usuarioLogado(){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     }
+        function logar(){
+            var emailVar = email_input.value;
+            var senhaVar = senha_input.value;
+            if (emailVar == "" || senhaVar == "") {
+                alert("insira em todos os campos")
+                return false;
+            }
+            
+            fetch("/usuarios/logar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    emailServer: emailVar,
+                    senhaServer: senhaVar
+                })
+            }).then(function (resposta) {
+                
+                if (resposta.ok) {
+                    console.log(resposta);
+                    
+                    resposta.json().then(json => {
+                        console.log(json);
+                        console.log(JSON.stringify(json));
+                        
+                        
+                        setTimeout(function () {
+                           window.location = "./dashboard/geral.html";
+                         }, '1000'); 
+                        });
+                        
+                    } else {
+                        resposta.text().then(texto => {
+                            console.error(texto);
+                            finalizarAguardar(texto);
+                });
+            }
+            
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+        return false;
+    }
+  usuarioLogado()
+  logar()
+}
+</script>
 </html>
