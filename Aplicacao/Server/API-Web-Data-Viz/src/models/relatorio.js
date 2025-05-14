@@ -14,10 +14,14 @@ var vetorMes = []
 
 function buscarUltimasMedidas(unidadeAtual) {
     var dataAtual = new Date();
-    var mesAtual = dataAtual.getMonth() + 1; // +1 porque getMonth() retorna 0-11
+    var mesAtual = dataAtual.getMonth() + 1;
     var anoAtual = dataAtual.getFullYear();
 
-    // Formatação para dois dígitos
+    if(unidadeAtual == undefined){
+        unidadeAtual = 1
+    }
+
+    // Formata para dois dígitos
     if (mesAtual < 10) mesAtual = `0${mesAtual}`;
 
     var instrucaoSql = `
