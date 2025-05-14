@@ -1,9 +1,10 @@
 var usuarioModel = require("../models/usuarioModel");
 
 
-function logar(req, res) {
+async function logar(req, res) {
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
+    console.log(req.body)
 
     if (email == undefined) {
         res.status(400).send("Seu email está undefined!");
@@ -13,10 +14,10 @@ function logar(req, res) {
             
     }
 
-     usuarioModel.logar(email, senha)
+    usuarioModel.logar(email, senha)
             .then(
                 function (resultado) {
-                    res.json(resultado);
+                    res.json(JSON.stringify(resultado));
                 }
             ).catch(
                 function (erro) {

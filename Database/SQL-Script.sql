@@ -20,7 +20,8 @@ CREATE TABLE empresa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cnpj VARCHAR(20) UNIQUE,
-    telefone VARCHAR(12)
+    telefone VARCHAR(12),
+    ativo int default  0
 );
 
 -- Tabela de usuários

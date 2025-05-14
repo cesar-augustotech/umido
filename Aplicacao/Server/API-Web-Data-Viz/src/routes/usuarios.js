@@ -8,6 +8,10 @@ var usuarioController = require("../controllers/usuarioController");
 router.post("/logar", function (req, res) {
     usuarioController.logar(req, res);
 });
+router.get("/logar2", function (req, res) {
+    console.log(req)
+    usuarioController.logar(req, res);
+});
 router.get("/usuarioLogado", function (req, res) {
     usuarioController.usuarioLogado(req, res);
 });
