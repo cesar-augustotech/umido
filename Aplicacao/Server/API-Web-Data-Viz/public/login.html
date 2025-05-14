@@ -58,8 +58,8 @@
                     senhaServer: ipt_login_senha.value
                 })
             })
-        let dados_resposta = JSON.parse(JSON.parse(await dados.text()))
-        sessionStorage.setItem("umido",JSON.stringify(dados_resposta))
+        let dados_resposta = await dados.text()
+        sessionStorage.setItem("umido",dados_resposta)
         if(dados_resposta.id_usuario){
             window.location = "http://localhost:3333/dashboard/geral.html"
         }
