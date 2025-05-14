@@ -12,14 +12,15 @@ DROP TABLE IF EXISTS sensor;
 DROP TABLE IF EXISTS unidade;
 DROP TABLE IF EXISTS usuario;
 DROP TABLE IF EXISTS empresa;
-
 -- Criação das tabelas
+
 
 -- Tabela de empresa
 CREATE TABLE empresa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    cnpj VARCHAR(20) UNIQUE
+    cnpj VARCHAR(20) UNIQUE,
+    telefone VARCHAR(12)
 );
 
 -- Tabela de usuários
@@ -28,8 +29,9 @@ CREATE TABLE usuario (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     senha VARCHAR(100) NOT NULL,
-    `nivel_de_acesso` CHAR(1)
+    nivel_de_acesso CHAR(1)
 );
+
 
 -- Tabela de unidade
 CREATE TABLE unidade (
@@ -40,6 +42,7 @@ CREATE TABLE unidade (
     FOREIGN KEY (empresa_id) REFERENCES empresa(id)
 );
 
+
 -- Tabela de sensor
 CREATE TABLE sensor (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -48,6 +51,7 @@ CREATE TABLE sensor (
     ativo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_unidade) REFERENCES unidade(id)
 );
+
 
 -- Tabela de medição
 CREATE TABLE medicao (
@@ -106,8 +110,10 @@ DROP USER IF EXISTS 'umidoInsert'@'%';
 CREATE USER 'umidoInsert'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT INSERT ON umido.medicao TO 'umidoInsert'@'%';
 
+
 DROP USER IF EXISTS 'umido'@'%';
 CREATE USER 'umido'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT INSERT ON umido.* TO 'umido'@'%';
+GRANT SELECT ON umido.* TO 'umido'@'%';
 FLUSH PRIVILEGES;
 
