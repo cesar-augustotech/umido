@@ -77,8 +77,8 @@
       async function obterDados() {
         const params = new URLSearchParams(
           {
-                    emailServer: ipt_login_email.value,
-                    senhaServer: ipt_login_senha.value
+              emailServer: ipt_login_email.value,
+              senhaServer: ipt_login_senha.value
           }
         );
       let dados = await fetch("/configuracao/empresas", {

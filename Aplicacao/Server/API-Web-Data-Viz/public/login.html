@@ -60,7 +60,7 @@
             })
         let dados_resposta = await dados.text()
         sessionStorage.setItem("umido",dados_resposta)
-        if(dados_resposta.id_usuario){
+        if(dados_resposta.length>10){
             window.location = "http://localhost:3333/dashboard/geral.html"
         }
         

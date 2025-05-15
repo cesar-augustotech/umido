@@ -1,7 +1,8 @@
 var mysql = require("mysql2");
 
 // CONEXÃO DO BANCO MYSQL SERVER
-/*Bill */
+/*Bill 
+*/
 var mySqlConfig = {
     host: 'localhost',
     database: 'umido',
