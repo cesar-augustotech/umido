@@ -151,21 +151,15 @@
 </body>
 <script>
 
- async function função() {
-    var select = await fetch("http://localhost:3333/relatorios/", {
-  "headers": { },
-  "body": null,
-  "method": "GET"
-  
- } ) 
-var dados = JSON.parse(await select.text())
-var resposta = [33.07,33.07,33.07,33.07,33.07,33.07,33.07,33.07,33.07,33.07,33.07,33.07]
-for(i = 0; i < dados.length; i ++) {
-    resposta.push(dados[i].umidade)
-}
-return resposta
+ async function buscarUmidadeMedia() {
+    const unidadeSelecionada = document.getElementById("selecionar_unidade").value;
+    const resposta = await fetch(`http://localhost:3333/relatorios?unidade=${unidadeSelecionada}`);
+    const dados = await resposta.json();
+    // O backend retorna [{ umidade_media: valor }]
+    // Se não houver dados, retorna 0
+    return dados.length > 0 ? [Number(dados[0].umidade_media)] : [0];
 } 
- função()
+buscarUmidadeMedia()
 
  
 let dadosSensores = [
@@ -218,7 +212,7 @@ async function criar_grafico_geral() {
     if (ultimo_grafico) {
         ultimo_grafico.destroy();
     }
-    var dados = await função()
+    var dados = await buscarUmidadeMedia()
     console.log(dados);
     
     ultimo_grafico = new Chart(contexto, {
@@ -480,11 +474,14 @@ function botao_abrir_fechar_menu() {
 
 
 
+
 function select_unidade() {
     dadosGraficos = [
         ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)], "Umidade Media Por Semana Do Mês Atual"],
         ["grafico_incidentes", "Incidentes", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [(parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10))], "Incidentes Por Área Do Mês Atual"],
     ];
+
+     criar_grafico_geral()
     criar_grafico_geral()
     criar_kpis()
     criar_html_estatisticas_mes()
@@ -506,5 +503,12 @@ async function funcao() {
 
     return dados.map(d => d.umidade);
 }
+
+window.onload = async () => {
+    criar_kpis();
+    criar_html_estatisticas_mes();
+    criar_grafico_estatisticas_mes();
+    await criar_grafico_geral();
+};
 </script>
 </html>

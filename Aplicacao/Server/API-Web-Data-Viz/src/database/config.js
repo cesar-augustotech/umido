@@ -6,8 +6,8 @@ var mysql = require("mysql2");
 var mySqlConfig = {
     host: 'localhost',
     database: 'umido',
-    user: "umido",
-    password: "Sptech#2024",
+    user: "root",
+    password: "-2bc.cosA",
     port: "3306"
 };
 /*
