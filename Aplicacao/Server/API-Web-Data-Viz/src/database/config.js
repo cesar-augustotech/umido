@@ -7,7 +7,7 @@ var mySqlConfig = {
     host: 'localhost',
     database: 'umido',
     user: "root",
-    password: "1571",
+    password: "-2bc.cosA",
     port: "3306"
 };
 /*

@@ -28,7 +28,7 @@ function buscarUltimasMedidas(unidadeAtual) {
         SELECT AVG(umidade) AS umidade
         FROM sensor
         INNER JOIN medicao ON sensor.id = medicao.id_sensor
-        WHERE sensor.id_unidade = ${unidadeAtual}
+        WHERE sensor.id_unidade = 1
         AND data_hora BETWEEN '${anoAtual}-${mesAtual}-01' AND LAST_DAY('${anoAtual}-${mesAtual}-01')
     `;
 
@@ -41,7 +41,7 @@ function buscarUmidadeMedia(idUnidade) {
         SELECT AVG(umidade) AS umidade_media
         FROM medicao
         INNER JOIN sensor ON medicao.id_sensor = sensor.id
-        WHERE sensor.id_unidade = ${idUnidade}
+        WHERE sensor.id_unidade = 1
     `;
 
     console.log("Executando a instrução SQL para média de umidade: \n" + instrucaoSql);
