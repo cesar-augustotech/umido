@@ -75,19 +75,25 @@
       ];
 
       async function obterDados() {
+        let usuario = JSON.parse(JSON.parse(sessionStorage.umido))
         const params = new URLSearchParams(
           {
-              emailServer: ipt_login_email.value,
-              senhaServer: ipt_login_senha.value
+              emailServer: usuario.email_usuario,
+              senhaServer: usuario.senha
           }
         );
-      let dados = await fetch("/configuracao/empresas", {
+      let dados = await fetch(`/root/dados_empresas?${params.toString()}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             })
+      let res = await dados.json()
+            // Exibe todas ao carregar
+      renderizarAprovadas(res.dados);
+
       }
+      obterDados()
 
       function botao_abrir_fechar_menu() {
         const menuLateral = document.querySelector('.menu_lateral');
@@ -126,6 +132,5 @@
         });
       }
 
-      // Exibe todas ao carregar
-      renderizarAprovadas(empresasAprovadas);
+
     </script>

@@ -151,6 +151,7 @@
 </body>
 <script>
 
+
  async function buscarUmidadeMedia() {
     const unidadeSelecionada = document.getElementById("selecionar_unidade").value;
     const resposta = await fetch(`http://localhost:3333/relatorios?unidade=${unidadeSelecionada}`);
@@ -158,6 +159,7 @@
     // O backend retorna [{ umidade_media: valor }]
     // Se não houver dados, retorna 0
     return dados.length > 0 ? [Number(dados[0].umidade_media)] : [0];
+
 } 
 buscarUmidadeMedia()
 

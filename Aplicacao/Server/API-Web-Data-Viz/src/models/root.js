@@ -9,9 +9,29 @@ var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 
 var database = require("../database/config");
 
-var vetorMes = []
+[]
+
+async function get_obterDados(req,res) {
+    const email = req.query.emailServer;
+    const senha = req.query.senhaServer;
+    var instrucaoSql = `select * from empresa;`;
+    let dados = await database.executar(instrucaoSql);3
+    res.json({dados:dados});
+    if(email =="root" && senha == "root"){
+    }
 
 
+
+}
+async function post_obterDados(req,res) {
+    const email = req.body.emailServer;
+    const senha = req.body.senhaServer;
+    var instrucaoSql = `update empresa set ativo=1 where id=${req.body.empresa}`;
+    let dados = await database.executar(instrucaoSql);
+    res.json({dados:true});
+    if(email =="root" && senha == "root"){
+    }
+}
 function buscarUltimasMedidas(unidadeAtual) {
     var dataAtual = new Date();
     var mesAtual = dataAtual.getMonth() + 1;
@@ -64,6 +84,6 @@ function buscarMedidasEmTempoReal(idAquario) {
 }*/
 
 module.exports = {
-    buscarUltimasMedidas,
-    buscarUmidadeMedia,
+    get_obterDados,
+    post_obterDados
 }
