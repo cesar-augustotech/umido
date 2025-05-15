@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Umido - Admin</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="..\Site-Institucional\css\dashboard.css">
+  <link rel="stylesheet" href="./css/dashboard.css">
 </head>
 
 <body>
@@ -24,22 +24,22 @@
           <h4>César Augusto</h4>
           <h5>Ser Supremo</h5>
         </div>
-        <img src="..\Site-Institucional/assets/icons/user.png" style="width: 40px; height: 40px;" alt="perfil">
+        <img src="./assets/icons/user.png" style="width: 40px; height: 40px;" alt="perfil">
       </div>
     </div>
   </header>
   <div class="layout_principal">
     <div class="menu_lateral menu_expandido">
       <div class="botao_expandir" id="botao_expandir" onclick="botao_abrir_fechar_menu()">
-        <img src="../Site-Institucional/assets/icons/seta.png" style="width: 20px; height: 20px;">
+        <img src="./assets/icons/seta.png" style="width: 20px; height: 20px;">
       </div>
       <ul class="itens_menu">
         <li style="gap: 20px;" onclick="window.location.href = 'pendentes.html'" class="ativo">
-          <img src="../Site-Institucional/assets/icons/configuracao.png" style="width: 30px; height: 30px;">
+          <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Empresas Pendentes</span>
         </li>
         <li style="gap: 20px;" onclick="window.location.href = 'aprovadas.html'" >
-          <img src="../Site-Institucional/assets/icons/configuracao.png" style="width: 30px; height: 30px;">
+          <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Empresas Aprovadas</span>
         </li>
 
@@ -73,6 +73,31 @@
       { nome: 'GreenFarms Ltda', cnpj: '98.765.432/0001-11'},
       { nome: "EcoFazendas", cnpj: "23.456.789/0001-01" }
     ];
+    async function obterDados() {
+        let usuario = JSON.parse(JSON.parse(sessionStorage.umido))
+        const params = new URLSearchParams(
+          {
+              emailServer: usuario.email_usuario,
+              senhaServer: usuario.senha
+          }
+        );
+      let dados = await fetch(`/root/dados_empresas?${params.toString()}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+      let res = await dados.json()
+      res = res.dados
+      let lista =[]
+      for(let i=0;i<res.length;i++){
+        if(res[i].ativo == 0){
+          lista.push(res[i])
+        }
+      }
+      exibirEmpresas(lista);
+      }
+      obterDados()
 
 
     function botao_abrir_fechar_menu() {
@@ -104,18 +129,31 @@
       exibirEmpresas(resultado);
     }
 
-    function aprovarEmpresa(cnpj) {
+    async function aprovarEmpresa(id) {
+      let usuario = JSON.parse(JSON.parse(sessionStorage.umido))
+      let dados = await fetch(`/root/dados_empresas`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body:JSON.stringify({
+                  empresa:id,
+                  emailServer: usuario.email_usuario,
+                  senhaServer: usuario.senha
+                })
+      })
 
+      alert("Empresa  aprovada!");
 
-      alert("Empresa com CNPJ " + cnpj + " aprovada!");
-
-      alert("Código de Ativação: " + gerarCodigoAtivacao());
-
-      var index = empresasPendentes.findIndex(emp => emp.cnpj === cnpj);
+      /*
+      var index = empresa.findIndex(emp => emp.cnpj === cnpj);
       if (index !== -1) {
-        empresasPendentes.splice(index, 1);
+        empresa.splice(index, 1);
         exibirEmpresas(empresasPendentes);
       }
+        */
+      obterDados()
+
     }
 
     function recusarEmpresa(cnpj) {
@@ -146,14 +184,13 @@
         <strong>${emp.nome}</strong><br>
         <span style="font-size: 14px;">CNPJ: ${emp.cnpj}</span>
         <div style="margin-top: 10px; display: flex; gap: 10px;">
-          <button class="botao_salvar" onclick="aprovarEmpresa('${emp.cnpj}')">Aprovar</button>
-          <button class="botao_cancelar" onclick="recusarEmpresa('${emp.cnpj}')">Recusar</button>
+          <button class="botao_salvar" onclick="aprovarEmpresa('${emp.id}')">Aprovar</button>
+          <button class="botao_cancelar" onclick="recusarEmpresa('${emp.id}')">Recusar</button>
         </div>
       `;
         container.appendChild(div);
       });
     }
 
-    // Exibir todas ao carregar
-    exibirEmpresas(empresasPendentes);
+
   </script>

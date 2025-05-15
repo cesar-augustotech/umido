@@ -22,6 +22,8 @@ var medidasRouter = require("./src/routes/medidas");
 var unidadeRouter = require("./src/routes/unidade");
 var empresaRouter = require("./src/routes/empresa");
 var relatorioRouter = require("./src/routes/relatoriosRoute")
+var rootRouter = require("./src/routes/root")
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,6 +38,8 @@ app.use("/medidas", medidasRouter);
 app.use("/unidade", unidadeRouter);
 app.use("/empresa", empresaRouter);
 app.use("/relatorios", relatorioRouter);
+app.use("/root", rootRouter);
+
 
 app.listen(PORTA_APP, function () {
     console.log(`

@@ -159,7 +159,7 @@
   
  } ) 
 var dados = JSON.parse(await select.text())
-var resposta = [33.07,33.07,33.07,33.07,33.07,33.07,33.07,33.07,33.07,33.07,33.07,33.07]
+var resposta = []
 for(i = 0; i < dados.length; i ++) {
     resposta.push(dados[i].umidade)
 }

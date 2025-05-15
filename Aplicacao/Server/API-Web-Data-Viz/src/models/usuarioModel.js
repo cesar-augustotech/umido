@@ -2,7 +2,7 @@ var database = require("../database/config")
 
 async function logar(email, senha) {
     var instrucaoSql = `
-        SELECT u.id as "id_usuario", u.nome as "nome_usuario", u.email as "email_usuario", u.nivel_de_acesso as "nivel_de_acesso", e.ativo, e.id as "id_empresa" FROM usuario u
+        SELECT u.id as "id_usuario", u.nome as "nome_usuario", u.senha as "senha", u.email as "email_usuario", u.nivel_de_acesso as "nivel_de_acesso", e.ativo, e.id as "id_empresa" FROM usuario u
         inner join unidade_usuario uu on uu.id_unidade = u.id
             inner join unidade uni on uni.id = uu.id_unidade
                 inner join empresa e on uni.empresa_id = e.id
