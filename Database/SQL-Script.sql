@@ -12,16 +12,14 @@ DROP TABLE IF EXISTS sensor;
 DROP TABLE IF EXISTS unidade;
 DROP TABLE IF EXISTS usuario;
 DROP TABLE IF EXISTS empresa;
--- Criação das tabelas
 
+-- Criação das tabelas
 
 -- Tabela de empresa
 CREATE TABLE empresa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    cnpj VARCHAR(20) UNIQUE,
-    telefone VARCHAR(12),
-    ativo int default  0
+    cnpj VARCHAR(20) UNIQUE
 );
 
 -- Tabela de usuários
@@ -30,9 +28,8 @@ CREATE TABLE usuario (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     senha VARCHAR(100) NOT NULL,
-    nivel_de_acesso CHAR(1)
+    `nivel_de_acesso` CHAR(1)
 );
-
 
 -- Tabela de unidade
 CREATE TABLE unidade (
@@ -43,7 +40,6 @@ CREATE TABLE unidade (
     FOREIGN KEY (empresa_id) REFERENCES empresa(id)
 );
 
-
 -- Tabela de sensor
 CREATE TABLE sensor (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -52,7 +48,6 @@ CREATE TABLE sensor (
     ativo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_unidade) REFERENCES unidade(id)
 );
-
 
 -- Tabela de medição
 CREATE TABLE medicao (
@@ -111,21 +106,72 @@ DROP USER IF EXISTS 'umidoInsert'@'%';
 CREATE USER 'umidoInsert'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT INSERT ON umido.medicao TO 'umidoInsert'@'%';
 
+drop user if exists 'umidoDashAdm'@'%';
+CREATE USER 'umidoDashboardAdm'@'%' IDENTIFIED BY 'Sptech#2024';
+GRANT INSERT ON umido.unidade TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT INSERT ON umido.sensor TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT INSERT ON umido.usuario TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT INSERT ON umido.unidade_usuario TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT select ON umido.viewDash TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT update ON umido.unidade TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT update ON umido.sensor TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT update ON umido.usuario TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT update ON umido.unidade_usuario TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT delete ON umido.unidade TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT delete ON umido.sensor TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT delete ON umido.usuario TO 'umidoDashboardAdm'@'%'with grant option;
+GRANT delete ON umido.unidade_usuario TO 'umidoDashboardAdm'@'%'with grant option;
 
-DROP USER IF EXISTS 'umido'@'%';
-CREATE USER 'umido'@'%' IDENTIFIED BY 'Sptech#2024';
-GRANT INSERT ON umido.* TO 'umido'@'%';
-GRANT SELECT ON umido.* TO 'umido'@'%';
-FLUSH PRIVILEGES;
+
+drop user if exists 'umidoDashComun'@'%';
+CREATE USER 'umidoDashboardComun'@'%' IDENTIFIED BY 'Sptech#2024';
+GRANT select ON umido.medicao TO 'umidoDashboardComun'@'%';
+GRANT select ON umido.unidade TO 'umidoDashboardComun'@'%';
+GRANT select ON umido.sensor TO 'umidoDashboardComun'@'%';
+GRANT select ON umido.usuario TO 'umidoDashboardComun'@'%';
+GRANT select ON umido.unidade_usuario TO 'umidoDashboardComun'@'%';
 
 
-select usu.*, uu.id_unidade, uni.empresa_id
-from usuario as usu
-inner join unidade_usuario as uu on uu.id_usuario = usu.id
-inner join unidade as uni on uni.id = uu.id_unidade
-where usu.email = "" and usu.senha = ""; 
+drop user if exists 'umidoCadastro'@'%';
+CREATE USER 'umidoCadastro'@'%' IDENTIFIED BY 'Sptech#2024';
+GRANT select ON umido.usuario TO 'umidoCadastro'@'%';
+GRANT select ON umido.empresa TO 'umidoCadastro'@'%';
+GRANT insert ON umido.usuario TO 'umidoCadastro'@'%';
+GRANT insert ON umido.empresa TO 'umidoCadastro'@'%';
+
+drop user if exists 'umido';
+create user 'umido' identified by 'Sptech#2024';
+grant all privileges on umido to 'umido' with grant option;
+grant select on umido.* to 'umido'@'localhost';
+flush privileges;
 
 
-select * from usuario;
-select * from empresa;
+-- Medição 1
+INSERT INTO medicao (id_sensor, umidade, data_hora) 
+VALUES 
+(1, 65.5, '2025-05-01 10:00:00');
 
+-- Medição 2
+INSERT INTO medicao (id_sensor, umidade, data_hora) 
+VALUES 
+(2, 70.0, '2025-05-01 10:15:00');
+
+-- Medição 3
+INSERT INTO medicao (id_sensor, umidade, data_hora) 
+VALUES 
+(1, 60.0, '2025-05-01 10:30:00');
+
+-- Medição 4
+INSERT INTO medicao (id_sensor, umidade, data_hora) 
+VALUES 
+(3, 72.3, '2025-05-01 10:45:00');
+
+-- Medição 5
+INSERT INTO medicao (id_sensor, umidade, data_hora) 
+VALUES 
+(2, 68.8, '2025-05-01 11:00:00');
+
+
+SELECT * FROM medicao WHERE id_sensor IN (
+    SELECT id FROM sensor WHERE id_unidade = 1
+);
