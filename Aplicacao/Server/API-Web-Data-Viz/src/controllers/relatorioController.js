@@ -2,9 +2,11 @@ var relatorioModel = require("../models/relatorioModel");
 
 
 function buscarUmidadeMediaUnidade(req, res) {
-  var select_unidade = req.params.select_unidade;
+  var unidadeAtual = req.params.unidadeAtual;
 
-    relatorioModel.buscarUmidadeMediaUnidade(select_unidade).then((resultado) => {
+    console.log(`controller`);
+
+    relatorioModel.buscarUmidadeMediaUnidade(unidadeAtual).then((resultado) => {
     if (resultado.length > 0) {
       res.status(200).json(resultado);
     } else {
@@ -18,6 +20,6 @@ function buscarUmidadeMediaUnidade(req, res) {
 }
 
 module.exports = {
-  relatorioModel,
+  buscarUmidadeMediaUnidade,
 }
 

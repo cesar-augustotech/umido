@@ -4,7 +4,7 @@ const router = express.Router();
 const relatorioController = require('../controllers/relatorioController');
 
 
-router.get("/buscarUmidadeMediaUnidade", function (req, res) {
+router.get("/buscarUmidadeMediaUnidade/:unidadeAtual", function (req, res) {
     relatorioController.buscarUmidadeMediaUnidade(req, res);
 });
 
