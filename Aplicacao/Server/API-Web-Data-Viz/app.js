@@ -17,12 +17,10 @@ var app = express();
 
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
-var avisosRouter = require("./src/routes/avisos");
-var medidasRouter = require("./src/routes/medidas");
 var unidadeRouter = require("./src/routes/unidade");
 var empresaRouter = require("./src/routes/empresa");
-var relatorioRouter = require("./src/routes/relatoriosRoute")
-var rootRouter = require("./src/routes/root")
+var relatorioRouter = require("./src/routes/relatorio");
+var rootRouter = require("./src/routes/root");
 
 
 app.use(express.json());
@@ -33,11 +31,9 @@ app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
-app.use("/avisos", avisosRouter);
-app.use("/medidas", medidasRouter);
 app.use("/unidade", unidadeRouter);
 app.use("/empresa", empresaRouter);
-app.use("/relatorios", relatorioRouter);
+app.use("/relatorio", relatorioRouter);
 app.use("/root", rootRouter);
 
 

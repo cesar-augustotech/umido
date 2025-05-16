@@ -53,10 +53,10 @@
         <section class="conteudo_principal">
             <div>
                 <select class="selecionar_unidade" id="selecionar_unidade" onchange="select_unidade()">
-                    <option value="1">Unidade 1</option>
-                    <option value="2">Unidade 2</option>
-                    <option value="3">Unidade 3</option>
-                    <option value="4">Unidade 4</option>
+                    <option value="Unidade 1">Unidade 1</option>
+                    <option value="Unidade 2">Unidade 2</option>
+                    <option value="Unidade 3">Unidade 3</option>
+                    <option value="Unidade 4">Unidade 4</option>
                 </select>
                 <button class="btn_add_unidade" id="btn_add_unidade" onclick="mostrar_modal_unidade()">Adicionar Unidade</button>
                 <button class="btn_add_unidade" id="" onclick="">Exportar dados da Unidade</button>
@@ -151,23 +151,24 @@
 </body>
 <script>
 
- async function função() {
-    var select = await fetch("http://localhost:3333/relatorios/", {
-  "headers": { },
-  "body": null,
-  "method": "GET"
-  
- } ) 
-var dados = JSON.parse(await select.text())
-var resposta = []
-for(i = 0; i < dados.length; i ++) {
-    resposta.push(dados[i].umidade)
+    function select_unidade() {
+        var unidadeAtual = selecionar_unidade.value
+        return unidadeAtual;
 }
-return resposta
-} 
- função()
+function criar_todos_os_graficos() {
+        var unidadeAtual = selecionar_unidade.value
+        dadosGraficos = [
+            ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)], "Umidade Media Por Semana Do Mês Atual"],
+            ["grafico_incidentes", "Incidentes", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [(parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10))], "Incidentes Por Área Do Mês Atual"],
+        ];
+    buscarUmidadeMediaUnidade()
+    criar_grafico_geral()
+    criar_kpis()
+    criar_html_estatisticas_mes()
+    criar_grafico_estatisticas_mes()
 
- 
+}
+
 let dadosSensores = [
     ["Sensor 1", "Ativo", "28%", "92%", "Ativo", [25, 27, 28, 30, 29, 28, 27, 26, 28, 29, 30, 28]],
     ["Sensor 2", "Ativo", "38%", "87%", "Ativo", [20, 21, 22, 34, 21, 22, 21, 26, 28, 29, 30, 28]],
@@ -175,6 +176,10 @@ let dadosSensores = [
     ["Sensor 4", "Ativo", "48%", "65%", "Ativo", [25, 28, 26, 35, 28, 26, 29, 26, 28, 29, 30, 28]],
     ["Sensor 5", "Ativo", "58%", "87%", "Ativo", [27, 27, 24, 37, 26, 29, 25, 26, 28, 29, 30, 28]]
 ];
+
+
+
+let quantidade_alerta = 0
 
 let dadosGraficos = [];
 
@@ -186,15 +191,41 @@ const modalAdicionarSensor = modal_adicionar_sensor;
 
 const formularioAdicionarSensor = formulario_adicionar_sensor;
 
-function criar_lista_alertas(){
-    let html_lista =""
-    for(let i =0;i<quantidade_alerta+5;i++){
-        html_lista += `
+
+function buscarUmidadeMediaUnidade(select_unidade) {
+    
+
+    
+    fetch(`/relatorio/buscarUmidadeMediaUnidade/${select_unidade}`, { cache: 'no-store' }).then(function (response) {
+        if (response.ok) {
+            response.json().then(function (resposta) {
+                console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    resposta.reverse();
+                    
+                    criar_grafico_geral(resposta, unidadeAtual);
+                    
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+    
+    
+    
+
+    function criar_lista_alertas(){
+        let html_lista =""
+        for(let i =0;i<quantidade_alerta+5;i++){
+            html_lista += `
         <li style="display: grid; grid-template-columns: 1fr 1fr;  border-bottom: 1px solid black;">
             <div>Sensor ${parseInt((Math.random()*dadosSensores.length) + 1) }</div>
             <div>${parseInt(Math.random()*29)+1}/${parseInt(Math.random()*11)+1}/2024</div>
-        </li>
-        ` 
+            </li>
+            ` 
     }
     let html = `
     <div class="container_grafico_mensal">
@@ -203,31 +234,28 @@ function criar_lista_alertas(){
             <div style="display: grid; grid-template-columns: 1fr 1fr;">
                 <div class="titulo_grafico">Sensor</div>
                 <div class="titulo_grafico">Data</div>
-            </div>
-            <ul>
-                ${html_lista}
-            </ul>
-        </div>
-    </div>
-    `
-    return html
-}
-
-async function criar_grafico_geral() {
+                </div>
+                <ul>
+                    ${html_lista}
+                    </ul>
+                    </div>
+                    </div>
+                    `
+                    return html
+                }
+                
+function criar_grafico_geral() {
     let contexto = document.getElementById('grafico_umidade').getContext('2d');
     if (ultimo_grafico) {
         ultimo_grafico.destroy();
     }
-    var dados = await função()
-    console.log(dados);
-    
     ultimo_grafico = new Chart(contexto, {
         type: "line",
-        data: { dados,
-            labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+        data: {
+            labels: ["Novembro", "Dezembro", "Janeiro", "Fevereiro", "Março", "Abril"],
             datasets: [
                 {
-                    label: "MININO",
+                    label: "Alerta",
                     data: [30, 30, 30, 30, 30, 30],
                     backgroundColor: 'rgba(255, 168, 255, 0.2)',
                     borderColor: 'rgba(255, 168, 255, 1)',
@@ -236,13 +264,14 @@ async function criar_grafico_geral() {
                 },
                 {
                     label: "Umidade (%)",
-                    data: dados,
+                    data: [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)],
+                    backgroundColor: 'rgba(0, 168, 255, 0.2)',
                     backgroundColor: 'rgba(0, 168, 255, 0.2)',
                     borderColor: 'rgba(0, 168, 255, 1)',
                     borderWidth: 2,
                     fill: false
                 }]
-        },
+            },
         options: {
             responsive: true,
             scales: {
@@ -252,9 +281,9 @@ async function criar_grafico_geral() {
             }
         }
     });
-
+    
 }
-let quantidade_alerta = 0
+
 function criar_kpis() {
     indicadores.innerHTML = ""
     lista_sensores.innerHTML = ""
@@ -273,17 +302,17 @@ function criar_kpis() {
         <li>
             <span class="nome_sensor">${dadosSensores[i][0]}</span>
             <span class="status_sensor ativo" onclick="mostrar_modal_sensor(${i})">${dadosSensores[i][1]}</span>
-        </li>`;
-    }
-    let elementoIndicadores = indicadores;
-    for (let i = 0; i < dadosIndicadores.length; i++) {
-        elementoIndicadores.innerHTML += `
+            </li>`;
+        }
+        let elementoIndicadores = indicadores;
+        for (let i = 0; i < dadosIndicadores.length; i++) {
+            elementoIndicadores.innerHTML += `
         <div class="cartao">
             <div class="valor_indicador">${dadosIndicadores[i][0]}</div>
             <div class="descricao_indicador">${dadosIndicadores[i][1]}</div>
             <div class="info_adicional">${dadosIndicadores[i][2]}</div>
-        </div>`;
-    }
+            </div>`;
+        }
 }
 
 function criar_grafico_estatisticas_mes() {
@@ -372,10 +401,10 @@ function criar_html_estatisticas_mes() {
                 <div class="container_grafico">
                     <canvas id="${dadosGraficos[i][0]}" style="height: 50%; width: 100%;"></canvas>
                 </div>
-            </div>
-        </div>`;
-    }
-    let lista_alerta = criar_lista_alertas()
+                </div>
+                </div>`;
+            }
+            let lista_alerta = criar_lista_alertas()
     html += lista_alerta
     graficos_mensais.innerHTML = html
 }
@@ -385,7 +414,7 @@ function criar_grafico_modal_sensor(dados) {
     if (window.graficoHistoricoSensor) {
         window.graficoHistoricoSensor.destroy();
     }
-
+    
     const horas = [];
     const agora = new Date();
     for (let i = 11; i >= 0; i--) {
@@ -393,7 +422,7 @@ function criar_grafico_modal_sensor(dados) {
         hora.setHours(agora.getHours() - i);
         horas.push(hora.getHours() + ':00');
     }
-
+    
     window.graficoHistoricoSensor = new Chart(contexto, {
         type: 'line',
         data: {
@@ -426,13 +455,13 @@ function mostrar_modal_sensor(posicao) {
     const titulomodal = titulo_modal_sensor;
     const umidadeSensor = umidade_sensor;
     const statusSensor = status_sensor;
-
+    
     titulomodal.textContent = dadosSensores[posicao][0];
     umidadeSensor.textContent = dadosSensores[posicao][2];  
     statusSensor.textContent = dadosSensores[posicao][4];
-
+    
     modal.style.display = 'block';
-
+    
     criar_grafico_modal_sensor(dadosSensores[posicao][5]);
 }
 
@@ -480,31 +509,7 @@ function botao_abrir_fechar_menu() {
 
 
 
-function select_unidade() {
-    dadosGraficos = [
-        ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)], "Umidade Media Por Semana Do Mês Atual"],
-        ["grafico_incidentes", "Incidentes", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [(parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10))], "Incidentes Por Área Do Mês Atual"],
-    ];
-    criar_grafico_geral()
-    criar_kpis()
-    criar_html_estatisticas_mes()
-    criar_grafico_estatisticas_mes()
-
-    var unidadeAtual = selecionar_unidade.value;
-    return unidadeAtual
-}
-
-export {select_unidade}
 
 select_unidade()
-
-
-async function funcao() {
-    let unidadeSelecionada = document.getElementById("selecionar_unidade").value;
-    let resposta = await fetch(`http://localhost:3333/relatorios?unidade=${unidadeSelecionada}`);
-    let dados = await resposta.json();
-
-    return dados.map(d => d.umidade);
-}
 </script>
 </html>

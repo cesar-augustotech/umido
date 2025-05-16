@@ -28,7 +28,7 @@ function cadastrarUnidade(req, res) {
   } else {
 
 
-    aquarioModel.cadastrar(descricao, idUsuario)
+    unidadeModel.cadastrar(descricao, idUsuario)
       .then((resultado) => {
         res.status(201).json(resultado);
       }
