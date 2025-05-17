@@ -117,6 +117,8 @@ DROP USER IF EXISTS 'umido'@'%';
 CREATE USER 'umido'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT INSERT ON umido.* TO 'umido'@'%';
 GRANT SELECT ON umido.* TO 'umido'@'%';
+GRANT UPDATE ON umido.* TO 'umido'@'%';
+GRANT DELETE ON umido.* TO 'umido'@'%';
 FLUSH PRIVILEGES;
 
 
