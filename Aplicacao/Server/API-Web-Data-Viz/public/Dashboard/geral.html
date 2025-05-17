@@ -19,8 +19,8 @@
       </nav>
       <div class="div_perfil">
         <div>
-          <h4>FERNANDO BRANDÃO</h4>
-          <h5>Administrador</h5>
+          <h4 id="nome_usuario_dashboard"></h4>
+          <h5 id="nivel_usuario_dashboard">Comum</h5>
         </div>
         <img src="../assets/icons/user.png" style="width: 40px; height: 40px;" alt="perfil">
       </div>
@@ -40,7 +40,7 @@
           <img src="../assets/icons/grafico.png" style="width: 30px; height: 30px;">
           <span>Relatórios</span>
         </li>
-        <li style="gap: 20px;" onclick="window.location.href = 'configuracao.html'">
+        <li id="botao_menu_configuracao" style="gap: 20px;" onclick="window.location.href = 'configuracao.html'">
           <img src="../assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Configurações</span>
         </li>
@@ -79,6 +79,17 @@
 </body>
 <script>
 
+  const usuario = JSON.parse(JSON.parse(sessionStorage.getItem("umido")));
+
+    nome_usuario_dashboard.innerHTML = usuario.nome_usuario
+
+    if (usuario.nivel_de_acesso == 'A') {
+        nivel_usuario_dashboard.innerHTML = 'Administrador'
+        botao_menu_configuracao.style.display = 'flex'
+    }
+    else if (usuario.nivel_de_acesso == 'S') {
+        nivel_usuario_dashboard.innerHTML = 'Supervisor'
+    }
   function botao_abrir_fechar_menu() {
     const menuLateral = document.querySelector('.menu_lateral');
     menuLateral.classList.toggle('menu_expandido');

@@ -11,24 +11,24 @@ async function logar(req, res) {
     } else if (senha == undefined) {
         res.status(400).send("Sua senha está indefinida!");
     } else {
-            
+
     }
 
     usuarioModel.logar(email, senha)
-            .then(
-                function (resultado) {
-                    res.json(JSON.stringify(resultado));
-                }
-            ).catch(
-                function (erro) {
-                    console.log(erro);
-                    console.log(
-                        "\nHouve um erro ao realizar o cadastro! Erro: ",
-                        erro.sqlMessage
-                    );
-                    res.status(500).json(erro.sqlMessage);
-                }
-            );
+        .then(
+            function (resultado) {
+                res.json(JSON.stringify(resultado));
+            }
+        ).catch(
+            function (erro) {
+                console.log(erro);
+                console.log(
+                    "\nHouve um erro ao realizar o cadastro! Erro: ",
+                    erro.sqlMessage
+                );
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
 
 }
 
@@ -55,7 +55,7 @@ function salvarUsuario(req, res) {
         usuarioModel.salvarUsuario(nome, email, senha, nivel_de_acesso)
             .then(
                 function (resultado) {
-                    res.json(resultado);
+                    res.status(200).json(resultado);
                 }
             ).catch(
                 function (erro) {
@@ -70,18 +70,81 @@ function salvarUsuario(req, res) {
     }
 }
 
+function salvarUnidadesUsuario (req, res) {
+    var idUnidade = req.body.unidade
+    var idUsuario = req.body.id
+    usuarioModel.salvarUnidadesUsuario(idUnidade, idUsuario).then(function (resultado) {
+        res.status(200).json(resultado)
+    }).catch(function (erro) {
+        res.status(500).json(erro.sqlMessage)
+    })
+
+    console.log('Salvndo a unidade')
+}
+
+function obterUnidadesUsuario(req, res) {
+    usuarioModel.obterUnidadesUsuario().then(function (resultado) {
+        res.status(200).json(resultado)
+    }). catch(function (erro) {
+        res.status(500).json(erro.sqlMessage)
+    })
+}
+
 function obterDados(req, res) {
-    usuarioModel.obterDados().then(function (resultado) {
+    var idEmpresa = req.body.idEmpresa
+    console.log('CONTROLLER FOI' + idEmpresa)
+
+    usuarioModel.obterDados(idEmpresa).then(function (resultado) {
         res.status(200).json(resultado)
     }).catch(function (erro) {
         res.status(500).json(erro.sqlMessage);
     })
 }
 
+function removerUsuario(req, res) {
+    var id = req.body.id
+
+    console.log(id + 'REMOVER CONTROLLER')
+
+    usuarioModel.removerUsuario(id).then(function (resultado) {
+        res.json(resultado)
+    }).catch(function (erro) {
+        res.status(500).json(erro.sqlMessage);
+    })
+}
+
+function editarUsuario(req, res) {
+    var id = req.body.idServer
+    var nome = req.body.nomeServer
+    var email = req.body.emailServer
+    var senha = req.body.senhaServer
+    var nivel_de_acesso = req.body.nivel_de_acessoServer
+
+    usuarioModel.editarUsuario(id, nome, email, senha, nivel_de_acesso).then(function (resultado) {
+        res.json(resultado)
+    }).catch(function (erro) {
+        res.status(500).json(erro.sqlMessage);
+    })
+}
+
+function obterUnidades(req, res) {
+    var id = req.body.idServer
+
+    usuarioModel.obterUnidades(id).then(function (resultado) {
+        res.json(resultado)
+    }).catch(function (erro) {
+        res.status(500).json(erro.sqlMessage)
+    })
+}
 
 
 module.exports = {
     logar,
     obterDados,
-    salvarUsuario
+    salvarUsuario,
+    removerUsuario,
+    editarUsuario,
+    obterUnidades,
+    salvarUnidadesUsuario,
+    obterUnidadesUsuario
 }

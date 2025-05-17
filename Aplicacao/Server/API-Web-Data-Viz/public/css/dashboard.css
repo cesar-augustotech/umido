@@ -109,6 +109,10 @@ nav input {
     cursor: pointer;
 }
 
+#botao_menu_configuracao {
+    display:  none;
+}
+
 .itens_menu {
     padding: 50px 0px 0px 0px;
 }

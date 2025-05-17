@@ -11,6 +11,7 @@ var mySqlConfig = {
 };
 /*
 */
+
 var mySqlConfig = {
     host: process.env.DB_HOST,
     database: process.env.DB_DATABASE,
@@ -27,6 +28,7 @@ function executar(instrucao) {
         return Promise.reject("AMBIENTE NÃO CONFIGURADO EM .env");
     } */
         
+        console.log(mySqlConfig)
 
     return new Promise(function (resolve, reject) {
         var conexao = mysql.createConnection(mySqlConfig);
