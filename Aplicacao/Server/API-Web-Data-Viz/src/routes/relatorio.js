@@ -9,4 +9,9 @@ router.get("/buscarUmidadeMediaUnidade/:unidadeAtual", function (req, res) {
 });
 
 
+router.get("/buscarAlertas/:unidadeAtual", function (req, res) {
+    relatorioController.buscarAlertas(req, res);
+});
+
+
 module.exports = router;

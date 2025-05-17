@@ -18,22 +18,42 @@ function buscarUmidadeMediaUnidade(unidadeAtual) {
     if (mesAtual < 10) mesAtual = `0${mesAtual}`;
 
     var instrucaoSql = `
-SELECT AVG(m.umidade),u.id,s.id
-FROM medicao as m
-INNER JOIN sensor AS s ON m.id_sensor = s.id
-INNER JOIN unidade AS u ON s.id_unidade = u.id
-WHERE u.id = 1
-AND data_hora BETWEEN '2025-05-01' AND LAST_DAY('2025-05-01')
-GROUP BY u.id,s.id;
-
-
     
+    //     SELECT AVG(m.umidade),m.data_hora,u.id,s.id
+    // FROM medicao as m
+    // INNER JOIN sensor AS s ON m.id_sensor = s.id
+    // INNER JOIN unidade AS u ON s.id_unidade = u.id
+    // WHERE u.id = ${unidadeAtual}
+    // AND data_hora BETWEEN '${anoAtual}-${mesAtual}-01' AND LAST_DAY('${anoAtual}-${mesAtual}-01')
+    // GROUP BY u.id,s.id;
     `;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
 
+function buscarAlertas(unidadeAtual) {
+    var dataAtual = new Date();
+    var mesAtual = dataAtual.getMonth() + 1;
+    var anoAtual = dataAtual.getFullYear();
+
+    if (mesAtual < 10) mesAtual = `0${mesAtual}`;
+
+    var instrucaoSql = `
+    
+    //     SELECT AVG(m.umidade),m.data_hora,u.id,s.id
+    // FROM medicao as m
+    // INNER JOIN sensor AS s ON m.id_sensor = s.id
+    // INNER JOIN unidade AS u ON s.id_unidade = u.id
+    // WHERE u.id = ${unidadeAtual}
+    // AND data_hora BETWEEN '${anoAtual}-${mesAtual}-01' AND LAST_DAY('${anoAtual}-${mesAtual}-01')
+    // GROUP BY u.id,s.id;
+    `;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
 module.exports = {
     buscarUmidadeMediaUnidade,
+    buscarAlertas
 }

@@ -162,7 +162,7 @@
     function select_unidade() {
         criar_todos_os_graficos()
     }
-    
+
     function criar_todos_os_graficos() {
         var unidadeAtual = selecionar_unidade.value
         dadosGraficos = [
@@ -175,9 +175,9 @@
         criar_kpis()
         criar_html_estatisticas_mes()
         criar_grafico_estatisticas_mes()
-        
+
     }
-    
+
     let dadosSensores = [
         ["Sensor 1", "Ativo", "28%", "92%", "Ativo", [25, 27, 28, 30, 29, 28, 27, 26, 28, 29, 30, 28]],
         ["Sensor 2", "Ativo", "38%", "87%", "Ativo", [20, 21, 22, 34, 21, 22, 21, 26, 28, 29, 30, 28]],
@@ -185,43 +185,58 @@
         ["Sensor 4", "Ativo", "48%", "65%", "Ativo", [25, 28, 26, 35, 28, 26, 29, 26, 28, 29, 30, 28]],
         ["Sensor 5", "Ativo", "58%", "87%", "Ativo", [27, 27, 24, 37, 26, 29, 25, 26, 28, 29, 30, 28]]
     ];
-    
-    
-    
+
+
     let quantidade_alerta = 0
-    
-    let dadosGraficos = [];
-    
+
+    let dadosColetados = [];
+
     let graficos = []
-    
+
     let ultimo_grafico;
-    
+
     const modalAdicionarSensor = modal_adicionar_sensor;
-    
+
     const formularioAdicionarSensor = formulario_adicionar_sensor;
-    
-    
+
+
     function buscarUmidadeMediaUnidade() {
         var unidadeAtual = selecionar_unidade.value
-       
-        
+
         fetch(`/relatorio/buscarUmidadeMediaUnidade/${unidadeAtual}`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
-                response.json().then(function (resposta) {
+                dadosGraficos = response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
                     resposta.reverse();
-                    criar_grafico_geral(resposta, unidadeAtual);
-                    
+                   
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
             }
         })
-        .catch(function (error) {
-            console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-        });
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
     }
-    
+
+    function buscarAlertas(){
+    var unidadeAtual = selecionar_unidade.value
+
+        fetch(`/relatorio/buscarAlertas/${unidadeAtual}`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                dadosGraficos = response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    resposta.reverse();
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+
 
 
 
@@ -252,14 +267,11 @@
         return html
     }
 
-    function criar_grafico_geral() {
+    function criar_grafico_geral(dadosColetados) {
         let contexto = document.getElementById('grafico_umidade').getContext('2d');
         if (ultimo_grafico) {
             ultimo_grafico.destroy();
         }
-
-        
-
 
         ultimo_grafico = new Chart(contexto, {
             type: "line",
@@ -276,7 +288,7 @@
                     },
                     {
                         label: "Umidade (%)",
-                        data: dadosGraficos,
+                        data: dadosColetados,
                         backgroundColor: 'rgba(0, 168, 255, 0.2)',
                         borderColor: 'rgba(0, 168, 255, 1)',
                         borderWidth: 2,
@@ -528,7 +540,7 @@
     };
 
     select_unidade()
-    
+
 </script>
 
 </html>
