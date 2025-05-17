@@ -267,7 +267,49 @@
         return html
     }
 
-    function criar_grafico_geral(dadosColetados) {
+    // Função para criar o gráfico geral, resgatando do banco
+   function buscarUmidadeMediaUnidade() {
+    var unidadeAtual = selecionar_unidade.value;
+
+    fetch(`/relatorio/buscarUmidadeMediaUnidade/${unidadeAtual}`, { cache: 'no-store' })
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+
+                   
+                    let medias = resposta.map(item => item.mediaMensal);
+                let labels = resposta.map(item => `${item.mes}/${item.ano}`);
+
+                let meses = resposta.map(item => item.mes);
+                console.log('Os meses do banco são:', meses);
+
+                    criar_grafico_geral(medias, meses);
+                    console.log('o valor recebido do banco é:', medias);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+        .catch(function (error) {
+            console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+        });
+}
+
+  // Fim da função fetch
+  var mediaUmidadeMensal = [0,0,0,0,0,0,0,0,0,0,0,0]
+  var mesReferencia = 0
+  function criar_grafico_geral(medias, meses) {
+      
+      
+      console.log('o valor recebido do banco pós grafico é:', medias)
+
+      for (i=0;i<12;i++){
+        mesReferencia = meses[i]
+        
+        mediaUmidadeMensal[mesReferencia - 1] = medias[i]
+            }
+    }
+      
         let contexto = document.getElementById('grafico_umidade').getContext('2d');
         if (ultimo_grafico) {
             ultimo_grafico.destroy();
@@ -276,11 +318,12 @@
         ultimo_grafico = new Chart(contexto, {
             type: "line",
             data: {
-                labels: ["Novembro", "Dezembro", "Janeiro", "Fevereiro", "Março", "Abril"],
+                labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+,
                 datasets: [
                     {
                         label: "Alerta",
-                        data: [30, 30, 30, 30, 30, 30],
+                        data: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
                         backgroundColor: 'rgba(255, 168, 255, 0.2)',
                         borderColor: 'rgba(255, 168, 255, 1)',
                         borderWidth: 2,
@@ -288,24 +331,24 @@
                     },
                     {
                         label: "Umidade (%)",
-                        data: dadosColetados,
+                        data: mediaUmidadeMensal,
                         backgroundColor: 'rgba(0, 168, 255, 0.2)',
                         borderColor: 'rgba(0, 168, 255, 1)',
                         borderWidth: 2,
                         fill: false
                     }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
-
-    }
+            });
+            
+        
 
     function criar_kpis() {
         indicadores.innerHTML = ""

@@ -18,15 +18,22 @@ function buscarUmidadeMediaUnidade(unidadeAtual) {
     if (mesAtual < 10) mesAtual = `0${mesAtual}`;
 
     var instrucaoSql = `
-    
-    //     SELECT AVG(m.umidade),m.data_hora,u.id,s.id
-    // FROM medicao as m
-    // INNER JOIN sensor AS s ON m.id_sensor = s.id
-    // INNER JOIN unidade AS u ON s.id_unidade = u.id
-    // WHERE u.id = ${unidadeAtual}
-    // AND data_hora BETWEEN '${anoAtual}-${mesAtual}-01' AND LAST_DAY('${anoAtual}-${mesAtual}-01')
-    // GROUP BY u.id,s.id;
-    `;
+     SELECT 
+    MONTH(m.data_hora) AS mes,
+    ROUND(AVG(m.umidade), 2) AS mediaMensal
+    FROM 
+    medicao AS m
+    JOIN 
+    sensor AS s ON m.id_sensor = s.id
+    JOIN 
+    unidade AS u ON s.id_unidade = u.id
+    WHERE 
+    u.id = ${unidadeAtual}
+    AND YEAR(m.data_hora) = ${anoAtual}
+    GROUP BY 
+    mes
+    ORDER BY 
+    mes;`;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
