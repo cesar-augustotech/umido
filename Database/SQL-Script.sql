@@ -84,16 +84,18 @@ INSERT INTO usuario (nome, email, senha, nivel_de_acesso) VALUES
 ('Carlos Souza', 'carlos@agrotech.com', 'senha123', 'S'),
 ('João Oliveira', 'joao@greenfarms.com', 'senha123', 'A');
 
+
+
 -- Inserção das unidades
 INSERT INTO unidade (nome, codigo_cnir, empresa_id) VALUES
 ('Unidade Sol Nascente', NULL, 1),
 ('Unidade Água Verde', NULL, 1),
 ('Unidade Santa Clara', NULL, 2);
 
+
 -- Associação de usuários às unidades
 INSERT INTO unidade_usuario (id_unidade, id_usuario) VALUES
 (1, 1),
-(2, 1),
 (2, 2),
 (3, 3);
 
@@ -117,39 +119,12 @@ DROP USER IF EXISTS 'umido'@'%';
 CREATE USER 'umido'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT INSERT ON umido.* TO 'umido'@'%';
 GRANT SELECT ON umido.* TO 'umido'@'%';
-GRANT UPDATE ON umido.* TO 'umido'@'%';
 GRANT DELETE ON umido.* TO 'umido'@'%';
+GRANT UPDATE ON umido.* TO 'umido'@'%';
 FLUSH PRIVILEGES;
-
-
-select usu.*, uu.id_unidade, uni.empresa_id
-from usuario as usu
-inner join unidade_usuario as uu on uu.id_usuario = usu.id
-inner join unidade as uni on uni.id = uu.id_unidade
-where usu.email = "" and usu.senha = ""; 
 
 
 select * from usuario;
 select * from empresa;
-
--- admin
-SELECT u.id as "id_usuario", u.nome as "nome_usuario", u.email as "email_usuario", u.nivel_de_acesso as "nivel_de_acesso", uu.id_unidade, e.ativo, e.id FROM usuario u
-		inner join unidade_usuario uu on uu.id_unidade = u.id
-			inner join unidade uni on uni.id = uu.id_unidade
-				inner join empresa e on uni.empresa_id = e.id
-where u.email = "ana@agrotech.com" and u.senha = "senha123";
-
-
-select u.id, u.nome from unidade u
-	inner join empresa e on u.empresa_id = e.id where e.id = 1;
-
-select u.id, u.nome from unidade_usuario uu
-	inner join unidade u on u.id = uu.id_unidade
-where uu.id_usuario = 1;
-
-select * from unidade_usuario;
-SELECT * FROM usuario;
 select * from unidade;
-select * from empresa;
-
-update empresa set ativo=0 where id=1
+select * from unidade_usuario;
