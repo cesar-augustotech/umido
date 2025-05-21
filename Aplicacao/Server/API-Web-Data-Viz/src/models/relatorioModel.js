@@ -47,16 +47,14 @@ function buscarAlertas(unidadeAtual) {
     if (mesAtual < 10) mesAtual = `0${mesAtual}`;
 
     var instrucaoSql = `
-   SELECT m.alerta,s.identificador,m.data_hora
+     SELECT m.alerta,s.identificador,m.data_hora
     FROM medicao as m
     INNER JOIN sensor AS s ON m.id_sensor = s.id
     INNER JOIN unidade AS u ON s.id_unidade = u.id
-    WHERE u.id = ${unidadeAtual}
-    AND data_hora BETWEEN '2025-05-01' AND LAST_DAY('2025-05-01');
-    `;
-
+    WHERE u.id = ${umidade} and m.alerta is not null
+    AND data_hora BETWEEN '${anoAtual}-${mesAtual}-01' AND LAST_DAY('${anoAtual}-${mesAtual}-01');
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql);`
 }
 
 function buscarIncidentes(unidadeAtual) {
@@ -67,16 +65,17 @@ function buscarIncidentes(unidadeAtual) {
     if (mesAtual < 10) mesAtual = `0${mesAtual}`;
 
     var instrucaoSql = `
-      SELECT 
+    SELECT
     m.id_sensor,
-    COUNT(*) AS qtd_alertas
-    FROM medicao AS m
+    count(case WHEN alerta = '1' THEN 'alerta_critico' end) as alerta_critivo,
+    count(case WHEN alerta = '0' THEN 'alerta' end) as alerta
+    FROM medicao as m
     INNER JOIN sensor AS s ON m.id_sensor = s.id
     INNER JOIN unidade AS u ON s.id_unidade = u.id
-    WHERE u.id = 2
-  AND m.data_hora BETWEEN '2025-05-01' AND LAST_DAY('2025-05-01')
-  AND m.alerta IS NOT NULL
-    GROUP BY m.id_sensor;
+    WHERE u.id = ${unidadeAtual}
+    AND data_hora BETWEEN '${anoAtual}-${mesAtual}-01' AND LAST_DAY('${anoAtual}-${mesAtual}-01')
+    AND m.alerta IS NOT NULL
+    GROUP BY id_sensor;
     `;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
@@ -93,10 +92,10 @@ function buscarUnidadeMediaPorSemana(unidadeAtual) {
     var instrucaoSql = `
     SELECT
     CASE
-    WHEN m.data_hora >= CURDATE() - INTERVAL 7 DAY THEN 4
+    WHEN m.data_hora >= CURDATE() - INTERVAL 0 DAY THEN 1
+    WHEN m.data_hora >= CURDATE() - INTERVAL 7 DAY THEN 2
     WHEN m.data_hora >= CURDATE() - INTERVAL 14 DAY THEN 3
-    WHEN m.data_hora >= CURDATE() - INTERVAL 21 DAY THEN 2
-    WHEN m.data_hora >= CURDATE() - INTERVAL 28 DAY THEN 1
+    WHEN m.data_hora >= CURDATE() - INTERVAL 21 DAY THEN 4
     END AS semana,
     AVG(m.umidade) AS umidade_media
     FROM medicao m
@@ -105,8 +104,7 @@ function buscarUnidadeMediaPorSemana(unidadeAtual) {
     WHERE m.data_hora >= CURDATE() - INTERVAL 28 DAY and u.id = ${unidadeAtual}
     GROUP BY u.nome, semana
     ORDER BY semana;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);`
+    `
 }
 
 
