@@ -10,8 +10,6 @@
 </head>
 
 <body>
-
-
     <header class="i_header">
         <div class="container">
             <div class="logo"></div>
@@ -157,27 +155,9 @@
     </div>
 </body>
 <script>
-
-
-    function select_unidade() {
-        criar_todos_os_graficos()
-    }
-    
-    function criar_todos_os_graficos() {
-        var unidadeAtual = selecionar_unidade.value
-        dadosGraficos = [
-            ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)], "Umidade Media Por Semana Do Mês Atual"],
-            ["grafico_incidentes", "Incidentes", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [(parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10))], "Incidentes Por Área Do Mês Atual"],
-        ];
-        console.log(select_unidade)
-        buscarUmidadeMediaUnidade()
-        criar_grafico_geral()
-        criar_kpis()
-        criar_html_estatisticas_mes()
-        criar_grafico_estatisticas_mes()
-        
-    }
-    
+    let dadosGraficos = [];
+    let graficos = [];
+    let ultimo_grafico;
     let dadosSensores = [
         ["Sensor 1", "Ativo", "28%", "92%", "Ativo", [25, 27, 28, 30, 29, 28, 27, 26, 28, 29, 30, 28]],
         ["Sensor 2", "Ativo", "38%", "87%", "Ativo", [20, 21, 22, 34, 21, 22, 21, 26, 28, 29, 30, 28]],
@@ -185,90 +165,102 @@
         ["Sensor 4", "Ativo", "48%", "65%", "Ativo", [25, 28, 26, 35, 28, 26, 29, 26, 28, 29, 30, 28]],
         ["Sensor 5", "Ativo", "58%", "87%", "Ativo", [27, 27, 24, 37, 26, 29, 25, 26, 28, 29, 30, 28]]
     ];
-    
-    
-    
-    let quantidade_alerta = 0
-    
-    let dadosGraficos = [];
-    
-    let graficos = []
-    
-    let ultimo_grafico;
-    
-    const modalAdicionarSensor = modal_adicionar_sensor;
-    
-    const formularioAdicionarSensor = formulario_adicionar_sensor;
-    
-    
+    let quantidade_alerta = 0;
+
+    function select_unidade() {
+        criar_todos_os_graficos();
+    }
+
+    function criar_todos_os_graficos() {
+        dadosGraficos = [];
+        buscarUmidadeMediaUnidade();
+        buscarIncidentes();
+        buscarUnidadeMediaPorSemana();
+    }
+
     function buscarUmidadeMediaUnidade() {
-        var unidadeAtual = selecionar_unidade.value
-       
-        
-        fetch(`/relatorio/buscarUmidadeMediaUnidade/${unidadeAtual}`, { cache: 'no-store' }).then(function (response) {
-            if (response.ok) {
-                response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                    resposta.reverse();
-                    criar_grafico_geral(resposta, unidadeAtual);
-                    
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-            }
-        })
-        .catch(function (error) {
-            console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-        });
-    }
-    
-
-
-
-    function criar_lista_alertas() {
-        let html_lista = ""
-        for (let i = 0; i < quantidade_alerta + 5; i++) {
-            html_lista += `
-        <li style="display: grid; grid-template-columns: 1fr 1fr;  border-bottom: 1px solid black;">
-            <div>Sensor ${parseInt((Math.random() * dadosSensores.length) + 1)}</div>
-            <div>${parseInt(Math.random() * 29) + 1}/${parseInt(Math.random() * 11) + 1}/2024</div>
-            </li>
-            `
-        }
-        let html = `
-    <div class="container_grafico_mensal">
-        <div class="cartao">
-            <div class="titulo_grafico">ALERTAS</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                <div class="titulo_grafico">Sensor</div>
-                <div class="titulo_grafico">Data</div>
-                </div>
-                <ul>
-                    ${html_lista}
-                    </ul>
-                    </div>
-                    </div>
-                    `
-        return html
+        var unidadeAtual = selecionar_unidade.value;
+        fetch(`/relatorio/buscarUmidadeMediaUnidade/${unidadeAtual}`, { cache: 'no-store' })
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        let medias = resposta.map(item => item.mediaMensal);
+                        let meses = resposta.map(item => item.mes);
+                        let labels = meses.map(m => {
+                            const nomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+                            return nomes[m - 1];
+                        });
+                        criar_grafico_geral(medias, labels);
+                    });
+                }
+            });
     }
 
-    function criar_grafico_geral() {
+    function buscarIncidentes() {
+        var unidadeAtual = selecionar_unidade.value;
+        fetch(`/relatorio/buscarIncidentes/${unidadeAtual}`, { cache: 'no-store' })
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        let qtd_alertas = resposta.map(item => item.qtd_alertas);
+                        let id_sensor = resposta.map(item => item.id_sensor);
+                        let labels = id_sensor.map(id => `Sensor ${id}`);
+                        dadosGraficos = dadosGraficos.filter(g => g[0] !== "grafico_incidentes");
+                        dadosGraficos.push([
+                            "grafico_incidentes",
+                            "Incidentes",
+                            "Incidentes",
+                            "pie",
+                            labels,
+                            qtd_alertas,
+                            "Incidentes Por Sensor"
+                        ]);
+                        criar_html_estatisticas_mes();
+                        criar_grafico_estatisticas_mes();
+                    });
+                }
+            });
+    }
+
+    function buscarUnidadeMediaPorSemana() {
+        var unidadeAtual = selecionar_unidade.value;
+        fetch(`/relatorio/buscarUnidadeMediaPorSemana/${unidadeAtual}`, { cache: 'no-store' })
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        let medias = resposta.map(item => item.umidade_media);
+                        let semanas = resposta.map(item => `Semana ${item.semana}`);
+                        dadosGraficos = dadosGraficos.filter(g => g[0] !== "grafico_mensal");
+                        dadosGraficos.push([
+                            "grafico_mensal",
+                            "Umidade",
+                            "Umidade (%)",
+                            "bar",
+                            semanas,
+                            medias,
+                            "Umidade Média Por Semana Do Mês Atual"
+                        ]);
+                        criar_html_estatisticas_mes();
+                        criar_grafico_estatisticas_mes();
+                    });
+                }
+            });
+    }
+
+   
+    function criar_grafico_geral(medias, labels) {
         let contexto = document.getElementById('grafico_umidade').getContext('2d');
         if (ultimo_grafico) {
             ultimo_grafico.destroy();
         }
-
-        
-
-
         ultimo_grafico = new Chart(contexto, {
             type: "line",
             data: {
-                labels: ["Novembro", "Dezembro", "Janeiro", "Fevereiro", "Março", "Abril"],
+                labels: labels,
                 datasets: [
                     {
                         label: "Alerta",
-                        data: [30, 30, 30, 30, 30, 30],
+                        data: Array(labels.length).fill(30),
                         backgroundColor: 'rgba(255, 168, 255, 0.2)',
                         borderColor: 'rgba(255, 168, 255, 1)',
                         borderWidth: 2,
@@ -276,7 +268,7 @@
                     },
                     {
                         label: "Umidade (%)",
-                        data: dadosGraficos,
+                        data: medias,
                         backgroundColor: 'rgba(0, 168, 255, 0.2)',
                         borderColor: 'rgba(0, 168, 255, 1)',
                         borderWidth: 2,
@@ -292,14 +284,152 @@
                 }
             }
         });
-
     }
 
+    function criar_grafico_estatisticas_mes() {
+        if (graficos.length > 0) {
+            for (let i = 0; i < graficos.length; i++) {
+                try {
+                    graficos[i].destroy();
+                } catch (e) { }
+            }
+            graficos = [];
+        }
+        const cores = [
+            'rgba(54, 162, 235, 0.5)',
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(255, 206, 86, 0.5)',
+            'rgba(75, 192, 192, 0.5)',
+            'rgba(153, 102, 255, 0.5)',
+            'rgba(255, 159, 64, 0.5)'
+        ];
+        const bordas = [
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 99, 132, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+        ];
+        for (let i = 0; i < dadosGraficos.length; i++) {
+            let contexto = document.getElementById(dadosGraficos[i][0]).getContext('2d');
+            let tipo = dadosGraficos[i][3];
+            let labels = dadosGraficos[i][4];
+            let dados = dadosGraficos[i][5];
+            let titulo = dadosGraficos[i][2];
+            let grafico;
+            if (tipo === "pie") {
+                grafico = new Chart(contexto, {
+                    type: "pie",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: titulo,
+                            data: dados,
+                            backgroundColor: cores.slice(0, labels.length),
+                            borderColor: bordas.slice(0, labels.length),
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            } else {
+                grafico = new Chart(contexto, {
+                    type: tipo,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: titulo,
+                            data: dados,
+                            backgroundColor: cores[0],
+                            borderColor: bordas[0],
+                            borderWidth: 2,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            graficos.push(grafico);
+        }
+    }
+
+    function criar_html_estatisticas_mes() {
+        graficos_mensais.innerHTML = "";
+        if (graficos.length > 0) {
+            for (let i = 0; i < graficos.length; i++) {
+                try {
+                    graficos[i].destroy();
+                } catch (e) { }
+            }
+        }
+        let html = "";
+        for (let i = 0; i < dadosGraficos.length; i++) {
+            html += `
+        <div class="container_grafico_mensal">
+            <div class="cartao">
+                <div class="titulo_grafico">${dadosGraficos[i][1]}</div>
+                <div class="titulo_grafico">${dadosGraficos[i][6]}</div>
+                <div class="container_grafico">
+                    <canvas id="${dadosGraficos[i][0]}" style="height: 50%; width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>`;
+        }
+        let lista_alerta = criar_lista_alertas();
+        html += lista_alerta;
+        graficos_mensais.innerHTML = html;
+    }
+
+
+    function criar_lista_alertas() {
+        let html_lista = "";
+        for (let i = 0; i < quantidade_alerta + 5; i++) {
+            html_lista += `
+        <li style="display: grid; grid-template-columns: 1fr 1fr;  border-bottom: 1px solid black;">
+            <div>Sensor ${parseInt((Math.random() * dadosSensores.length) + 1)}</div>
+            <div>${parseInt(Math.random() * 29) + 1}/${parseInt(Math.random() * 11) + 1}/2024</div>
+            </li>
+            `;
+        }
+        let html = `
+    <div class="container_grafico_mensal">
+        <div class="cartao">
+            <div class="titulo_grafico">ALERTAS</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                <div class="titulo_grafico">Sensor</div>
+                <div class="titulo_grafico">Data</div>
+                </div>
+                <ul>
+                    ${html_lista}
+                    </ul>
+                    </div>
+                    </div>
+                    `;
+        return html;
+    }
+
+
     function criar_kpis() {
-        indicadores.innerHTML = ""
-        lista_sensores.innerHTML = ""
-        let data = new Date()
-        quantidade_alerta = parseInt(Math.random() * 10)
+        indicadores.innerHTML = "";
+        lista_sensores.innerHTML = "";
+        let data = new Date();
+        quantidade_alerta = parseInt(Math.random() * 10);
         let dadosIndicadores = [
             [quantidade_alerta, "incidentes", "(Mês atual)"],
             [parseInt(Math.random() * 70) + 30, "umidade média atual", "(Mês atual)"],
@@ -326,106 +456,12 @@
         }
     }
 
-    function criar_grafico_estatisticas_mes() {
-        for (let i = 0; i < dadosGraficos.length; i++) {
-            let contexto = document.getElementById(dadosGraficos[i][0]).getContext('2d');
-            let cor1 = parseInt(Math.random() * 256)
-            let cor2 = parseInt(Math.random() * 256)
-            let cor3 = parseInt(Math.random() * 256)
-            let grafico;
-            if (dadosGraficos[i][3] == "pie") {
-                let cores = []
-                let bordas = []
-                for (let a = 0; a < dadosGraficos[i][4].length; a++) {
-                    let cor1 = parseInt(Math.random() * 256)
-                    let cor2 = parseInt(Math.random() * 256)
-                    let cor3 = parseInt(Math.random() * 256)
-                    cores.push(`rgba(${cor1}, ${cor2}, ${cor3}, 0.2)`)
-                    bordas.push(`rgba(${cor1}, ${cor2}, ${cor3}, 1)`)
-                }
-                grafico = new Chart(contexto, {
-                    type: dadosGraficos[i][3],
-                    data: {
-                        labels: dadosGraficos[i][4],
-                        datasets: [{
-                            label: dadosGraficos[i][2],
-                            data: dadosGraficos[i][5],
-                            backgroundColor: cores,
-                            borderColor: bordas,
-                            borderWidth: 2,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            } else {
-                grafico = new Chart(contexto, {
-                    type: dadosGraficos[i][3],
-                    data: {
-                        labels: dadosGraficos[i][4],
-                        datasets: [{
-                            label: dadosGraficos[i][2],
-                            data: dadosGraficos[i][5],
-                            backgroundColor: `rgba(${cor1}, ${cor2}, ${cor3}, 0.2)`,
-                            borderColor: `rgba(${cor1}, ${cor2}, ${cor3}, 1)`,
-                            borderWidth: 2,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            }
-            graficos.push(grafico)
-        }
-    }
-
-    function criar_html_estatisticas_mes() {
-        graficos_mensais.innerHTML = ""
-        if (graficos.length > 0) {
-            for (let i = 0; i < graficos.length; i++) {
-                try {
-                    graficos[i].destroy()
-                } catch (e) { }
-            }
-        }
-        let html = ""
-        for (let i = 0; i < dadosGraficos.length; i++) {
-            html += `
-        <div class="container_grafico_mensal">
-            <div class="cartao">
-                <div class="titulo_grafico">${dadosGraficos[i][1]}</div>
-                <div class="titulo_grafico">${dadosGraficos[i][6]}</div>
-                <div class="container_grafico">
-                    <canvas id="${dadosGraficos[i][0]}" style="height: 50%; width: 100%;"></canvas>
-                </div>
-                </div>
-                </div>`;
-        }
-        let lista_alerta = criar_lista_alertas()
-        html += lista_alerta
-        graficos_mensais.innerHTML = html
-    }
-
+    
     function criar_grafico_modal_sensor(dados) {
         const contexto = document.getElementById('grafico_historico_sensor').getContext('2d');
         if (window.graficoHistoricoSensor) {
             window.graficoHistoricoSensor.destroy();
         }
-
         const horas = [];
         const agora = new Date();
         for (let i = 11; i >= 0; i--) {
@@ -433,7 +469,6 @@
             hora.setHours(agora.getHours() - i);
             horas.push(hora.getHours() + ':00');
         }
-
         window.graficoHistoricoSensor = new Chart(contexto, {
             type: 'line',
             data: {
@@ -481,7 +516,7 @@
     }
 
     function mostrar_modal_adicionar_sensor() {
-        modalAdicionarSensor.style.display = 'block';
+        modal_adicionar_sensor.style.display = 'block';
     }
 
     function fechar_modal() {
@@ -493,21 +528,20 @@
     }
 
     function fechar_modal_adicionar_sensor() {
-        modalAdicionarSensor.style.display = 'none';
-        formularioAdicionarSensor.reset();
+        modal_adicionar_sensor.style.display = 'none';
+        formulario_adicionar_sensor.reset();
     }
 
     function botao_salvar_unidade() {
-        selecionar_unidade.innerHTML += `<option value="${nome_unidade.value}">${nome_unidade.value}</option>`
+        selecionar_unidade.innerHTML += `<option value="${nome_unidade.value}">${nome_unidade.value}</option>`;
         modal_unidade.style.display = 'none';
         return false;
-
     }
 
     function botao_salvar_formulario() {
         const nome = nome_sensor.value;
-        dadosSensores.push([nome, "Ativo", "100%", "10%", "Ativo", [0]])
-        criar_kpis()
+        dadosSensores.push([nome, "Ativo", "100%", "10%", "Ativo", [0]]);
+        criar_kpis();
         fechar_modal_adicionar_sensor();
         return false;
     }
@@ -519,16 +553,9 @@
     }
 
 
-
-    window.onload = async () => {
+    window.onload = () => {
         criar_kpis();
-        criar_html_estatisticas_mes();
-        criar_grafico_estatisticas_mes();
-        await criar_grafico_geral();
+        select_unidade();
     };
-
-    select_unidade()
-    
 </script>
-
 </html>

@@ -19,8 +19,8 @@
       </nav>
       <div class="div_perfil">
         <div>
-          <h4 id="h4_nome_usuario"></h4>
-          <h5 id="h5_nivel_acesso"></h5>
+          <h4 id="nome_usuario_dashboard"></h4>
+          <h5 id="nivel_usuario_dashboard">Comum</h5>
         </div>
         <img src="../assets/icons/user.png" style="width: 40px; height: 40px;" alt="perfil">
       </div>
@@ -40,7 +40,7 @@
           <img src="../assets/icons/grafico.png" style="width: 30px; height: 30px;">
           <span>Relatórios</span>
         </li>
-        <li style="gap: 20px;" onclick="window.location.href = 'configuracao.html'">
+        <li id="botao_menu_configuracao" style="gap: 20px;" onclick="window.location.href = 'configuracao.html'">
           <img src="../assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Configurações</span>
         </li>
@@ -79,6 +79,17 @@
 </body>
 <script>
 
+  const usuario = JSON.parse(JSON.parse(sessionStorage.getItem("umido")));
+
+    nome_usuario_dashboard.innerHTML = usuario.nome_usuario
+
+    if (usuario.nivel_de_acesso == 'A') {
+        nivel_usuario_dashboard.innerHTML = 'Administrador'
+        botao_menu_configuracao.style.display = 'flex'
+    }
+    else if (usuario.nivel_de_acesso == 'S') {
+        nivel_usuario_dashboard.innerHTML = 'Supervisor'
+    }
   function botao_abrir_fechar_menu() {
     const menuLateral = document.querySelector('.menu_lateral');
     menuLateral.classList.toggle('menu_expandido');
@@ -86,85 +97,11 @@
   }
 
 
- 
-  /*
-  const unidades = [
-    {
-      id: 1, nome: "Unidade 1",
-      responsaveis: ["César", "Dereck"],
-      sensores: [
-        { nome: "Sensor 1", umidade: "85%", alerta: 0 },
-        { nome: "Sensor 2", umidade: "85%", alerta: 0 }
-      ],
-      outrasInfos: "Informações bem legais sobre essa unidade (descrição no banco de dados) (Ex:Localizada no setor norte.)"
-    },
-    {
-      id: 2, nome: "Unidade 2",
-      responsaveis: ["César, Bill"],
-      sensores: [
-        { nome: "Sensor 3", umidade: "30%", alerta: 1 },
-        { nome: "Sensor 4", umidade: "30%", alerta: 1 }
-      ],
-      outrasInfos: "Informações bem legais sobre essa unidade (descrição no banco de dados)"
-    },
-    {
-      id: 3, nome: "Unidade 3",
-      responsaveis: ["César, Erick"],
-      sensores: [
-        { nome: "Sensor 5", umidade: "85%", alerta: 0 },
-        { nome: "Sensor 6", umidade: "30%", alerta: 1 }
-      ],
-      outrasInfos: "Informações bem legais sobre essa unidade (descrição no banco de dados)"
-    }, {
-      id: 4, nome: "Unidade 4",
-      responsaveis: ["César, Gustavo"],
-      sensores: [
-        { nome: "Sensor 7", umidade: "30%", alerta: 1 },
-        { nome: "Sensor 8", umidade: "85%", alerta: 0 }
-      ],
-      outrasInfos: "Informações bem legais sobre essa unidade (descrição no banco de dados)"
-    }, {
-      id: 4, nome: "Unidade 4",
-      responsaveis: ["César, Gustavo"],
-      sensores: [
-        { nome: "Sensor 7", umidade: "30%", alerta: 1 },
-        { nome: "Sensor 8", umidade: "85%", alerta: 0 }
-      ],
-      outrasInfos: "Informações bem legais sobre essa unidade (descrição no banco de dados)"
-    }, {
-      id: 4, nome: "Unidade 4",
-      responsaveis: ["César, Gustavo"],
-      sensores: [
-        { nome: "Sensor 7", umidade: "30%", alerta: 1 },
-        { nome: "Sensor 8", umidade: "85%", alerta: 0 }
-      ],
-      outrasInfos: "Informações bem legais sobre essa unidade (descrição no banco de dados)"
-    }, {
-      id: 4, nome: "Unidade 4",
-      responsaveis: ["César, Gustavo"],
-      sensores: [
-        { nome: "Sensor 7", umidade: "30%", alerta: 1 },
-        { nome: "Sensor 8", umidade: "85%", alerta: 0 }
-      ],
-      outrasInfos: "Informações bem legais sobre essa unidade (descrição no banco de dados)"
-    }, {
-      id: 4, nome: "Unidade 4",
-      responsaveis: ["César, Gustavo"],
-      sensores: [
-        { nome: "Sensor 7", umidade: "30%", alerta: 1 },
-        { nome: "Sensor 8", umidade: "85%", alerta: 0 }
-      ],
-      outrasInfos: "Informações bem legais sobre essa unidade (descrição no banco de dados)"
-    }
-
-  ];
-  */
 let unidades = [];
  
   let paginaAtual = 1;
   const itensPorPagina = 10;
 
-  const usuario = JSON.parse(JSON.parse(sessionStorage.getItem("umido")));
   const idUsuario = usuario.id_usuario;
   const nomeUsuario = usuario.nome_usuario;
   const nivelUsuario = usuario.nivel_de_acesso;
