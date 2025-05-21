@@ -1,9 +1,9 @@
 var unidadeModel = require("../models/unidadeModel");
 
-function buscarUnidadePorEmpresa(req, res) {
+function buscarUnidadesDoResponsavel(req, res) {
   var idUsuario = req.params.idUsuario;
 
-  unidadeModel.buscarUnidadePorEmpresa(idUsuario).then((resultado) => {
+  unidadeModel.buscarUnidadesDoResponsavel(idUsuario).then((resultado) => {
     if (resultado.length > 0) {
       res.status(200).json(resultado);
     } else {
@@ -11,11 +11,32 @@ function buscarUnidadePorEmpresa(req, res) {
     }
   }).catch(function (erro) {
     console.log(erro);
-    console.log("Houve um erro ao buscar os aquarios: ", erro.sqlMessage);
+    console.log("Houve um erro ao buscar as unidades: ", erro.sqlMessage);
     res.status(500).json(erro.sqlMessage);
   });
 }
 
+async function buscarIndicadores(req, res) {
+  try {
+    const idUsuario = req.params.idUsuario;
+    const indicadores = await unidadeModel.buscarIndicadores(idUsuario);
+    res.json(indicadores); // <-- ESSA LINHA É OBRIGATÓRIA
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar indicadores" });
+  }
+}
+
+async function buscarAlertas(req, res) {
+  try {
+    const idUsuario = req.params.idUsuario;
+    const alertas = await unidadeModel.buscarAlertas(idUsuario);
+    res.json(alertas); // <-- ESSA LINHA É OBRIGATÓRIA
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar alertas" });
+  }
+}
 
 function cadastrarUnidade(req, res) {
   var descricao = req.body.descricao;
@@ -44,6 +65,8 @@ function cadastrarUnidade(req, res) {
 }
 
 module.exports = {
-  buscarUnidadePorEmpresa,
-  cadastrarUnidade
+  buscarUnidadesDoResponsavel,
+  cadastrarUnidade,
+  buscarIndicadores,
+  buscarAlertas
 }
