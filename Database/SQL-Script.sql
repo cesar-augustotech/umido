@@ -1,26 +1,15 @@
--- Remoção do banco de dados para efeito de demonstração de execução do script (Apagar sessão após apresentação)
-DROP DATABASE IF EXISTS umido;
-
 -- Criação do banco de dados
-CREATE DATABASE umido;
+CREATE DATABASE IF NOT EXISTS umido;
 USE umido;
 
--- Remoção das tabelas para efeito de demonstração de execução do script (Apagar sessão após apresentação)
-DROP TABLE IF EXISTS unidade_usuario;
-DROP TABLE IF EXISTS medicao;
-DROP TABLE IF EXISTS sensor;
-DROP TABLE IF EXISTS unidade;
-DROP TABLE IF EXISTS usuario;
-DROP TABLE IF EXISTS empresa;
 -- Criação das tabelas
 
-
--- Tabela de empresa
+-- Tabela de empresas
 CREATE TABLE empresa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cnpj VARCHAR(20) UNIQUE,
-    telefone VARCHAR(12),
+    telefone VARCHAR(20),
     ativo int default  0
 );
 
@@ -30,21 +19,19 @@ CREATE TABLE usuario (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     senha VARCHAR(100) NOT NULL,
-    nivel_de_acesso CHAR(1)
+    nivel_de_acesso ENUM('admin', 'comum') NOT NULL
 );
 
-
--- Tabela de unidade
+-- Tabela de unidades (fazendas)
 CREATE TABLE unidade (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     codigo_cnir VARCHAR(30),
-    empresa_id INT NOT NULL,
-    FOREIGN KEY (empresa_id) REFERENCES empresa(id)
+    id_empresa INT NOT NULL,
+    FOREIGN KEY (id_empresa) REFERENCES empresa(id)
 );
 
-
--- Tabela de sensor
+-- Tabela de sensores
 CREATE TABLE sensor (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_unidade INT NOT NULL,
@@ -53,18 +40,17 @@ CREATE TABLE sensor (
     FOREIGN KEY (id_unidade) REFERENCES unidade(id)
 );
 
-
--- Tabela de medição
+-- Tabela de medições de umidade
 CREATE TABLE medicao (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_sensor INT NOT NULL,
     umidade DECIMAL(5,2) NOT NULL, 
     data_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
-    alerta char(1),
+    alerta CHAR(1),
     FOREIGN KEY (id_sensor) REFERENCES sensor(id)
 );
 
--- Tabela de relacionamento entre unidade e usuário (muitos-para-muitos)
+-- Relacionamento entre usuários e unidades (muitos-para-muitos)
 CREATE TABLE unidade_usuario (
     id_unidade INT NOT NULL,
     id_usuario INT NOT NULL,
@@ -73,42 +59,77 @@ CREATE TABLE unidade_usuario (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 );
 
--- Inserção de empresas
-INSERT INTO empresa (nome, cnpj) VALUES 
-('AgroTech Brasil', '12.345.678/0001-99'),
-('GreenFarms Ltda', '98.765.432/0001-11');
 
--- Inserção de usuários
+-- Criação dos usuários do sistema com permissões específicas
+CREATE USER IF NOT EXISTS 'umido'@'localhost' IDENTIFIED BY 'Sptech#2024';
+GRANT ALL PRIVILEGES ON umido.* TO 'umido'@'localhost';
+
+CREATE USER IF NOT EXISTS 'umidoInsert'@'localhost' IDENTIFIED BY 'Sptech#2024';
+GRANT INSERT ON umido.medicao TO 'umidoInsert'@'localhost';
+
+FLUSH PRIVILEGES;
+-- Inserção de dados iniciais
+
+-- Empresas
+INSERT INTO empresa (nome, cnpj,ativo) VALUES
+    ('Sentinela','12.345.678/0001-99',1),
+    ('Hydroscan','98.765.432/0001-11',1),
+    ('CodeBerry', '10.765.432/0001-12',1),
+    ('Projeto10','34.565.432/0001-11',0);
+
+-- Usuários
 INSERT INTO usuario (nome, email, senha, nivel_de_acesso) VALUES
-('Ana Silva', 'ana@agrotech.com', 'senha123', 'A'),
-('Carlos Souza', 'carlos@agrotech.com', 'senha123', 'S'),
-('João Oliveira', 'joao@greenfarms.com', 'senha123', 'A');
+    ('César Augusto','cesar@email','Sptech#2024','admin'),
+    ('Bill Hebert','bill@email','Sptech#2024','comum'),
+    ('Pedro Giraldi','pedro@email','Sptech#2024','comum'),
+    ('Enzo Servilha','enzo@email.com','Sptech#2024','comum'),
+    ('Felipe Hideki','felipe@email','Sptech#2024','comum'),
+    ('Rafael','rafael@email','Sptech#2024','admin'),
+    ('Pedro Rico','rico@email','Sptech#2024','comum'),
+    ('Erick Araujo','erick@email','Sptech#2024','admin');
 
+-- Unidades
+INSERT INTO unidade (nome, codigo_cnir, id_empresa) VALUES
+    ('Unidade Sentinela 1', 'CNIR-11', 1),
+    ('Unidade Sentinela 2', 'CNIR-12', 1),
+    ('Unidade Sentinela 3', 'CNIR-13', 1),
+    ('Unidade Sentinela 4', 'CNIR-14', 1),
+    ('Unidade Sentinela 5', 'CNIR-15', 1),
+    ('Unidade HydroScan 1', 'CNIR-21', 2),
+    ('Unidade HydroScan 2', 'CNIR-22', 2),
+    ('Unidade CodeBerry 1', 'CNIR-31', 3);
 
+-- Associação de usuários administradores a TODAS as unidades da empresa
 
--- Inserção das unidades
-INSERT INTO unidade (nome, codigo_cnir, empresa_id) VALUES
-('Unidade Sol Nascente', NULL, 1),
-('Unidade Água Verde', NULL, 1),
-('Unidade Santa Clara', NULL, 2);
+-- César (empresa 1)
+INSERT INTO unidade_usuario (id_unidade, id_usuario)
+SELECT id, 1 FROM unidade WHERE id_empresa = 1;
 
+-- Rafael (empresa 2)
+INSERT INTO unidade_usuario (id_unidade, id_usuario)
+SELECT id, 6 FROM unidade WHERE id_empresa = 2;
 
--- Associação de usuários às unidades
+-- Erick (empresa 3)
+INSERT INTO unidade_usuario (id_unidade, id_usuario)
+SELECT id, 8 FROM unidade WHERE id_empresa = 3;
+
+-- Associação de usuários comuns a unidades específicas
 INSERT INTO unidade_usuario (id_unidade, id_usuario) VALUES
-(1, 1),
-(2, 2),
-(3, 3);
+    (1, 2),
+    (2, 3),
+    (3, 4),
+    (6, 5),
+    (7, 7);
 
--- Inserção dos sensores
+-- Sensores
 INSERT INTO sensor (id_unidade, identificador) VALUES
-(1, 'A1'),
-(1, 'A2'),
-(2, 'A1'),
-(2, 'A2'),
-(2, 'B1'),
-(3, 'A1'),
-(3, 'B1');
+    (1, 'SENT-1A'),
+    (1, 'SENT-1B'),
+    (2, 'SENT-2A'),
+    (6, 'HYDR-1A'),
+    (8, 'CODE-1A');
 
+-- Medições (dados simulados)
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
 (1, 45.2, '2025-05-01 08:00:00', 0),
 (1, 28.7, '2025-05-01 10:00:00', 1),
@@ -465,75 +486,3 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
 (1, 45.0, '2025-04-29 08:00:00', 0),
 (1, 52.0, '2025-04-30 08:00:00', NULL);
 
-
--- Criação do usuário com permissão de inserção de medições
-DROP USER IF EXISTS 'umidoInsert'@'%';
-CREATE USER 'umidoInsert'@'%' IDENTIFIED BY 'Sptech#2024';
-GRANT INSERT ON umido.medicao TO 'umidoInsert'@'%';
-
-
-DROP USER IF EXISTS 'umido'@'%';
-CREATE USER 'umido'@'%' IDENTIFIED BY 'Sptech#2024';
-GRANT INSERT ON umido.* TO 'umido'@'%';
-GRANT SELECT ON umido.* TO 'umido'@'%';
-GRANT DELETE ON umido.* TO 'umido'@'%';
-GRANT UPDATE ON umido.* TO 'umido'@'%';
-FLUSH PRIVILEGES;
-
-
-select * from usuario;
-select * from empresa;
-select * from unidade;
-select * from unidade_usuario;
-
-
- SELECT 
-    MONTH(m.data_hora) AS mes,
-    ROUND(AVG(m.umidade), 2) AS mediaMensal
-    FROM 
-    medicao AS m
-    JOIN 
-    sensor AS s ON m.id_sensor = s.id
-    JOIN 
-    unidade AS u ON s.id_unidade = u.id
-    WHERE 
-    u.id = 1
-    AND YEAR(m.data_hora) = 2025
-    GROUP BY mes
-    ORDER BY mes;
-    
-   SELECT m.alerta,s.identificador,m.data_hora
-    FROM medicao as m
-    INNER JOIN sensor AS s ON m.id_sensor = s.id
-    INNER JOIN unidade AS u ON s.id_unidade = u.id
-    WHERE u.id = 1 and m.alerta is not null
-    AND data_hora BETWEEN '2025-05-01' AND LAST_DAY('2025-05-01');
-    
-  
-SELECT
-m.id_sensor,
-count(case WHEN alerta = '1' THEN 'alerta_critico' end) as alerta_critivo,
-count(case WHEN alerta = '0' THEN 'alerta' end) as alerta
-FROM medicao as m
-INNER JOIN sensor AS s ON m.id_sensor = s.id
-INNER JOIN unidade AS u ON s.id_unidade = u.id
-WHERE u.id = 1
-AND m.data_hora BETWEEN '2025-05-01' AND LAST_DAY('2025-05-01')
-AND m.alerta IS NOT NULL
-GROUP BY id_sensor;
-    
-    
-     SELECT
-    CASE
-    WHEN m.data_hora >= CURDATE() - INTERVAL 0 DAY THEN 1
-    WHEN m.data_hora >= CURDATE() - INTERVAL 7 DAY THEN 2
-    WHEN m.data_hora >= CURDATE() - INTERVAL 14 DAY THEN 3
-    WHEN m.data_hora >= CURDATE() - INTERVAL 21 DAY THEN 4
-    END AS semana,
-    AVG(m.umidade) AS umidade_media
-    FROM medicao m
-    JOIN sensor s ON m.id_sensor = s.id
-    JOIN unidade u ON s.id_unidade = u.id
-    WHERE m.data_hora >= CURDATE() - INTERVAL 28 DAY and u.id = 1
-    GROUP BY u.nome, semana
-    ORDER BY semana;

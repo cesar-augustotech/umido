@@ -21,7 +21,8 @@
 
             <section class="ipt-main">
                 <div class="ipt-main" id="div_caixaCadastro">
-                    <input class="ipt-caixa ipt-icon1" type="text" id="ipt_nomeRegistro" placeholder="Nome registro">
+                    <input class="ipt-caixa ipt-icon1" type="text" id="ipt_nomeEmpresa" placeholder="Nome da Empresa">
+                    <input class="ipt-caixa ipt-icon1" type="text" id="ipt_nomeRegistro" placeholder="Nome de Usuário">
                     <input class="ipt-caixa ipt-icon2" type="text" id="ipt_email" placeholder="E-mail">
                     <input class="ipt-caixa ipt-icon3" type="text" id="ipt_telefone" placeholder="Telefone">
                     <input class="ipt-caixa ipt-icon4" type="text" id="ipt_cnpj" placeholder="CNPJ">
@@ -56,18 +57,18 @@
 
             //Recupere o valor da nova input pelo nome do id
             // Agora vá para o método fetch logo abaixo
-            var nomeRegistroVar = ipt_nomeRegistro.value;
+            var nomeEmpresaVar = ipt_nomeEmpresa.value;
             var emailVar = ipt_email.value;
             var telefoneVar = ipt_telefone.value;
             var cnpjVar = ipt_cnpj.value;
             var senhaVar = ipt_senha.value;
             var confirmacaoSenhaVar = ipt_senhaConfirmada.value;
-            var nivelDeAcessoVar = 'A'
+            var nivelDeAcessoVar = 'admin'
             
             
             // Verificando se há algum campo em branco
             if (
-                nomeRegistroVar == "" ||
+                nomeEmpresaVar == "" ||
                 emailVar == "" ||
                 cnpjVar == "" ||
                 senhaVar == "" ||
@@ -83,7 +84,7 @@
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    nomeRegistradoServer: nomeRegistroVar,
+                    nomeRegistradoServer: nomeEmpresaVar,
                     telefoneServer: telefoneVar,
                     cnpjServer: cnpjVar,
                     emailServer: emailVar,
@@ -119,7 +120,7 @@
             var cnpjVar = ipt_cnpj.value;
             var senhaVar = ipt_senha.value;
             var confirmacaoSenhaVar = ipt_senhaConfirmada.value;
-            var nivelDeAcessoVar = 'A'
+            var nivelDeAcessoVar = 'admin'
             
             
             // Verificando se há algum campo em branco
