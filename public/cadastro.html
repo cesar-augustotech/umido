@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umido</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="./js/script.js"></script>
+</head>
+
+<body>
+
+    <section id="tela_cadastro" class="cadastro">
+        <section class="main-cadastro">
+            <a onclick="href='index.html'"><button class="botaoVoltar"></button></a>
+
+            <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
+
+            <h2 class="second-titule-cadastro">Solicite o Cadastro da sua Empresa</h2>
+
+            <section class="ipt-main">
+                <div class="ipt-main" id="div_caixaCadastro">
+                    <input class="ipt-caixa ipt-icon1" type="text" id="ipt_nomeEmpresa" placeholder="Nome da Empresa">
+                    <input class="ipt-caixa ipt-icon1" type="text" id="ipt_nomeUsuario" placeholder="Nome de Usuário">
+                    <input class="ipt-caixa ipt-icon2" type="text" id="ipt_email" placeholder="E-mail">
+                    <input class="ipt-caixa ipt-icon3" type="text" id="ipt_telefone" placeholder="Telefone">
+                    <input class="ipt-caixa ipt-icon4" type="text" id="ipt_cnpj" placeholder="CNPJ">
+                    <input class="ipt-caixa ipt-icon6" type="password" id="ipt_senha" placeholder="Senha">
+                    <input class="ipt-caixa ipt-icon6" type="password" id="ipt_senhaConfirmada"
+                        placeholder="Repita sua senha">
+                </div>
+
+                <div class="confirme-main" id="div_logar">
+                    <div class="botao-main">
+                        <button class="botaoCadastrar" onclick="cadastrar()">Cadastre-se</button>
+                    </div>
+                    <div class="login-main">
+                        <a class="text-login">Já possui login?</a>
+                        <a class="link-login" onclick="href='login.html'">
+                            <p>Clique aqui</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        
+        <div id="cardErro" style="display:none; color: red; margin-top: 10px;">
+            <span id="mensagem_erro"></span>
+        </div>
+
+        <script>
+        
+
+            async function cadastrar() {
+                // Recupera os valores dos inputs pelo id
+                var nomeEmpresaVar = document.getElementById('ipt_nomeEmpresa').value.trim();
+                var nomeUsuarioVar = document.getElementById('ipt_nomeUsuario').value.trim();
+                var emailVar = document.getElementById('ipt_email').value.trim();
+                var telefoneVar = document.getElementById('ipt_telefone').value.trim();
+                var cnpjVar = document.getElementById('ipt_cnpj').value.trim();
+                var senhaVar = document.getElementById('ipt_senha').value;
+                var confirmacaoSenhaVar = document.getElementById('ipt_senhaConfirmada').value;
+
+                var cardErro = document.getElementById('cardErro');
+                var mensagem_erro = document.getElementById('mensagem_erro');
+
+                // Limpa mensagens anteriores
+                if (mensagem_erro) {
+                    mensagem_erro.style.color = "red";
+                    mensagem_erro.innerHTML = "";
+                }
+
+                // Validação de campos obrigatórios
+                if (
+                    nomeUsuarioVar === "" ||
+                    nomeEmpresaVar === "" ||
+                    emailVar === "" ||
+                    telefoneVar === "" ||
+                    cnpjVar === "" ||
+                    senhaVar === "" ||
+                    confirmacaoSenhaVar === ""
+                ) {
+                    if (cardErro && mensagem_erro) {
+                        cardErro.style.display = "block";
+                        mensagem_erro.innerHTML = "Preencha todos os campos!";
+                        setTimeout(sumirMensagem, 5000);
+                    }
+                    return false;
+                }
+
+                // Validação de e-mail simples
+                if (!emailVar.includes("@") || !emailVar.includes(".")) {
+                    if (cardErro && mensagem_erro) {
+                        cardErro.style.display = "block";
+                        mensagem_erro.innerHTML = "Digite um e-mail válido!";
+                        setTimeout(sumirMensagem, 5000);
+                    }
+                    return false;
+                }
+
+                // Validação de CNPJ simples (apenas tamanho)
+                if (cnpjVar.length < 14) {
+                    if (cardErro && mensagem_erro) {
+                        cardErro.style.display = "block";
+                        mensagem_erro.innerHTML = "Digite um CNPJ válido!";
+                        setTimeout(sumirMensagem, 5000);
+                    }
+                    return false;
+                }
+
+                // Validação de senha
+                if (senhaVar.length < 6) {
+                    if (cardErro && mensagem_erro) {
+                        cardErro.style.display = "block";
+                        mensagem_erro.innerHTML = "A senha deve ter pelo menos 6 caracteres!";
+                        setTimeout(sumirMensagem, 5000);
+                    }
+                    return false;
+                }
+
+                // Verifica se as senhas coincidem
+                if (senhaVar !== confirmacaoSenhaVar) {
+                    if (cardErro && mensagem_erro) {
+                        cardErro.style.display = "block";
+                        mensagem_erro.innerHTML = "As senhas não coincidem!";
+                        setTimeout(sumirMensagem, 5000);
+                    }
+                    return false;
+                }
+
+                // Envia os dados para o backend
+                try {
+                    const resposta = await fetch("/usuarios/cadastrar", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            nomeUsuarioServer: nomeUsuarioVar,
+                            nomeEmpresaServer: nomeEmpresaVar,
+                            emailServer: emailVar,
+                            telefoneServer: telefoneVar,
+                            cnpjServer: cnpjVar,
+                            senhaServer: senhaVar
+                        }),
+                    });
+
+                    if (resposta.ok) {
+                        if (cardErro && mensagem_erro) {
+                            cardErro.style.display = "block";
+                            mensagem_erro.style.color = "green";
+                            mensagem_erro.innerHTML = "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+                        }
+                        setTimeout(() => {
+                            window.location = "login.html";
+                        }, 2000);
+                    } else {
+                        const msg = await resposta.text();
+                        if (cardErro && mensagem_erro) {
+                            cardErro.style.display = "block";
+                            mensagem_erro.style.color = "red";
+                            mensagem_erro.innerHTML = msg || "Houve um erro ao tentar realizar o cadastro!";
+                        }
+                    }
+                } catch (erro) {
+                    if (cardErro && mensagem_erro) {
+                        cardErro.style.display = "block";
+                        mensagem_erro.style.color = "red";
+                        mensagem_erro.innerHTML = "Erro de conexão!";
+                    }
+                }
+
+                return false;
+            }
+
+            function sumirMensagem() {
+                var cardErro = document.getElementById('cardErro');
+                var mensagem_erro = document.getElementById('mensagem_erro');
+                if (cardErro) cardErro.style.display = "none";
+                if (mensagem_erro) mensagem_erro.innerHTML = "";
+            }
+        </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umido</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="./js/script.js"></script>
+</head>
+
+<body>
+    <section id="tela_login" class="login">
+
+        <section class="main-cadastro ">
+            <a onclick="href='index.html'"><button class="botaoVoltar"></button></a>
+
+            <h1 class="main-titule">Seja&nbsp;<span class="greentext">bem-vindo!</span></h1>
+
+            <h2 class="second-titule">Efetue seu login</h2>
+            <br><br><br><br><br><br><br><br>
+            <section class="ipt-main">
+                <div class="ipt-main" id="div_caixaCadastro">
+                    <input class="ipt-caixa ipt-icon1" type="text" id="ipt_login_email"
+                        placeholder="Insira o seu e-mail cadastrado">
+                    <input class="ipt-caixa ipt-icon2" type="password" id="ipt_login_senha"
+                        placeholder="Insira a sua senha cadastrada">
+                </div>
+
+                <div class="confirme-main" id="div_logar">
+                    <div class="botao-main">
+                        <button class="botaoCadastrar" onclick="acessar()">Acesse</button>
+                    </div>
+                    <div class="login-main">
+                        <a class="text-login">Não tem cadastro?</a>
+                        <a class="link-login" onclick="href='cadastro.html'">
+                            <p>Clique aqui</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </section>
+
+    <div id="cardErro" style="display:none; color: red; margin-top: 10px;">
+        <span id="mensagem_erro"></span>
+    </div>
+
+    <script>
+        async function acessar() {
+            var emailVar = document.getElementById('ipt_login_email').value.trim();
+            var senhaVar = document.getElementById('ipt_login_senha').value;
+            
+           
+            // Elementos para exibir mensagens de erro (adicione no HTML se quiser)
+            var cardErro = document.getElementById('cardErro');
+            var mensagem_erro = document.getElementById('mensagem_erro');
+
+            // Limpa mensagens anteriores
+            if (mensagem_erro) {
+                mensagem_erro.style.color = "red";
+                mensagem_erro.innerHTML = "";
+            }
+
+            if (emailVar === "" || senhaVar === "") {
+                if (cardErro && mensagem_erro) {
+                    cardErro.style.display = "block";
+                    mensagem_erro.innerHTML = "Preencha todos os campos!";
+                    setTimeout(sumirMensagem, 5000);
+                }
+                return false;
+            }
+
+            try {
+                console.log("Tentando autenticar usuário:", emailVar);
+                const resposta = await fetch("/usuarios/autenticar", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        emailServer: emailVar,
+                        senhaServer: senhaVar
+                    })
+                });
+
+                
+                
+                if (resposta.ok) {
+                    const json = await resposta.json();
+                 console.log("Usuário autenticado:", json);
+                    sessionStorage.EMAIL_USUARIO = json.email;
+                    sessionStorage.NOME_USUARIO = json.nome;
+                    sessionStorage.ID_USUARIO = json.id;
+                    sessionStorage.UNIDADES = JSON.stringify(json.unidades)
+                    sessionStorage.NIVEL_DE_ACESSO = json.nivel_de_acesso;
+                    sessionStorage.EMPRESA_ID = json.empresa_id;
+                    sessionStorage.EMPRESA_NOME = json.empresa_nome;
+
+                    
+                    if (json.empresa_ativo){
+                        sessionStorage.EMPRESA_ATIVO = json.empresa_ativo;
+                    } else {
+                        sessionStorage.EMPRESA_ATIVO = "false";
+                        if (cardErro && mensagem_erro) {
+                            cardErro.style.display = "block";
+                            mensagem_erro.innerHTML = "Empresa não está ativa!";
+                            setTimeout(sumirMensagem, 5000);
+                        }
+                        return false;
+                    }
+
+                    if(sessionStorage.EMAIL_USUARIO == 'umidoRoot'){
+                        sessionStorage.ADMIN = "true";
+                        console.log("Usuário é administrador.");
+                    } else {
+                        sessionStorage.ADMIN = "false";
+                        console.log("Usuário não é administrador.");
+                    }
+                    await setTimeout(function () {
+
+                        if (sessionStorage.ADMIN == "true") {
+                            window.location = "./pendentes.html";
+                        } else {
+                            window.location = "./dashboard/geral.html";
+                        }
+                        
+                    }, 1000);
+                } else {
+                    const texto = await resposta.text();
+                    if (cardErro && mensagem_erro) {
+                        cardErro.style.display = "block";
+                        mensagem_erro.innerHTML = texto || "Houve um erro ao tentar realizar o login!";
+                        setTimeout(sumirMensagem, 5000);
+                    }
+                }
+            } catch (erro) {
+                if (cardErro && mensagem_erro) {
+                    cardErro.style.display = "block";
+                    mensagem_erro.innerHTML = "Erro de conexão!";
+                    setTimeout(sumirMensagem, 5000);
+                }
+            }
+
+            return false;
+        }
+
+        function sumirMensagem() {
+            var cardErro = document.getElementById('cardErro');
+            if (cardErro) cardErro.style.display = "none";
+        }
+    </script>
+</body>
+
+</html>
