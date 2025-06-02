@@ -39,7 +39,7 @@ A interface exibe as métricas para o usuário, permitindo análise e tomada de 
 ✔ Facilidade no monitoramento de grandes áreas rurais.
 
 ## 📌 Status do Projeto
-🔹 Fase atual: Sprint 2 – 
+🔹 Fase atual: Sprint 3 – 
 
 🔹 Duração total do projeto: 6 meses
 
