@@ -203,14 +203,41 @@ let ultimo_grafico;
 const modalAdicionarSensor = modal_adicionar_sensor;
 
 const formularioAdicionarSensor = formulario_adicionar_sensor;
+// buscarListaAlertas
 
-function criar_lista_alertas(){
+ function listaLeads (){
+
+    fetch(`/relatorios/buscarListaAlertas?unidade=${sessionStorage.ID_UNIDADE}`, { cache: 'no-store' })
+    .then(function (response) {
+        if (response.ok) {
+          response.json().then(function (resposta) {
+            console.log(resposta)
+            console.log(`Dados recebidos da lista: ${JSON.stringify(resposta)}`);
+            var id = []
+            var data = []
+            var umidade = []
+            for(let i =0; i < resposta; i++){
+
+               id.push(resposta[i].id_sensor)
+               data.push (resposta[i].data_hora)
+               umidade.push(resposta[i].umidade)
+              }
+
+            console.log('passou do fetch da lista');
+            criar_lista_alertas(id, data, umidade)
+
+          });
+        }
+      })};
+
+function criar_lista_alertas(id, data, umidade){
     let html_lista =""
-    for(let i =0;i<quantidade_alerta+5;i++){
+    for(let i =0;i<id;i++){
         html_lista += `
         <li style="display: grid; grid-template-columns: 1fr 1fr;  border-bottom: 1px solid black;">
-            <div>Sensor ${parseInt((Math.random()*dadosSensores.length) + 1) }</div>
-            <div>${parseInt(Math.random()*29)+1}/${parseInt(Math.random()*11)+1}/2024</div>
+            <div>Sensor ${id}</div>
+            <div>${data}</div>
+            <div>${umidade}</div>
         </li>
         ` 
     }
@@ -230,6 +257,52 @@ function criar_lista_alertas(){
     `
     return html
 }
+
+ function listaLeads (){
+
+    fetch(`/relatorios/buscarListaAlertas?unidade=${sessionStorage.ID_UNIDADE}`, { cache: 'no-store' })
+    .then(function (response) {
+        if (response.ok) {
+          response.json().then(function (resposta) {
+            console.log(resposta)
+            console.log(`Dados recebidos da lista: ${JSON.stringify(resposta)}`);
+            var id = []
+            var data = []
+            var umidade = []
+            for(let i =0; i < resposta; i++){
+               id.push(resposta[i].id_sensor)
+               data.push (resposta[i].data_hora)
+               umidade.push(resposta[i].umidade)
+              }
+
+            console.log('passou do fetch da lista');
+            criar_lista_alertas(id, data, umidade)
+
+          });
+        }
+      })};
+
+fetch(`/relatorios/buscarListaAlertas?unidade=${sessionStorage.ID_UNIDADE}`, { cache: 'no-store' })
+    .then(function (response) {
+        if (response.ok) {
+          response.json().then(function (resposta) {
+            console.log(resposta)
+            console.log(`Dados recebidos da lista: ${JSON.stringify(resposta)}`);
+            var id = []
+            var data = []
+            var umidade = []
+            for(let i =0; i < resposta; i++){
+               id.push(resposta[i].id_sensor)
+               data.push (resposta[i].data_hora)
+               umidade.push(resposta[i].umidade)
+              }
+
+            console.log('passou do fetch da lista');
+            criar_grafico_geral(id, data, umidade)
+
+          });
+        }
+      })
 
 function criar_grafico_geral() {
     let contexto = document.getElementById('grafico_umidade').getContext('2d');
