@@ -71,8 +71,8 @@
                         </div>
                     </div>
                     <div class="cartao">
-                        <div class="titulo_sensores">Lista de sensores
-                            <button id="botao_adicionar_sensor" onclick="mostrar_modal_adicionar_sensor()" class="botao_adicionar">Novo Sensor</button>
+                        <div class="titulo_sensores">Lista de hectares
+                            <button id="botao_adicionar_sensor" onclick="mostrar_modal_adicionar_sensor()" class="botao_adicionar">solicitar novo Sensor</button>
                         </div>
                         <div class="lista_botoes">
                             <ul class="lista_sensores" id="lista_sensores"></ul>
@@ -111,11 +111,11 @@
     <div id="modal_adicionar_sensor" class="modal">
         <div class="conteudo_modal">
             <span class="fechar_modal" id="fechar_modal" onclick="fechar_modal_adicionar_sensor()">&times;</span>
-            <h2>Adicionar Novo Sensor</h2>
+            <h2>Solicitar Novo Sensor</h2>
             <form id="formulario_adicionar_sensor">
                 <div class="grupo_formulario">
-                    <label for="nome_sensor">Nome do Sensor:</label>
-                    <input type="text" id="nome_sensor" required placeholder="Ex: Sensor 11">
+                    <label for="nome_sensor">Nome da nova área:</label>
+                    <input type="text" id="nome_sensor" required placeholder="Ex: Hectar 12">
                 </div>
                 <div class="grupo_formulario">
                     <label for="tipo_sensor">Tipo de Sensor:</label>
@@ -126,7 +126,7 @@
                 <div class="botoes_formulario">
                     <button type="button" class="botao_cancelar" onclick="fechar_modal_adicionar_sensor()"
                         id="botao_cancelar">Cancelar</button>
-                    <button type="submit" class="botao_salvar" onclick="botao_salvar_formulario()">Salvar Sensor</button>
+                    <button type="submit" class="botao_salvar" onclick="botao_salvar_formulario()">Solicitar sensor para a nova área</button>
                 </div>
             </form>
         </div>
