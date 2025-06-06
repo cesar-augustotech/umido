@@ -44,7 +44,7 @@
                     <img src="../assets/icons/configuracao.png" style="width: 30px; height: 30px;">
                     <span>Configurações</span>
                 </li>
-                <li style="gap: 20px;" onclick="window.location.href = '../index.html'">
+                <li style="gap: 20px;" onclick="logout()">
                     <img src="../assets/icons/sair.png" style="width: 30px; height: 30px;">
                     <span>Sair</span>
             </ul>
@@ -579,6 +579,12 @@ console.log(idUnidadeSelecionada)
     criar_html_estatisticas_mes()
     criar_grafico_estatisticas_mes()
 
+}
+
+
+function logout(){
+sessionStorage.clear()
+window.location.href = '../index.html'
 }
 
 
