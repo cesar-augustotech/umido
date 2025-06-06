@@ -46,10 +46,17 @@
           <img src="../assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Configurações</span>
         </li>
-        <li style="gap: 20px;" onclick="window.location.href = '../index.html'">
+        <a href="https://umido.atlassian.net/servicedesk/customer/portals">
+          <li style="gap: 20px;" onclick="">
+            <img src="../assets/icons/alert.png" style="width: 30px; height: 30px;">
+            <span>Suporte</span>
+          </li>
+        </a>
+
+        <li style="gap: 20px;" onclick="logout()">
           <img src="../assets/icons/sair.png" style="width: 30px; height: 30px;">
           <span>Sair</span>
-      </ul>
+        </li>
     </div>
 
     <section class="conteudo_principal">
@@ -91,7 +98,7 @@
     const nomeUsuario = sessionStorage.getItem("NOME_USUARIO") || "Usuário";
     const nivelAcesso = sessionStorage.getItem("NIVEL_DE_ACESSO");
     nome_usuario_dashboard.innerHTML = nomeUsuario;
-  nivel_usuario_dashboard.innerHTML = nivelAcesso == 'admin' ? 'Administrador' : 'comum';
+    nivel_usuario_dashboard.innerHTML = nivelAcesso == 'admin' ? 'Administrador' : 'comum';
 
     function botao_abrir_fechar_menu() {
       const menuLateral = document.querySelector('.menu_lateral');
@@ -185,7 +192,7 @@
     []
     */
 
-    
+
       if (!unidades || unidades.length === 0) {
         document.getElementById("areaUnidades").innerHTML = "<p>Nenhuma unidade encontrada.</p>";
         return;
@@ -251,9 +258,9 @@
           ...u.sensores
             .map(s =>
               s.ultimaMedida &&
-              s.ultimaMedida.umidade !== undefined &&
-              s.ultimaMedida.umidade !== null &&
-              !isNaN(parseFloat(s.ultimaMedida.umidade))
+                s.ultimaMedida.umidade !== undefined &&
+                s.ultimaMedida.umidade !== null &&
+                !isNaN(parseFloat(s.ultimaMedida.umidade))
                 ? parseFloat(s.ultimaMedida.umidade)
                 : Infinity
             )
@@ -275,49 +282,49 @@
 
     }
 
-     async function criar_kpis() {
-  indicadores.innerHTML = "";
-    //TROCAR ID DA EMPRESA AQUIIIIIIIIIIIIIIIIIIIII
-  try {
-    const response = await fetch(`/unidades/indicadores/${idUsuario}`);
-    const dados = await response.json();
-    console.log(dados);
+    async function criar_kpis() {
+      indicadores.innerHTML = "";
+      //TROCAR ID DA EMPRESA AQUIIIIIIIIIIIIIIIIIIIII
+      try {
+        const response = await fetch(`/unidades/indicadores/${idUsuario}`);
+        const dados = await response.json();
+        console.log(dados);
 
-    let dadosIndicadores = [
-      [dados.quantidade_alerta, "incidentes", "(Mês atual)"],
-      [dados.umidade_media + "%", "umidade média atual", "(Mês atual)"],
-  
-      [dados.sensores_desativados, "sensores desativados", ""],
-      [dados.hora_atualizacao, dados.data_atualizacao, "última atualização"]
-    ];
+        let dadosIndicadores = [
+          [dados.quantidade_alerta, "incidentes", "(Mês atual)"],
+          [dados.umidade_media + "%", "umidade média atual", "(Mês atual)"],
 
-    for (let i = 0; i < dadosIndicadores.length; i++) {
-      indicadores.innerHTML += `
+          [dados.sensores_desativados, "sensores desativados", ""],
+          [dados.hora_atualizacao, dados.data_atualizacao, "última atualização"]
+        ];
+
+        for (let i = 0; i < dadosIndicadores.length; i++) {
+          indicadores.innerHTML += `
         <div class="cartao">
             <div class="valor_indicador">${dadosIndicadores[i][0]}</div>
             <div class="descricao_indicador">${dadosIndicadores[i][1]}</div>
             <div class="info_adicional">${dadosIndicadores[i][2]}</div>
         </div>`;
+        }
+      } catch (error) {
+        console.error("Erro ao buscar indicadores:", error);
+      }
     }
-  } catch (error) {
-    console.error("Erro ao buscar indicadores:", error);
-  }
-}
 
     async function criar_lista_alertas() {
       let html_lista = "";
       let areaListaAlertas = document.getElementById("areaListaAlertas");
-      
-        try {
-          //TROCAR ID DA EMPRESA AQUIIIIIIIIIIIIIIIIIIIII
-          const resposta = await fetch(`/unidades/alertas/${idUsuario}`);
-          const alertas = await resposta.json();
-      
-          if (alertas.length === 0) {
-            html_lista = `<tr><td colspan="2">Nenhum alerta nas últimas 24h</td></tr>`;
-          } else {
-            alertas.forEach(a => {
-              html_lista += `
+
+      try {
+        //TROCAR ID DA EMPRESA AQUIIIIIIIIIIIIIIIIIIIII
+        const resposta = await fetch(`/unidades/alertas/${idUsuario}`);
+        const alertas = await resposta.json();
+
+        if (alertas.length === 0) {
+          html_lista = `<tr><td colspan="2">Nenhum alerta nas últimas 24h</td></tr>`;
+        } else {
+          alertas.forEach(a => {
+            html_lista += `
                 
                   <td>${a.unidade_nome}</td>
                   <td>${a.sensor_nome}</td>
@@ -325,12 +332,12 @@
                   <td>${new Date(a.data_hora).toLocaleString()}</td>
                 </tr>
               `;
-            });
-          }
-        } catch (error) {
-          html_lista = `<tr><td colspan="2">Erro ao buscar alertas</td></tr>`;
+          });
         }
-      
+      } catch (error) {
+        html_lista = `<tr><td colspan="2">Erro ao buscar alertas</td></tr>`;
+      }
+
       let html = `
     <div class="container_grafico_mensal">
       <div class="cartao">
@@ -369,6 +376,11 @@
       document.getElementById("modalUnidade").style.display = "none";
     }
 
+
+    function logout() {
+      sessionStorage.clear()
+      window.location.href = '../index.html'
+    }
 
     atualizarPaginaInicial();
   </script>
