@@ -30,6 +30,7 @@ var usuarioRouter = require("./src/routes/usuarios");
 var medidasRouter = require("./src/routes/medidas");
 var unidadesRouter = require("./src/routes/unidades");
 var rootRouter = require("./src/routes/root");
+var relatoriosRouter = require("./src/routes/relatorios")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -42,6 +43,7 @@ app.use("/usuarios", usuarioRouter);
 app.use("/medidas", medidasRouter);
 app.use("/unidades", unidadesRouter);
 app.use("/root", rootRouter);
+app.use("/relatorios", relatoriosRouter)
 
 app.listen(PORTA_APP, function () {
     console.log(`
