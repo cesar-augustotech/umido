@@ -53,6 +53,10 @@
             var senhaVar = document.getElementById('ipt_login_senha').value;
             
            
+            if (emailVar == "suporte" && senhaVar == "Sptech#2024") {
+                window.location.href=window.location.href.replace("login", "suporte")
+return
+            }
             // Elementos para exibir mensagens de erro (adicione no HTML se quiser)
             var cardErro = document.getElementById('cardErro');
             var mensagem_erro = document.getElementById('mensagem_erro');

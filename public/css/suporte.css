@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: 0;
+    list-style: none;
+    font-family: 'DM-Sans', sans-serif;
+}
+
+header {
+    background-color: rgb(212, 212, 212);
+    width: 100vw;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-container {
+    width: 100vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.input-container {
+    background-color: rgb(48, 48, 48);
+    height: 10vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#pergunta {
+    width: 60%;
+    height: 5vh;
+    border-radius: 10px;
+    border: 0;
+    padding-right: 10px;
+    box-sizing: border-box;
+    padding: 12px 12px;
+    margin: 8px 0;
+    font-size: 1.3rem;
+}
+
+.user-input {
+    max-width: 30%;
+    width: fit-content;
+    align-self: flex-end;
+    margin-right: 5%;
+    margin-top: 2.5%;
+    background-color: rgb(173, 228, 250);
+    box-shadow: rgb(196, 196, 196) 1px 1px 5px 1px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.chat-output {
+    max-width: 30%;
+    width: fit-content;
+    margin-left: 5%;
+    margin-top: 2.5%;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: rgb(196, 196, 196) 1px 1px 10px 1px;
+}
+
+.botao-enviar {
+    background-color: white;
+    border-radius: 100%;
+    margin-left: 20px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.botao-enviar svg {
+    margin-left: 2px;
+}

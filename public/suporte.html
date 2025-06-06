@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BobIA</title>
+    <link rel="stylesheet" href="css/suporte.css">
+</head>
+
+<body>
+    <header>
+        <h1>BobAi - N3/Umido</h1>
+    </header>
+    <section>
+        <div id="chat_container" class="chat-container">
+        </div>
+        <div class="input-container">
+            <input type="text" id="pergunta">
+            <a onclick="gerarResposta()" class="botao-enviar">
+                <svg xmlns="http://www.w3.org/2000/svg" height="44px" viewBox="0 -960 960 960" width="46px" fill="#c4c4c4c"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg>
+            </a>
+        </div>
+    </section>
+</body>
+<script>
+
+    async function gerarResposta() {
+        const pergunta = document.getElementById('pergunta').value;
+        chat_container.innerHTML += `<div class="user-input">${pergunta}</div>`
+
+        const response = await fetch('/perguntar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ pergunta })
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        chat_container.innerHTML += `<div class="chat-output">${data.resultado}</div>`
+    }
+
+</script>
+
+</html>
