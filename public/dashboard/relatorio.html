@@ -82,7 +82,6 @@
                 <div style="width: 100%; height: 100%; display: grid ; grid-template-rows: 20px 1fr;">
                     <div class="titulo_grafico">ESTATÍSTICAS E ALERTAS DO MÊS</div>
                     <div class="graficos_mensais" id="graficos_mensais"></div>
-                  
                 </div>
             </div>
         </section>
@@ -151,7 +150,7 @@
     </div>
 </body>
 <script>
-const idUsuario = sessionStorage.getItem("ID_USUARIO"); // Pega o ID do usuário logado
+const idUsuario = sessionStorage.getItem("ID_USUARIO"); // Pega o ID do usuário logado ou usa 1 como padrão
     const nomeUsuario = sessionStorage.getItem("NOME_USUARIO") || "Usuário";
     const nivelAcesso = sessionStorage.getItem("NIVEL_DE_ACESSO");
     nome_usuario_dashboard.innerHTML = nomeUsuario;
@@ -205,10 +204,10 @@ const modalAdicionarSensor = modal_adicionar_sensor;
 
 const formularioAdicionarSensor = formulario_adicionar_sensor;
 // buscarListaAlertas
-/*
- function listaLeads (idUnidadeSelecionada){
 
-    fetch(`/relatorios/buscarListaAlertas?unidade=${idUnidadeSelecionada}`, { cache: 'no-store' })
+ function listaLeads (){
+
+    fetch(`/relatorios/buscarListaAlertas?unidade=${sessionStorage.ID_UNIDADE}`, { cache: 'no-store' })
     .then(function (response) {
         if (response.ok) {
           response.json().then(function (resposta) {
@@ -243,20 +242,17 @@ function criar_lista_alertas(id, data, umidade){
         ` 
     }
     let html = `
-   <div class="container_grafico_mensal">
-      <div class="cartao">
-        <div class="valor_indicador">ALERTAS</div>
-        <div class="descricao_indicador">Últimos alertas registrados (24h)</div><br>
-        <table class="tabela_grafico">
-          <tr>
-            <th>Unidade</th>
-            <th>Sensor</th>
-            <th>Umidade</th>
-            <th>Data</th>
-          </tr>
-          ${html_lista}
-        </table>
-      </div>
+    <div class="container_grafico_mensal">
+        <div class="cartao">
+            <div class="titulo_grafico">ALERTAS</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                <div class="titulo_grafico">Sensor</div>
+                <div class="titulo_grafico">Data</div>
+            </div>
+            <ul>
+                ${html_lista}
+            </ul>
+        </div>
     </div>
     `
     return html
@@ -307,57 +303,6 @@ fetch(`/relatorios/buscarListaAlertas?unidade=${sessionStorage.ID_UNIDADE}`, { c
           });
         }
       })
-*/
-
-   async function criar_lista_alertas() {
-      let html_lista = "";
-      
-      
-        try {
-        
-          const resposta = await fetch(`/unidades/${idUnidadeSelecionada}/alertas/${idUsuario}`);
-          const alertas = await resposta.json();
-      
-          if (alertas.length === 0) {
-            html_lista = `<tr><td colspan="2">Nenhum alerta nas últimas 24h</td></tr>`;
-          } else {
-            alertas.forEach(a => {
-              html_lista += `
-                
-                  <td>${a.unidade_nome}</td>
-                  <td>${a.sensor_nome}</td>
-                  <td>${a.umidade}%</td>
-                  <td>${new Date(a.data_hora).toLocaleString()}</td>
-                </tr>
-              `;
-            });
-          }
-        } catch (error) {
-          html_lista = `<tr><td colspan="2">Erro ao buscar alertas</td></tr>`;
-        }
-     
-      let html = `
-    <div class="container_grafico_mensal">
-      <div class="cartao">
-        <div class="valor_indicador">ALERTAS</div>
-        <div class="descricao_indicador">Últimos alertas registrados (24h)</div><br>
-        <table class="tabela_grafico">
-          <tr>
-            <th>Unidade</th>
-            <th>Sensor</th>
-            <th>Umidade</th>
-            <th>Data</th>
-          </tr>
-          ${html_lista}
-        </table>
-      </div>
-    </div>
-  `;
-
-  console.log(html)
-    return html;
-    }
-
 
 function criar_grafico_geral() {
     let contexto = document.getElementById('grafico_umidade').getContext('2d');
@@ -493,7 +438,7 @@ function criar_grafico_estatisticas_mes() {
     }
 }
 
-async function criar_html_estatisticas_mes() {
+function criar_html_estatisticas_mes() {
     graficos_mensais.innerHTML = ""
     if (graficos.length > 0) {
         for (let i = 0; i < graficos.length; i++) {
@@ -515,7 +460,7 @@ async function criar_html_estatisticas_mes() {
             </div>
         </div>`;
     }
-    let lista_alerta = await criar_lista_alertas()
+    let lista_alerta = criar_lista_alertas()
     html += lista_alerta
     graficos_mensais.innerHTML = html
 }
@@ -629,8 +574,6 @@ console.log(idUnidadeSelecionada)
         ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)], "Umidade Media Por Semana Do Mês Atual"],
         ["grafico_incidentes", "Incidentes", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [(parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10))], "Incidentes Por Área Do Mês Atual"],
     ];
-
-   
     criar_grafico_geral()
     criar_kpis()
     criar_html_estatisticas_mes()

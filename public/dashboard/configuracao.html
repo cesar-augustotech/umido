@@ -46,9 +46,17 @@
           <img src="../assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Configurações</span>
         </li>
-        <li style="gap: 20px;" onclick="window.location.href = '../index.html'">
+        <a href="https://umido.atlassian.net/servicedesk/customer/portals">
+          <li style="gap: 20px;" onclick="">
+            <img src="../assets/icons/alert.png" style="width: 30px; height: 30px;">
+            <span>Suporte</span>
+          </li>
+        </a>
+
+        <li style="gap: 20px;" onclick="logout()">
           <img src="../assets/icons/sair.png" style="width: 30px; height: 30px;">
           <span>Sair</span>
+        </li>
       </ul>
     </div>
 
@@ -284,42 +292,42 @@
   function fecharModalUsuarioEditar() {
     document.getElementById("modalUsuarioEditar").style.display = "none";
   }
-  
+
   function salvarUsuario() {
-  var nomeFetch = ipt_nome.value;
-  var emailFetch = ipt_email.value;
-  var senhaFetch = ipt_senha.value;
-  var nivel_de_acessoFetch = sel_nivel.value;
+    var nomeFetch = ipt_nome.value;
+    var emailFetch = ipt_email.value;
+    var senhaFetch = ipt_senha.value;
+    var nivel_de_acessoFetch = sel_nivel.value;
 
-  // Array com as unidades selecionadas
-  const unidadesSelecionadas = [...listaCheckBox];
+    // Array com as unidades selecionadas
+    const unidadesSelecionadas = [...listaCheckBox];
 
-  fecharModalUsuario();
+    fecharModalUsuario();
 
-  fetch("/usuarios/salvarUsuario", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      nomeServer: nomeFetch,
-      emailServer: emailFetch,
-      senhaServer: senhaFetch,
-      nivel_de_acessoServer: nivel_de_acessoFetch,
-      unidades: unidadesSelecionadas // Envia as unidades selecionadas
-    }),
-  })
-    .then(function (resposta) {
-      if (resposta.ok) {
-        obterDados();
-      } else {
-        throw "Houve um erro ao tentar realizar o cadastro!";
-      }
+    fetch("/usuarios/salvarUsuario", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nomeServer: nomeFetch,
+        emailServer: emailFetch,
+        senhaServer: senhaFetch,
+        nivel_de_acessoServer: nivel_de_acessoFetch,
+        unidades: unidadesSelecionadas // Envia as unidades selecionadas
+      }),
     })
-    .catch(function (resposta) {
-      console.log(`#ERRO: ${resposta}`);
-    });
-}
+      .then(function (resposta) {
+        if (resposta.ok) {
+          obterDados();
+        } else {
+          throw "Houve um erro ao tentar realizar o cadastro!";
+        }
+      })
+      .catch(function (resposta) {
+        console.log(`#ERRO: ${resposta}`);
+      });
+  }
 
   function editarUsuario(id) {
     console.log(id)
@@ -424,6 +432,11 @@
       }
     }
     console.log(listaCheckBox)
+  }
+
+  function logout() {
+    sessionStorage.clear()
+    window.location.href = '../index.html'
   }
 
   // Chama obterDados ao carregar a página

@@ -403,4 +403,7 @@ nav input {
 }
 
 
+a { color: inherit;
+text-decoration: none;
 
+} 
