@@ -16,7 +16,8 @@ function buscarListaAlertas(idUnidade) {
 
 function buscarMediaMensal () {
 
-    var instrucaoSql = `SELECT 
+    var instrucaoSql = `SELECT
+     
        `;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
