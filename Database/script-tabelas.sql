@@ -1,3 +1,4 @@
+-- drop database umido;
 -- Criação do banco de dados
 CREATE DATABASE IF NOT EXISTS umido;
 USE umido;
@@ -133,9 +134,6 @@ SELECT id, 2 FROM unidade WHERE id_empresa = 2;
 INSERT INTO unidade_usuario (id_unidade, id_usuario)
 SELECT id, 6 FROM unidade WHERE id_empresa = 2;
 
--- Felipe (id_usuario = 6) -> Empresa 1 (Umido)
-INSERT INTO unidade_usuario (id_unidade, id_usuario)
-SELECT id, 6 FROM unidade WHERE id_empresa = 2;
 
 -- Erick (id_usuario = 8) -> Empresa 3 (CodeBerry)
 INSERT INTO unidade_usuario (id_unidade, id_usuario)
