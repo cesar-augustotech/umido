@@ -256,7 +256,7 @@ nav input {
     color: white;
 }
 
-.graficos_mensais {
+.graficos-mensais {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     width: 100%;

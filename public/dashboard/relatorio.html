@@ -59,10 +59,10 @@
         <section class="conteudo_principal">
             <div>
                 <select class="selecionar_unidade" id="selecionar_unidade" onchange="select_unidade()">
-                    <option value="Unidade 1">Unidade 1</option>
-                    <option value="Unidade 2">Unidade 2</option>
-                    <option value="Unidade 3">Unidade 3</option>
-                    <option value="Unidade 4">Unidade 4</option>
+                    <option value="1">Unidade 1</option>
+                    <option value="3">Unidade 3</option>
+                    <option value="2">Unidade 2</option>
+                    <option value="4">Unidade 4</option>
                 </select>
                 <button class="btn_add_unidade" id="btn_add_unidade" onclick="mostrar_modal_unidade()">Adicionar Unidade</button>
                 <button class="btn_add_unidade" id="" onclick="">Exportar dados da Unidade</button>
@@ -87,7 +87,7 @@
                 </div>
                 <div style="width: 100%; height: 100%; display: grid ; grid-template-rows: 20px 1fr;">
                     <div class="titulo_grafico">ESTATÍSTICAS E ALERTAS DO MÊS</div>
-                    <div class="graficos_mensais" id="graficos_mensais"></div>
+                    <div class="graficos-mensais" id="graficos_mensais"></div>
                 </div>
             </div>
         </section>
@@ -192,45 +192,116 @@ let idUnidadeSelecionada = null;
 // Chame ao carregar a página
 carregarUnidadesUsuario();
 
-let dadosSensores = [
-    ["Sensor 1", "Ativo", "28%", "92%", "Ativo", [25, 27, 28, 30, 29, 28, 27, 26, 28, 29, 30, 28]],
-    ["Sensor 2", "Ativo", "38%", "87%", "Ativo", [20, 21, 22, 34, 21, 22, 21, 26, 28, 29, 30, 28]],
-    ["Sensor 3", "Ativo", "23%", "76%", "Ativo", [23, 24, 28, 32, 22, 23, 22, 26, 28, 29, 30, 28]],
-    ["Sensor 4", "Ativo", "48%", "65%", "Ativo", [25, 28, 26, 35, 28, 26, 29, 26, 28, 29, 30, 28]],
-    ["Sensor 5", "Ativo", "58%", "87%", "Ativo", [27, 27, 24, 37, 26, 29, 25, 26, 28, 29, 30, 28]]
-];
-
-let dadosGraficos = [];
-
-let graficos = []
 
 let ultimo_grafico;
 
 const modalAdicionarSensor = modal_adicionar_sensor;
 
 const formularioAdicionarSensor = formulario_adicionar_sensor;
-// buscarListaAlertas
 
- function listaLeads (){
 
-    fetch(`/relatorios/buscarListaAlertas?unidade=${sessionStorage.ID_UNIDADE}`, { cache: 'no-store' })
+ function buscarUmidadePorSensor(){
+    let idSensor = 1
+
+    fetch(`/relatorios/buscarUmidadePorSensor/${idSensor}`, { cache: 'no-store' })
     .then(function (response) {
         if (response.ok) {
           response.json().then(function (resposta) {
-            console.log(resposta)
-            console.log(`Dados recebidos da lista: ${JSON.stringify(resposta)}`);
+            var semana = resposta.map(item => item.semana)
+            var dados =  resposta.map(item => item.umidade)
+          
+            console.log('umidade por sensor')
+
+
+          });
+        }
+      })};
+
+
+
+ function buscarQuantidadeDeAlertas(){
+    let idUnidade = selecionar_unidade.value
+
+    fetch(`/relatorios/buscarUmidadeMediaUnidade/${idUnidade}`, { cache: 'no-store' })
+    .then(function (response) {
+        if (response.ok) {
+          response.json().then(function (resposta) {
+            var mes = resposta.map(item => item.mes)
+            var dados =  resposta.map(item => item.umidade)
+          
+            console.log('quantidade de alerta')
+
+          });
+        }
+      })};
+
+
+
+
+
+ function buscarUmidadeMediaUltimasSemanas(){
+    let idUnidade = selecionar_unidade.value
+
+    fetch(`/relatorios/buscarUmidadeMediaUnidade/${idUnidade}`, { cache: 'no-store' })
+    .then(function (response) {
+        if (response.ok) {
+          response.json().then(function (resposta) {
+            var mes = resposta.map(item => item.mes)
+            var dados =  resposta.map(item => item.umidade)
+          
+            console.log('4 semanas')
+
+
+            
+
+
+          });
+        }
+      })};
+
+
+
+
+
+
+ function buscarUmidadeMediaUnidade(){
+    let idUnidade = selecionar_unidade.value
+
+    fetch(`/relatorios/buscarUmidadeMediaUnidade/${idUnidade}`, { cache: 'no-store' })
+    .then(function (response) {
+        if (response.ok) {
+          response.json().then(function (resposta) {
+            var mes = resposta.map(item => item.mes)
+            var dados =  resposta.map(item => item.umidade)
+          
+           
+
+          });
+        }
+      })};
+
+
+
+
+ function buscarListaAlertas(){
+    let idUnidade = selecionar_unidade.value
+
+    fetch(`/relatorios/buscarListaAlertas/${idUnidade}`, { cache: 'no-store' })
+    .then(function (response) {
+        if (response.ok) {
+          response.json().then(function (resposta) {
+          
             var id = []
             var data = []
             var umidade = []
             for(let i =0; i < resposta; i++){
-
                id.push(resposta[i].id_sensor)
                data.push (resposta[i].data_hora)
                umidade.push(resposta[i].umidade)
               }
 
-            console.log('passou do fetch da lista');
-            criar_lista_alertas(id, data, umidade)
+           
+            // criar_lista_alertas(id, data, umidade)
 
           });
         }
@@ -264,51 +335,6 @@ function criar_lista_alertas(id, data, umidade){
     return html
 }
 
- function listaLeads (){
-
-    fetch(`/relatorios/buscarListaAlertas?unidade=${sessionStorage.ID_UNIDADE}`, { cache: 'no-store' })
-    .then(function (response) {
-        if (response.ok) {
-          response.json().then(function (resposta) {
-            console.log(resposta)
-            console.log(`Dados recebidos da lista: ${JSON.stringify(resposta)}`);
-            var id = []
-            var data = []
-            var umidade = []
-            for(let i =0; i < resposta; i++){
-               id.push(resposta[i].id_sensor)
-               data.push (resposta[i].data_hora)
-               umidade.push(resposta[i].umidade)
-              }
-
-            console.log('passou do fetch da lista');
-            criar_lista_alertas(id, data, umidade)
-
-          });
-        }
-      })};
-
-fetch(`/relatorios/buscarListaAlertas?unidade=${sessionStorage.ID_UNIDADE}`, { cache: 'no-store' })
-    .then(function (response) {
-        if (response.ok) {
-          response.json().then(function (resposta) {
-            console.log(resposta)
-            console.log(`Dados recebidos da lista: ${JSON.stringify(resposta)}`);
-            var id = []
-            var data = []
-            var umidade = []
-            for(let i =0; i < resposta; i++){
-               id.push(resposta[i].id_sensor)
-               data.push (resposta[i].data_hora)
-               umidade.push(resposta[i].umidade)
-              }
-
-            console.log('passou do fetch da lista');
-            criar_grafico_geral(id, data, umidade)
-
-          });
-        }
-      })
 
 function criar_grafico_geral() {
     let contexto = document.getElementById('grafico_umidade').getContext('2d');
@@ -348,8 +374,9 @@ function criar_grafico_geral() {
     });
 
 }
+
 let quantidade_alerta = 0
-    async function criar_kpis() {
+async function criar_kpis() {
   indicadores.innerHTML = "";
     //TROCAR ID DA EMPRESA AQUIIIIIIIIIIIIIIIIIIIII
   try {
@@ -377,6 +404,7 @@ let quantidade_alerta = 0
     console.error("Erro ao buscar indicadores:", error);
   }
 }
+
 function criar_grafico_estatisticas_mes() {
     for (let i = 0; i < dadosGraficos.length; i++) {
         let contexto = document.getElementById(dadosGraficos[i][0]).getContext('2d');
@@ -395,9 +423,9 @@ function criar_grafico_estatisticas_mes() {
                 bordas.push(`rgba(${cor1}, ${cor2}, ${cor3}, 1)`)
             }
             grafico = new Chart(contexto, {
-                type: dadosGraficos[i][3],
+                type: line,
                 data: {
-                    labels: dadosGraficos[i][4],
+                    labels: dadosGraficos[i][4]     ,
                     datasets: [{
                         label: dadosGraficos[i][2],
                         data: dadosGraficos[i][5],
@@ -569,25 +597,20 @@ function botao_abrir_fechar_menu() {
     botao_expandir.classList.toggle('girar');
 }
 
-
-
 function select_unidade() {
      const select = document.getElementById("selecionar_unidade");
   idUnidadeSelecionada = select.value; 
 console.log(idUnidadeSelecionada)
 
-    dadosGraficos = [
-        ["grafico_mensal", "Umidade", "Umidade (%)", "bar", ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)], "Umidade Media Por Semana Do Mês Atual"],
-        ["grafico_incidentes", "Incidentes", "Incidentes", "pie", ["Área A", "Área B", "Área C", "Área D"], [(parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10)), (parseInt(Math.random() * 10))], "Incidentes Por Área Do Mês Atual"],
-    ];
-    criar_grafico_geral()
-    criar_kpis()
-    criar_html_estatisticas_mes()
-    criar_grafico_estatisticas_mes()
-
+buscarQuantidadeDeAlertas()
+buscarUmidadePorSensor()
+ buscarUmidadeMediaUltimasSemanas()
+buscarUmidadeMediaUnidade()
+ buscarListaAlertas()
 }
 
-
+select_unidade()
+criar_html_estatisticas_mes()
 </script>
 </html>
 

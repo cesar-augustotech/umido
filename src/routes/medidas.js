@@ -8,7 +8,7 @@ router.get("/tempo-real/:idUnidade", function (req, res) {
     medidaController.buscarMedidasEmTempoReal(req, res);
 })
 
-router.get("/ultima/:idSensor", function (req, res) {
+router.get("/ultima/:idSensor",function (req, res) {
     medidaController.buscarUltimaPorSensor(req, res);
 });
 

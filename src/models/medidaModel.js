@@ -13,6 +13,12 @@ function buscarUltimaPorSensor(idSensor) {
 }
 
 
+
+
+
+
+
+
 module.exports = {
     buscarUltimaPorSensor
 }
