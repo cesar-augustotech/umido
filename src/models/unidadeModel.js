@@ -78,13 +78,12 @@ async function buscarIndicadores(idUsuario) {
          JOIN sensor s ON m.id_sensor = s.id
          JOIN unidade u ON s.id_unidade = u.id
          JOIN unidade_usuario uu ON uu.id_unidade = u.id
-        WHERE m.alerta = 1
-          AND MONTH(m.data_hora) = MONTH(CURRENT_DATE())
-          AND YEAR(m.data_hora) = YEAR(CURRENT_DATE())
+        WHERE m.alerta in( 1, 0)
+          AND day(m.data_hora) = day(CURRENT_DATE())
           AND uu.id_usuario = ${idUsuario}
       ) AS quantidade_alerta,
 
-      (SELECT ROUND(AVG(m.umidade), 2)
+      (SELECT ROUND(min(m.umidade), 2)
          FROM medicao m
          JOIN sensor s ON m.id_sensor = s.id
          JOIN unidade u ON s.id_unidade = u.id
@@ -120,7 +119,16 @@ async function buscarIndicadores(idUsuario) {
          JOIN unidade u ON s.id_unidade = u.id
          JOIN unidade_usuario uu ON uu.id_unidade = u.id
         WHERE uu.id_usuario = ${idUsuario}
-      ) AS data_atualizacao
+      ) AS data_atualizacao,
+      
+      (SELECT COUNT(*) 
+         FROM medicao m
+         JOIN sensor s ON m.id_sensor = s.id
+         JOIN unidade u ON s.id_unidade = u.id
+         JOIN unidade_usuario uu ON uu.id_unidade = u.id
+        WHERE day(m.data_hora) = day(CURRENT_DATE())
+          AND uu.id_usuario = ${idUsuario}
+      ) AS total_alertas
   `;
 
   console.log("Executando a instrução SQL para buscar KPIs: \n" + instrucaoSql);
@@ -170,14 +178,12 @@ async function buscarIndicadoresPorUnidade(idUsuario, idUnidade) {
          JOIN sensor s ON m.id_sensor = s.id
          JOIN unidade u ON s.id_unidade = u.id
          JOIN unidade_usuario uu ON uu.id_unidade = u.id
-        WHERE m.alerta = 1
-          AND MONTH(m.data_hora) = MONTH(CURRENT_DATE())
-          AND YEAR(m.data_hora) = YEAR(CURRENT_DATE())
+        WHERE m.alerta in( 1, 0)
+          AND day(m.data_hora) = day(CURRENT_DATE())
           AND uu.id_usuario = ${idUsuario}
-          AND u.id = ${idUnidade}
       ) AS quantidade_alerta,
 
-      (SELECT ROUND(AVG(m.umidade), 2)
+      (SELECT ROUND(min(m.umidade), 2)
          FROM medicao m
          JOIN sensor s ON m.id_sensor = s.id
          JOIN unidade u ON s.id_unidade = u.id

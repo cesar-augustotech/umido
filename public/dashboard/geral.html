@@ -291,8 +291,8 @@
         console.log(dados);
 
         let dadosIndicadores = [
-          [dados.quantidade_alerta, "incidentes", "(Mês atual)"],
-          [dados.umidade_media + "%", "umidade média atual", "(Mês atual)"],
+          [(dados.quantidade_alerta * 100 / dados.total_alertas).toFixed(2), "Porcentagem de alertas", "(Dia atual)"],
+          [dados.umidade_media + "%", "menor umidade atual", "(em tempo atual)"],
 
           [dados.sensores_desativados, "sensores desativados", ""],
           [dados.hora_atualizacao, dados.data_atualizacao, "última atualização"]

@@ -34,6 +34,7 @@ limit 6;
     return database.executar(instrucaoSql);
 }
 
+<<<<<<< HEAD
 function buscarUmidadeMediaUltimasSemanas(idUnidade) {
     var instrucaoSql = `
         select avg(m.umidade) as umidade,extract(week from m.data_hora) as semana
@@ -47,6 +48,11 @@ limit 4;
     `;
     return database.executar(instrucaoSql);
 }
+=======
+    var instrucaoSql = `SELECT
+     
+       `;
+>>>>>>> 539a0cca0486fc6b402a2f4729cd766cbca08a3c
 
 
 function buscarQuantidadeDeAlertas(idUnidade) {
