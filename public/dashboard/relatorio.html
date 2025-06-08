@@ -14,8 +14,7 @@
         <div class="container">
             <div class="logo"></div>
             <nav>
-                <input type="text" placeholder="Buscar...">
-                <button class="botao_buscar">Buscar</button>
+          
             </nav>
             <div class="div_perfil">
                 <div>
@@ -229,8 +228,9 @@ const formularioAdicionarSensor = formulario_adicionar_sensor;
     .then(function (response) {
         if (response.ok) {
           response.json().then(function (resposta) {
-            
-console.log(resposta)
+              console.log(resposta)
+
+  
             //  mostrar_modal_sensor(resposta)
 
           });
@@ -264,7 +264,7 @@ console.log(resposta)
             
             
             criar_grafico_umidade_semana(semana)
-            console.log(resposta)
+
           });
         }
       })};
@@ -295,37 +295,36 @@ console.log(resposta)
             
 
 
-            var listaData = resposta.map(item => item.data_hora)
-            var id = resposta.map(item => item.id_sensor)
+            var data = resposta.map(item => item.data)
+            var identificador = resposta.map(item => item.identificador)
             var umidade = resposta.map(item => item.umidade)
            
             
-           criar_lista_alertas(id, listaData, umidade)
+           criar_lista_alertas(identificador, data, umidade)
             
         
           });
         }
       })};
 
-function criar_lista_alertas(id, listaData, umidade){
+function criar_lista_alertas(identificador, data, umidade){
     var html_lista = ""
 
-    for(let i = 0;i < id.length ; i++){
+    for(let i = 0;i < identificador.length ; i++){
         html_lista += `
         <li style="display: grid; grid-template-columns: 1fr 1fr;  border-bottom: 1px solid black; ">
-            <div>Sensor ${id[i]}</div>
-            <div>${listaData[i]}</div>
-            <div>${umidade[i]}</div>
+            <div style='width: 400px;'>Sensor ${identificador[i]} | ${data[i]}     |       ${umidade[i]}(%)</div>
+           <br>
+           
         </li>  
-        ` 
-        console.log('oi')
+        `
     }
     let html = `
     <div class="container_grafico_mensal">
         <div class="lista_alertas">
             <div class="titulo_grafico">ALERTAS</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                <div class="titulo_grafico">  Sensor   </div>   
+                <div style='width: 600px;'> <b> Identificador do sensor  | data do alerta | médie umidade </b></div>   
 
             </div>
             <ul>
@@ -416,12 +415,11 @@ function criar_grafico_geral(mes,dados) {
 let quantidade_alerta = 0
 async function criar_kpis() {
   indicadores.innerHTML = "";
-    //TROCAR ID DA EMPRESA AQUIIIIIIIIIIIIIIIIIIIII
+ console.log('response')
   try {
     const response = await fetch(`/unidades/${idUnidadeSelecionada}/indicadores/${idUsuario}`);
     const dados = await response.json();
-    console.log(dados);
-
+   
     let dadosIndicadores = [
       [dados.quantidade_alerta, "incidentes", "(Mês atual)"],
       [dados.umidade_media + "%", "umidade média atual", "(Mês atual)"],
@@ -447,7 +445,6 @@ function criar_grafico_umidade_semana(semana){
 
     let contexto = document.getElementById('grafico_umidade_semana').getContext('2d');
 
-    console.log('semana',semana)
  graficoUmidadeSemana = new Chart(contexto, {
         type: 'bar',
         data: {
@@ -484,7 +481,7 @@ function criar_grafico_alertas_pie(sensor,alerta){
  
     let contexto = document.getElementById('grafico_alertas_pie').getContext('2d');
 
-    console.log(sensor,alerta)
+
 
     graficoAlertasPie = new Chart(contexto, {
         type: 'pie',
@@ -555,9 +552,9 @@ function mostrar_modal_sensor(posicao) {
     const umidadeSensor = umidade_sensor;
     const statusSensor = status_sensor;
 
-    titulomodal.textContent = dadosSensores[posicao][0];
-    umidadeSensor.textContent = dadosSensores[posicao][2];  
-    statusSensor.textContent = dadosSensores[posicao][4];
+    titulomodal.textContent = 's';
+    umidadeSensor.textContent = 's';  
+    statusSensor.textContent = 's';
 
     modal.style.display = 'block';
 
@@ -609,9 +606,9 @@ function botao_abrir_fechar_menu() {
 function select_unidade() {
      const select = document.getElementById("selecionar_unidade");
   idUnidadeSelecionada = select.value; 
-console.log(idUnidadeSelecionada)
 
 
+lista_area.innerHTML = ''
  graficoUmidadeSemana.destroy()
  graficoAlertasPie.destroy() 
  graficoUmidadeMedia.destroy()
@@ -622,8 +619,9 @@ buscarUmidadePorSensor()
  buscarUmidadeMediaUltimasSemanas()
 buscarUmidadeMediaUnidade()
  buscarListaAlertas()
+ criar_kpis()
 }
-
+criar_kpis() 
 buscarQuantidadeDeAlertas()
 buscarUmidadePorSensor()
  buscarUmidadeMediaUltimasSemanas()

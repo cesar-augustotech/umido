@@ -3,11 +3,11 @@ var database = require("../database/config");
 function buscarListaAlertas(idUnidade) {
 
     var instrucaoSql = `
-SELECT id_sensor,
-umidade,
-DATE_FORMAT(m.data_hora, '%H:%i:%s  %d/%m/%Y'),data_hora
+SELECT s.identificador,
+m.umidade,
+DATE_FORMAT(m.data_hora, '%H:%i:%s  %d/%m/%Y') as data,m.data_hora
 from  medicao as m
-inner join sensor on sensor.id = m.id_sensor
+inner join sensor as s on s.id = m.id_sensor
 where id_unidade = ${idUnidade}  and data_hora >= DATE_SUB(now(), INTERVAL 48 hour) and alerta = (0 or 1)
 order by data_hora desc
 limit 28;
