@@ -3,7 +3,9 @@ var database = require("../database/config");
 function buscarListaAlertas(idUnidade) {
 
     var instrucaoSql = `
-SELECT id_sensor,umidade,extract(day from m.data_hora),data_hora
+SELECT id_sensor,
+umidade,
+DATE_FORMAT(m.data_hora, '%H:%i:%s  %d/%m/%Y'),data_hora
 from  medicao as m
 inner join sensor on sensor.id = m.id_sensor
 where id_unidade = ${idUnidade}  and data_hora >= DATE_SUB(now(), INTERVAL 48 hour) and alerta = (0 or 1)
