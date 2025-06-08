@@ -324,7 +324,7 @@ function criar_lista_alertas(identificador, data, umidade){
         <div class="lista_alertas">
             <div class="titulo_grafico">ALERTAS</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                <div style='width: 600px;'> <b> Identificador do sensor  | data do alerta | médie umidade </b></div>   
+                <div style='width: 600px;'> <b> Identificador do sensor  | data do alerta | umidade </b></div>   
 
             </div>
             <ul>
@@ -412,8 +412,8 @@ function criar_grafico_geral(mes,dados) {
 
 }
 
-let quantidade_alerta = 0
 async function criar_kpis() {
+    
   indicadores.innerHTML = "";
  console.log('response')
   try {
