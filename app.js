@@ -7,10 +7,10 @@ var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 
 require("dotenv").config({ path: caminho_env });
 
-/*BobAI*/
-// const { GoogleGenAI } = require("@google/genai");
+// /*BobAI*/
+ const { GoogleGenAI } = require("@google/genai");
+ const chatIA = new GoogleGenAI({ apiKey: process.env.MINHA_CHAVE });
 
-// const chatIA = new GoogleGenAI({ apiKey: process.env.MINHA_CHAVE });
 
 
 

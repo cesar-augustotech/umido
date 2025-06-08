@@ -3,16 +3,12 @@ var database = require("../database/config");
 function buscarListaAlertas(idUnidade) {
 
     var instrucaoSql = `
-SELECT id_sensor,
-       umidade,
-       data_hora
-       from
-       medicao
-       inner join sensor on sensor.id = medicao.id_sensor
-       where alerta in (1, 2)
-       and
-       id_unidade = ${idUnidade}
-       limit 28;
+SELECT id_sensor,umidade,extract(day from m.data_hora),data_hora
+from  medicao as m
+inner join sensor on sensor.id = m.id_sensor
+where id_unidade = ${idUnidade}  and data_hora >= DATE_SUB(now(), INTERVAL 48 hour) and alerta = (0 or 1)
+order by data_hora desc
+limit 28;
        
        `
 
@@ -22,22 +18,22 @@ SELECT id_sensor,
 
 function buscarUmidadeMediaUnidade(idUnidade) {
     var instrucaoSql = `
-        select avg(m.umidade) as umidade,extract(month from m.data_hora) as mes 
+        select  truncate(avg(m.umidade),1) as umidade,extract(month from m.data_hora) as mes 
 from medicao as m
 inner join sensor as s on s.id = m.id_sensor
 inner join unidade as u on u.id = s.id_unidade
 where u.id = ${idUnidade}
 group by mes
-order by mes desc
+order by mes 
 limit 6;
     `;
     return database.executar(instrucaoSql);
 }
 
-<<<<<<< HEAD
+
 function buscarUmidadeMediaUltimasSemanas(idUnidade) {
     var instrucaoSql = `
-        select avg(m.umidade) as umidade,extract(week from m.data_hora) as semana
+        select  truncate(avg(m.umidade),1) as umidade,extract(week from m.data_hora) as semana
 from medicao as m
 inner join sensor as s on s.id = m.id_sensor
 inner join unidade as u on u.id = s.id_unidade
@@ -48,38 +44,33 @@ limit 4;
     `;
     return database.executar(instrucaoSql);
 }
-=======
-    var instrucaoSql = `SELECT
-     
-       `;
->>>>>>> 539a0cca0486fc6b402a2f4729cd766cbca08a3c
 
 
 function buscarQuantidadeDeAlertas(idUnidade) {
     var instrucaoSql = `
-       select count(alerta),id_sensor
+      select count(alerta) as alerta,id_sensor as sensor
 from medicao as m
 inner join sensor as s on s.id = m.id_sensor
 inner join unidade as u on u.id = s.id_unidade
 where u.id = ${idUnidade}
 group by id_sensor;
-
     `;
     return database.executar(instrucaoSql);
 }
 
-function buscarUmidadePorSensor(idSensor) {
-    var instrucaoSql = `
-       select avg(m.umidade) as umidade,extract(hour from m.data_hora) as hora 
+function buscarUmidadePorSensor(idUnidade) {
+    var instrucaoSql = ` 
+ select m.id_sensor,s.identificador,
+HOUR(m.data_hora) AS hora_do_dia,
+avg(m.umidade)
 from medicao as m
 inner join sensor as s on s.id = m.id_sensor
 inner join unidade as u on u.id = s.id_unidade
-where s.id = ${idSensor}
-group by hora
-order by hora desc
-limit 24;
-    `;
-    return database.executar(instrucaoSql);
+where u.id = ${idUnidade} and data_hora >= DATE_SUB(now(), INTERVAL 24 hour)
+group by m.id_sensor, hora_do_dia
+order by m.id_sensor;
+`;
+return database.executar(instrucaoSql);
 }
 
 module.exports = {

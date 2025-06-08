@@ -33,7 +33,7 @@ function buscarUmidadeMediaUnidade(req, res) {
 
 function buscarUmidadeMediaUltimasSemanas(req, res) {
     let idUnidade = req.params.idUnidade;
-     relatorioModel.buscarUmidadeMediaUnidade(idUnidade).then(function (resultado) {
+     relatorioModel.buscarUmidadeMediaUltimasSemanas(idUnidade).then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
@@ -48,7 +48,7 @@ function buscarUmidadeMediaUltimasSemanas(req, res) {
 
 function buscarQuantidadeDeAlertas(req, res) {
     let idUnidade = req.params.idUnidade;
-     relatorioModel.buscarUmidadeMediaUnidade(idUnidade).then(function (resultado) {
+     relatorioModel.buscarQuantidadeDeAlertas(idUnidade).then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
@@ -62,8 +62,8 @@ function buscarQuantidadeDeAlertas(req, res) {
 }
 
 function buscarUmidadePorSensor(req, res) {
-    let idSensor = req.params.idSensor;
-     relatorioModel.buscarUmidadePorSensor(idSensor).then(function (resultado) {
+    let idUnidade = req.params.idUnidade;
+     relatorioModel.buscarUmidadePorSensor(idUnidade).then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {

@@ -77,7 +77,7 @@
                         </div>
                     </div>
                     <div class="cartao">
-                        <div class="titulo_sensores">Lista de hectares
+                        <div class="titulo_sensores">Lista de áreas
                             <button id="botao_adicionar_sensor" onclick="mostrar_modal_adicionar_sensor()" class="botao_adicionar">solicitar novo Sensor</button>
                         </div>
                         <div class="lista_botoes">
@@ -87,7 +87,20 @@
                 </div>
                 <div style="width: 100%; height: 100%; display: grid ; grid-template-rows: 20px 1fr;">
                     <div class="titulo_grafico">ESTATÍSTICAS E ALERTAS DO MÊS</div>
-                    <div class="graficos-mensais" id="graficos_mensais"></div>
+                    <div class="graficos-mensais" id="graficos_mensais">
+                        <div class="container_grafico_mensal">
+                            <div class="graficos-semanas">
+                                <canvas id="grafico_umidade_semana"></canvas>
+                            </div>
+                        </div>
+                        <div class="graficos-alertas">
+                            <canvas class="" id="grafico_alertas_pie"></canvas>
+                        </div>
+                        <div id="lista_area">
+                        
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </section>
@@ -161,7 +174,9 @@ const idUsuario = sessionStorage.getItem("ID_USUARIO"); // Pega o ID do usuário
     const nivelAcesso = sessionStorage.getItem("NIVEL_DE_ACESSO");
     nome_usuario_dashboard.innerHTML = nomeUsuario;
   nivel_usuario_dashboard.innerHTML = nivelAcesso == 'admin' ? 'Administrador' : 'comum';
-
+    var graficoUmidadeSemana
+    var graficoAlertasPie 
+    var graficoUmidadeMedia 
 
     // Função para buscar as unidades relacionadas ao usuário logado
   async function carregarUnidadesUsuario() {
@@ -184,7 +199,7 @@ const idUsuario = sessionStorage.getItem("ID_USUARIO"); // Pega o ID do usuário
   });
 
   // Chama o restante da lógica para atualizar os gráficos e KPIs
-  select_unidade();
+
 }
 
 let idUnidadeSelecionada = null;
@@ -201,68 +216,51 @@ const formularioAdicionarSensor = formulario_adicionar_sensor;
 
 
  function buscarUmidadePorSensor(){
-    let idSensor = 1
+    let idUnidade = selecionar_unidade.value
 
-    fetch(`/relatorios/buscarUmidadePorSensor/${idSensor}`, { cache: 'no-store' })
+    fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}`, { cache: 'no-store' })
     .then(function (response) {
         if (response.ok) {
           response.json().then(function (resposta) {
-            var semana = resposta.map(item => item.semana)
-            var dados =  resposta.map(item => item.umidade)
-          
-            console.log('umidade por sensor')
-
+            
+console.log(resposta)
+            //  mostrar_modal_sensor(resposta)
 
           });
         }
       })};
-
-
 
  function buscarQuantidadeDeAlertas(){
     let idUnidade = selecionar_unidade.value
 
-    fetch(`/relatorios/buscarUmidadeMediaUnidade/${idUnidade}`, { cache: 'no-store' })
+    fetch(`/relatorios/buscarQuantidadeDeAlertas/${idUnidade}`, { cache: 'no-store' })
     .then(function (response) {
         if (response.ok) {
           response.json().then(function (resposta) {
-            var mes = resposta.map(item => item.mes)
-            var dados =  resposta.map(item => item.umidade)
+            var sensor = resposta.map(item => item.sensor)
+            var alerta =  resposta.map(item => item.alerta)
           
-            console.log('quantidade de alerta')
-
+        
+             criar_grafico_alertas_pie(sensor,alerta)
           });
         }
       })};
-
-
-
-
 
  function buscarUmidadeMediaUltimasSemanas(){
     let idUnidade = selecionar_unidade.value
 
-    fetch(`/relatorios/buscarUmidadeMediaUnidade/${idUnidade}`, { cache: 'no-store' })
+    fetch(`/relatorios/buscarUmidadeMediaUltimasSemanas/${idUnidade}`, { cache: 'no-store' })
     .then(function (response) {
         if (response.ok) {
           response.json().then(function (resposta) {
-            var mes = resposta.map(item => item.mes)
-            var dados =  resposta.map(item => item.umidade)
-          
-            console.log('4 semanas')
-
-
+            var semana = resposta.map(item => item.umidade)
             
-
-
+            
+            criar_grafico_umidade_semana(semana)
+            console.log(resposta)
           });
         }
       })};
-
-
-
-
-
 
  function buscarUmidadeMediaUnidade(){
     let idUnidade = selecionar_unidade.value
@@ -274,14 +272,11 @@ const formularioAdicionarSensor = formulario_adicionar_sensor;
             var mes = resposta.map(item => item.mes)
             var dados =  resposta.map(item => item.umidade)
           
-           
+            criar_grafico_geral(mes,dados)
 
           });
         }
       })};
-
-
-
 
  function buscarListaAlertas(){
     let idUnidade = selecionar_unidade.value
@@ -290,19 +285,23 @@ const formularioAdicionarSensor = formulario_adicionar_sensor;
     .then(function (response) {
         if (response.ok) {
           response.json().then(function (resposta) {
-          
-            var id = []
-            var data = []
-            var umidade = []
-            for(let i =0; i < resposta; i++){
-               id.push(resposta[i].id_sensor)
-               data.push (resposta[i].data_hora)
-               umidade.push(resposta[i].umidade)
-              }
+            
+            data = []
 
+            var listaData = resposta.map(item => item.data_hora)
+            var id = resposta.map(item => item.id_sensor)
+            var umidade = resposta.map(item => item.umidade)
            
-            // criar_lista_alertas(id, data, umidade)
-
+            criar_lista_alertas(id, data, umidade)
+                console.log(resposta)
+                // criar_lista_alertas(id, data, umidade)
+                
+                for(let i = 0; i < listaData.length; i++ ){
+                    data += new Date(listaData[i])
+                }
+                console.log('lista',id,data,umidade)
+            
+        
           });
         }
       })};
@@ -332,33 +331,67 @@ function criar_lista_alertas(id, data, umidade){
         </div>
     </div>
     `
-    return html
+     lista_area.innerHTML = html
 }
 
-
-function criar_grafico_geral() {
+function criar_grafico_geral(mes,dados) {
     let contexto = document.getElementById('grafico_umidade').getContext('2d');
-    if (ultimo_grafico) {
-        ultimo_grafico.destroy();
+
+    for(let i = 0; i < 12 ;i++){
+        if (mes[i] == 1){
+            mes[i] = 'jan' 
+        }else if (mes[i] == 2){
+            mes[i] = 'fev' 
+        }else if (mes[i] == 3){
+            mes[i] = 'mar' 
+        }else if (mes[i] == 4){
+            mes[i] = 'abr'
+        }else if (mes[i] == 5){
+            mes[i] = 'mai'
+        }else if (mes[i] == 6){
+            mes[i] = 'jun' 
+        }else if (mes[i] == 7){
+            mes[i] = 'jul' 
+        }else if (mes[i] == 8){
+            mes[i] = 'ago' 
+        }else if (mes[i] == 9){
+            mes[i] = 'set' 
+        }else if (mes[i] == 10){
+            mes[i] = 'out' 
+        }else if (mes[i] == 11){
+            mes[i] = 'nov' 
+        }else if (mes[i] == 12){
+            mes[i] = 'dez' 
+        }
     }
-    ultimo_grafico = new Chart(contexto, {
+
+
+    graficoUmidadeMedia = new Chart(contexto, {
         type: "line",
         data: {
-            labels: ["Novembro", "Dezembro", "Janeiro", "Fevereiro", "Março", "Abril"],
+            labels:mes ,
             datasets: [
                 {
-                    label: "MININO",
+                    label: "CRÍTICO",
                     data: [30, 30, 30, 30, 30, 30],
                     backgroundColor: 'rgba(255, 168, 255, 0.2)',
-                    borderColor: 'rgba(255, 168, 255, 1)',
+                    borderColor: 'rgba(255, 000, 000, 0.5)',
+                    borderWidth: 2,
+                    fill: true
+                },
+                 {
+                    label: "ALERTA",
+                    data: [40, 40, 40, 40, 40, 40],
+                    backgroundColor: 'rgba(255, 168, 255, 0.2)',
+                    borderColor: 'rgba(100, 208, 255, 0.9)',
                     borderWidth: 2,
                     fill: true
                 },
                 {
                     label: "Umidade (%)",
-                    data: [(parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30), (parseInt(Math.random() * 70) + 30)],
-                    backgroundColor: 'rgba(0, 168, 255, 0.2)',
-                    borderColor: 'rgba(0, 168, 255, 1)',
+                    data: dados,
+                    backgroundColor: 'rgba(0, 168, 255, 0.9)',
+                    borderColor: 'rgba(0, 150, 255, 1)',
                     borderWidth: 2,
                     fill: false
                 }]
@@ -367,7 +400,9 @@ function criar_grafico_geral() {
             responsive: true,
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    suggestedMin: 0,
+                        suggestedMax: 80,
                 }
             }
         }
@@ -405,113 +440,84 @@ async function criar_kpis() {
   }
 }
 
-function criar_grafico_estatisticas_mes() {
-    for (let i = 0; i < dadosGraficos.length; i++) {
-        let contexto = document.getElementById(dadosGraficos[i][0]).getContext('2d');
-        let cor1 = parseInt(Math.random()*256)
-        let cor2 = parseInt(Math.random()*256)
-        let cor3 = parseInt(Math.random()*256)
-        let grafico;
-        if(dadosGraficos[i][3] == "pie"){
-            let cores =[]
-            let bordas =[]
-            for(let a=0;a<dadosGraficos[i][4].length;a++){
-                let cor1 = parseInt(Math.random()*256)
-                let cor2 = parseInt(Math.random()*256)
-                let cor3 = parseInt(Math.random()*256)
-                cores.push(`rgba(${cor1}, ${cor2}, ${cor3}, 0.2)`)
-                bordas.push(`rgba(${cor1}, ${cor2}, ${cor3}, 1)`)
-            }
-            grafico = new Chart(contexto, {
-                type: line,
-                data: {
-                    labels: dadosGraficos[i][4]     ,
-                    datasets: [{
-                        label: dadosGraficos[i][2],
-                        data: dadosGraficos[i][5],
-                        backgroundColor: cores,
-                        borderColor: bordas,
-                        borderWidth: 2,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }else{
-            grafico = new Chart(contexto, {
-                type: dadosGraficos[i][3],
-                data: {
-                    labels: dadosGraficos[i][4],
-                    datasets: [{
-                        label: dadosGraficos[i][2],
-                        data: dadosGraficos[i][5],
-                        backgroundColor: `rgba(${cor1}, ${cor2}, ${cor3}, 0.2)`,
-                        borderColor: `rgba(${cor1}, ${cor2}, ${cor3}, 1)`,
-                        borderWidth: 2,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-        graficos.push(grafico)
+function criar_grafico_umidade_semana(semana){
+
+    let contexto = document.getElementById('grafico_umidade_semana').getContext('2d');
+
+    console.log('semana',semana)
+ graficoUmidadeSemana = new Chart(contexto, {
+        type: 'bar',
+        data: {
+            labels: ['1º semana','2º semana','3º semana','4º semana'],
+            datasets: [{
+                label: 'Umidade (%)',
+                data: semana,
+                borderColor: '#00a8ff',
+                backgroundColor: 'rgba(0, 168, 255, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                    title: {
+                        display: true,
+                        text: 'Umidade média das últimas semana',
+                        color: '#000000',
+                        font: {
+                            Size: 150,
+                        },
+                           },
     }
+        }
+    });
+
+
 }
 
-function criar_html_estatisticas_mes() {
-    graficos_mensais.innerHTML = ""
-    if (graficos.length > 0) {
-        for (let i = 0; i < graficos.length; i++) {
-            try {
-                graficos[i].destroy()                
-            } catch (e) {}
-        }
-    }
-    let html = ""
-    for (let i = 0; i < dadosGraficos.length; i++) {
-        html += `
-        <div class="container_grafico_mensal">
-            <div class="cartao">
-                <div class="titulo_grafico">${dadosGraficos[i][1]}</div>
-                <div class="titulo_grafico">${dadosGraficos[i][6]}</div>
-                <div class="container_grafico">
-                    <canvas id="${dadosGraficos[i][0]}" style="height: 50%; width: 100%;"></canvas>
-                </div>
-            </div>
-        </div>`;
-    }
-    let lista_alerta = criar_lista_alertas()
-    html += lista_alerta
-    graficos_mensais.innerHTML = html
-}
+function criar_grafico_alertas_pie(sensor,alerta){
+ 
+    let contexto = document.getElementById('grafico_alertas_pie').getContext('2d');
 
-function criar_grafico_modal_sensor(dados) {
+    console.log(sensor,alerta)
+
+    graficoAlertasPie = new Chart(contexto, {
+        type: 'pie',
+        data: {
+            labels: sensor,
+            datasets: [{
+                label: 'quantidade de alertas',
+                data: alerta,
+                borderColor: '#00a8ff',
+                backgroundColor: 'rgba(0, 168, 255, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            plugins: {
+                    title: {
+                        display: true,
+                        text: 'Áreas com alertas',
+                        color: '#000000',
+                        font: {
+                            Size: 150,
+                        },
+                           },
+    }
+        },
+})
+};
+
+function criar_grafico_modal_sensor(horas,dados) {
+
     const contexto = document.getElementById('grafico_historico_sensor').getContext('2d');
-    if (window.graficoHistoricoSensor) {
-        window.graficoHistoricoSensor.destroy();
-    }
+if (window.graficoHistoricoSensor) {
+    window.graficoHistoricoSensor.destroy();
+}
 
-    const horas = [];
-    const agora = new Date();
-    for (let i = 11; i >= 0; i--) {
-        const hora = new Date(agora);
-        hora.setHours(agora.getHours() - i);
-        horas.push(hora.getHours() + ':00');
-    }
 
     window.graficoHistoricoSensor = new Chart(contexto, {
         type: 'line',
@@ -602,6 +608,12 @@ function select_unidade() {
   idUnidadeSelecionada = select.value; 
 console.log(idUnidadeSelecionada)
 
+
+ graficoUmidadeSemana.destroy()
+ graficoAlertasPie.destroy() 
+ graficoUmidadeMedia.destroy()
+
+
 buscarQuantidadeDeAlertas()
 buscarUmidadePorSensor()
  buscarUmidadeMediaUltimasSemanas()
@@ -609,8 +621,12 @@ buscarUmidadeMediaUnidade()
  buscarListaAlertas()
 }
 
-select_unidade()
-criar_html_estatisticas_mes()
+buscarQuantidadeDeAlertas()
+buscarUmidadePorSensor()
+ buscarUmidadeMediaUltimasSemanas()
+buscarUmidadeMediaUnidade()
+ buscarListaAlertas()
+// criar_html_estatisticas_mes()
 </script>
 </html>
 
