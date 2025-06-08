@@ -286,44 +286,40 @@ console.log(resposta)
         if (response.ok) {
           response.json().then(function (resposta) {
             
-            data = []
+
 
             var listaData = resposta.map(item => item.data_hora)
             var id = resposta.map(item => item.id_sensor)
             var umidade = resposta.map(item => item.umidade)
            
-            criar_lista_alertas(id, data, umidade)
-                console.log(resposta)
-                // criar_lista_alertas(id, data, umidade)
-                
-                for(let i = 0; i < listaData.length; i++ ){
-                    data += new Date(listaData[i])
-                }
-                console.log('lista',id,data,umidade)
+            
+           criar_lista_alertas(id, listaData, umidade)
             
         
           });
         }
       })};
 
-function criar_lista_alertas(id, data, umidade){
-    let html_lista =""
-    for(let i =0;i<id;i++){
+function criar_lista_alertas(id, listaData, umidade){
+    var html_lista = ""
+
+    for(let i = 0;i < id.length ; i++){
         html_lista += `
-        <li style="display: grid; grid-template-columns: 1fr 1fr;  border-bottom: 1px solid black;">
-            <div>Sensor ${id}</div>
-            <div>${data}</div>
-            <div>${umidade}</div>
-        </li>
+        <li style="display: grid; grid-template-columns: 1fr 1fr;  border-bottom: 1px solid black; ">
+            <div>Sensor ${id[i]}</div>
+            <div>${listaData[i]}</div>
+            <div>${umidade[i]}</div>
+        </li>  
         ` 
+        console.log('oi')
     }
     let html = `
     <div class="container_grafico_mensal">
-        <div class="cartao">
+        <div class="lista_alertas">
             <div class="titulo_grafico">ALERTAS</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                <div class="titulo_grafico">Sensor</div>
-                <div class="titulo_grafico">Data</div>
+                <div class="titulo_grafico">  Sensor   </div>   
+
             </div>
             <ul>
                 ${html_lista}
