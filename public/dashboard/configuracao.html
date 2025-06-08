@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="br">
+<html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
@@ -10,13 +10,10 @@
 </head>
 
 <body>
-
-
   <header class="i_header">
     <div class="container">
       <div class="logo"></div>
-      <nav>
-      </nav>
+      <nav></nav>
       <div class="div_perfil">
         <div>
           <h4 id="nome_usuario_dashboard"></h4>
@@ -44,21 +41,18 @@
           <img src="../assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Configurações</span>
         </li>
-        <a href="https://umido.atlassian.net/servicedesk/customer/portals">
-          <li style="gap: 20px;" onclick="">
+        <li style="gap: 20px;">
+          <a href="https://umido.atlassian.net/servicedesk/customer/portals">
             <img src="../assets/icons/alert.png" style="width: 30px; height: 30px;">
             <span>Suporte</span>
-          </li>
-        </a>
-
-
-                                 <a href="../../Documentação/Manual usuario projeto Umido.pdf" download="Manual_usuario_projeto_Umido.pdf">
-          <li style="gap: 20px;" onclick="">
+          </a>
+        </li>
+        <li style="gap: 20px;">
+          <a href="../../Documentação/Manual usuario projeto Umido.pdf" download="Manual_usuario_projeto_Umido.pdf">
             <img src="../assets/icons/icone download.png" style="width: 30px; height: 30px;">
             <span>Manual</span>
-          </li>
-        </a>
-
+          </a>
+        </li>
         <li style="gap: 20px;" onclick="logout()">
           <img src="../assets/icons/sair.png" style="width: 30px; height: 30px;">
           <span>Sair</span>
@@ -70,7 +64,7 @@
       <div class="cartao">
         <div class="titulo_grafico">
           <span>Gerenciamento de Usuários</span>
-          <button class="botao_adicionar" onclick="abrirModalUsuario()">+ Adicionar Usuário</button>
+          <button class="botao_adicionar" onclick="abrirModalUsuario()" aria-label="Adicionar usuário">+ Adicionar Usuário</button>
         </div>
         <table style="width:100%; border-collapse: collapse;">
           <thead>
@@ -86,24 +80,25 @@
         </table>
       </div>
 
+      <!-- Modal Cadastro -->
       <div class="modal" id="modalUsuario">
         <div class="conteudo_modal">
-          <span class="fechar_modal" onclick="fecharModalUsuario()">&times;</span>
+          <span class="fechar_modal" onclick="fecharModalUsuario()" aria-label="Fechar modal">&times;</span>
           <h2>Cadastro de Funcionário</h2>
           <div class="grupo_formulario">
-            <label>Nome</label>
+            <label for="ipt_nome">Nome</label>
             <input type="text" id="ipt_nome">
           </div>
           <div class="grupo_formulario">
-            <label>Email</label>
+            <label for="ipt_email">Email</label>
             <input type="email" id="ipt_email">
           </div>
           <div class="grupo_formulario">
-            <label>Senha</label>
+            <label for="ipt_senha">Senha</label>
             <input type="password" id="ipt_senha">
           </div>
           <div class="grupo_formulario">
-            <label>Nível de Acesso</label>
+            <label for="sel_nivel">Nível de Acesso</label>
             <select id="sel_nivel">
               <option value="comum">Comum</option>
               <option value="admin">Administrador</option>
@@ -111,65 +106,57 @@
           </div>
           <div class="grupo_formulario">
             <label>Unidades Vinculadas</label>
-            <div id="checkboxes_unidades"></div>
+            <div id="checkboxes_unidades_cadastro"></div>
           </div>
-          <button class="botao_salvar" onclick="salvarUsuario()">Salvar</button>
-          <button class="botao_cancelar" onclick="fecharModalUsuario()">Cancelar</button>
+          <button class="botao_salvar" onclick="salvarUsuario()" aria-label="Salvar usuário">Salvar</button>
+          <button class="botao_cancelar" onclick="fecharModalUsuario()" aria-label="Cancelar">Cancelar</button>
         </div>
       </div>
 
+      <!-- Modal Edição -->
       <div class="modal" id="modalUsuarioEditar">
         <div class="conteudo_modal">
-          <span class="fechar_modal" onclick="fecharModalUsuarioEditar()">&times;</span>
+          <span class="fechar_modal" onclick="fecharModalUsuarioEditar()" aria-label="Fechar modal">&times;</span>
           <h2>Cadastro de Funcionário</h2>
           <div class="grupo_formulario">
-            <label>Nome</label>
+            <label for="ipt_nome_editar">Nome</label>
             <input type="text" id="ipt_nome_editar">
           </div>
           <div class="grupo_formulario">
-            <label>Email</label>
+            <label for="ipt_email_editar">Email</label>
             <input type="email" id="ipt_email_editar">
           </div>
           <div class="grupo_formulario">
-            <label>Senha</label>
+            <label for="ipt_senha_editar">Senha</label>
             <input type="password" id="ipt_senha_editar">
           </div>
           <div class="grupo_formulario">
-            <label>Nível de Acesso</label>
+            <label for="sel_nivel_editar">Nível de Acesso</label>
             <select id="sel_nivel_editar">
               <option value="comum">Comum</option>
-
               <option value="admin">Administrador</option>
             </select>
           </div>
           <div class="grupo_formulario">
             <label>Unidades Vinculadas</label>
-            <div id="checkboxes_unidades">
-
-            </div>
+            <div id="checkboxes_unidades_editar"></div>
           </div>
-          <button class="botao_cancelar" onclick="fecharModalUsuarioEditar()">Cancelar</button>
-          <div id="botaoEditar">
-
-          </div>
+          <button class="botao_cancelar" onclick="fecharModalUsuarioEditar()" aria-label="Cancelar">Cancelar</button>
+          <div id="botaoEditar"></div>
         </div>
       </div>
-
     </section>
   </div>
 
-
-
-
-
 </body>
 <script>
-  // Variáveis globais devem ser declaradas antes de qualquer uso
+  // Variáveis globais
   let usuarios = [];
   let unidadesDisponiveis = [];
   let idEditando;
   let usuariosIds = [];
-  let listaCheckBox = [];
+  let listaCheckBoxCadastro = [];
+  let listaCheckBoxEditar = [];
 
   const idUsuario = sessionStorage.getItem("ID_USUARIO");
   const nomeUsuario = sessionStorage.getItem("NOME_USUARIO") || "Usuário";
@@ -177,9 +164,9 @@
   const idEmpresa = sessionStorage.getItem("EMPRESA_ID");
 
   nome_usuario_dashboard.innerHTML = nomeUsuario;
-  nivel_usuario_dashboard.innerHTML = nivelAcesso == 'admin' ? 'Administrador' : 'comum';
+  nivel_usuario_dashboard.innerHTML = nivelAcesso == 'admin' ? 'Administrador' : 'Comum';
 
-  // Sempre limpe o array antes de popular
+  // Carrega unidades disponíveis
   fetch("/usuarios/obterUnidades", {
     method: "POST",
     headers: {
@@ -193,8 +180,8 @@
       unidadeUsuario.forEach(unidadeAtual => {
         unidadesDisponiveis.push(unidadeAtual.nome);
       });
-      // Se quiser atualizar os checkboxes ao carregar as unidades disponíveis:
-      gerarCheckboxes([]);
+      gerarCheckboxes([], "checkboxes_unidades_cadastro", listaCheckBoxCadastro);
+      gerarCheckboxes([], "checkboxes_unidades_editar", listaCheckBoxEditar);
     })
     .catch(function (resposta) {
       console.log(`#ERRO: ${resposta}`);
@@ -209,9 +196,6 @@
   function obterDados() {
     tabela_usuarios.innerHTML = '';
     usuariosIds = [];
-    var unidades = [];
-    console.log('Empresa do Usuario: ' + idEmpresa);
-
     fetch('/usuarios/obterDados', {
       method: "POST",
       headers: {
@@ -223,26 +207,23 @@
       .then(data => {
         usuarios = data;
         tabela_usuarios.innerHTML = "";
-
         usuarios.forEach(usuarios => {
           const tr = document.createElement("tr");
-          console.log('Usuario atual: ' + usuarios.id)
           usuariosIds.push(usuarios.id)
           tr.innerHTML = `
-        <td>${usuarios.id}</td>
-        <td>${usuarios.nome}</td>
-        <td>${usuarios.email}</td>
-        <td id="valores_obter_unidades${usuarios.id}"></td>
-        <td>
-          <button class="botao_buscar" onclick="abrirModalUsuarioEditar(${usuarios.id})">Editar</button>
-          <button class="botao_cancelar" onclick="removerUsuario(${usuarios.id})">Remover</button>
-        </td>
-      `;
+            <td>${usuarios.id}</td>
+            <td>${usuarios.nome}</td>
+            <td>${usuarios.email}</td>
+            <td id="valores_obter_unidades${usuarios.id}"></td>
+            <td>
+              <button class="botao_buscar" onclick="abrirModalUsuarioEditar(${usuarios.id})" aria-label="Editar usuário">Editar</button>
+              <button class="botao_cancelar" onclick="removerUsuario(${usuarios.id})" aria-label="Remover usuário">Remover</button>
+            </td>
+          `;
           tabela_usuarios.appendChild(tr);
         });
       })
       .then(function () {
-        console.log('Ids dos usuarios' + usuariosIds)
         for (let i = 0; i < usuariosIds.length; i++) {
           fetch("/usuarios/obterUnidades", {
             method: "POST",
@@ -271,24 +252,37 @@
   }
 
   function abrirModalUsuario() {
-    idEditando = 1;
+    idEditando = null;
     document.getElementById("ipt_nome").value = "";
     document.getElementById("ipt_email").value = "";
     document.getElementById("ipt_senha").value = "";
     document.getElementById("sel_nivel").value = "comum";
-    gerarCheckboxes([]);
+    gerarCheckboxes([], "checkboxes_unidades_cadastro", listaCheckBoxCadastro);
     document.getElementById("modalUsuario").style.display = "block";
   }
 
   function abrirModalUsuarioEditar(id) {
-    console.log(id)
-    document.getElementById("ipt_nome_editar").value = "";
-    document.getElementById("ipt_email_editar").value = "";
+    // Busca dados do usuário para preencher o modal
+    const usuario = usuarios.find(u => u.id === id);
+    document.getElementById("ipt_nome_editar").value = usuario ? usuario.nome : "";
+    document.getElementById("ipt_email_editar").value = usuario ? usuario.email : "";
     document.getElementById("ipt_senha_editar").value = "";
-    document.getElementById("sel_nivel_editar").value = "comum";
-    gerarCheckboxes([]);
+    document.getElementById("sel_nivel_editar").value = usuario && usuario.nivel_de_acesso ? usuario.nivel_de_acesso : "comum";
+    // Busca unidades vinculadas
+    fetch("/usuarios/obterUnidades", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ idServer: id }),
+    })
+      .then(response => response.json())
+      .then(unidadeUsuario => {
+        const selecionadas = unidadeUsuario.map(u => u.nome);
+        gerarCheckboxes(selecionadas, "checkboxes_unidades_editar", listaCheckBoxEditar);
+      });
     document.getElementById("modalUsuarioEditar").style.display = "block";
-    botaoEditar.innerHTML = `<button class="botao_salvar" onclick="editarUsuario(${id})">Editar</button>`
+    botaoEditar.innerHTML = `<button class="botao_salvar" onclick="editarUsuario(${id})" aria-label="Editar usuário">Editar</button>`;
   }
 
   function fecharModalUsuario() {
@@ -300,13 +294,21 @@
   }
 
   function salvarUsuario() {
-    var nomeFetch = ipt_nome.value;
-    var emailFetch = ipt_email.value;
+    var nomeFetch = ipt_nome.value.trim();
+    var emailFetch = ipt_email.value.trim();
     var senhaFetch = ipt_senha.value;
     var nivel_de_acessoFetch = sel_nivel.value;
+    const unidadesSelecionadas = [...listaCheckBoxCadastro];
 
-    // Array com as unidades selecionadas
-    const unidadesSelecionadas = [...listaCheckBox];
+    // Validação básica
+    if (!nomeFetch || !emailFetch || !senhaFetch) {
+      alert("Preencha todos os campos obrigatórios.");
+      return;
+    }
+    if (!emailFetch.includes('@')) {
+      alert("Digite um email válido.");
+      return;
+    }
 
     fecharModalUsuario();
 
@@ -320,7 +322,7 @@
         emailServer: emailFetch,
         senhaServer: senhaFetch,
         nivel_de_acessoServer: nivel_de_acessoFetch,
-        unidades: unidadesSelecionadas // Envia as unidades selecionadas
+        unidades: unidadesSelecionadas
       }),
     })
       .then(function (resposta) {
@@ -336,11 +338,20 @@
   }
 
   function editarUsuario(id) {
-    console.log(id)
-    var nomeFetch = ipt_nome_editar.value
-    var emailFetch = ipt_email_editar.value
-    var senhaFetch = ipt_senha_editar.value
-    var nivel_de_acessoFetch = sel_nivel_editar.value
+    var nomeFetch = ipt_nome_editar.value.trim();
+    var emailFetch = ipt_email_editar.value.trim();
+    var senhaFetch = ipt_senha_editar.value;
+    var nivel_de_acessoFetch = sel_nivel_editar.value;
+    const unidadesSelecionadas = [...listaCheckBoxEditar];
+
+    if (!nomeFetch || !emailFetch) {
+      alert("Preencha todos os campos obrigatórios.");
+      return;
+    }
+    if (!emailFetch.includes('@')) {
+      alert("Digite um email válido.");
+      return;
+    }
 
     fecharModalUsuarioEditar();
 
@@ -354,10 +365,10 @@
         nomeServer: nomeFetch,
         emailServer: emailFetch,
         senhaServer: senhaFetch,
-        nivel_de_acessoServer: nivel_de_acessoFetch
+        nivel_de_acessoServer: nivel_de_acessoFetch,
+        unidades: unidadesSelecionadas
       }),
     }).then(function (resposta) {
-      console.log("resposta: ", resposta);
       if (resposta.ok) {
         obterDados();
       } else {
@@ -372,7 +383,6 @@
 
   function removerUsuario(id) {
     if (confirm("Deseja realmente remover este usuário?")) {
-      console.log(id + 'REMOVER')
       fetch("/usuarios/removerUsuario", {
         method: "POST",
         headers: {
@@ -380,7 +390,6 @@
         },
         body: JSON.stringify({ id }),
       }).then(function (resposta) {
-        console.log("resposta: ", resposta);
         if (resposta.ok) {
           obterDados();
         } else {
@@ -393,20 +402,19 @@
     }
   }
 
-  function gerarCheckboxes(selecionadas) {
-    const container = document.getElementById("checkboxes_unidades");
+  // Função para gerar checkboxes de unidades
+  function gerarCheckboxes(selecionadas, containerId, listaCheckBox) {
+    const container = document.getElementById(containerId);
     container.innerHTML = "";
-    // Limpa listaCheckBox para evitar duplicidade
-    listaCheckBox = [];
+    listaCheckBox.length = 0;
     unidadesDisponiveis.forEach(unidade => {
-      const id = `chk_${unidade.replace(/\s+/g, "_")}`;
+      const id = `chk_${containerId}_${unidade.replace(/\s+/g, "_")}`;
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.id = id;
       checkbox.value = unidade;
-      checkbox.onchange = () => addListaCheck(document.getElementById(id));
+      checkbox.onchange = () => addListaCheck(checkbox, listaCheckBox);
 
-      // Se estiver em selecionadas, já marca o checkbox
       if (selecionadas && selecionadas.includes(unidade)) {
         checkbox.checked = true;
         listaCheckBox.push(unidade);
@@ -425,28 +433,25 @@
     });
   }
 
-  function addListaCheck(value) {
-    if (value.checked) {
-      if (!listaCheckBox.includes(value.value)) {
-        listaCheckBox.push(value.value);
+  function addListaCheck(checkbox, listaCheckBox) {
+    if (checkbox.checked) {
+      if (!listaCheckBox.includes(checkbox.value)) {
+        listaCheckBox.push(checkbox.value);
       }
-    }
-    else {
-      const index = listaCheckBox.indexOf(value.value);
+    } else {
+      const index = listaCheckBox.indexOf(checkbox.value);
       if (index !== -1) {
         listaCheckBox.splice(index, 1);
       }
     }
-    console.log(listaCheckBox)
   }
 
   function logout() {
-    sessionStorage.clear()
-    window.location.href = '../index.html'
+    sessionStorage.clear();
+    window.location.href = '../index.html';
   }
 
   // Chama obterDados ao carregar a página
   obterDados();
 </script>
-
 </html>
