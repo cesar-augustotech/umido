@@ -26,6 +26,31 @@ console.log(empresa);
     if(email =="root"){
     }
 }
+
+
+async function get_sensores_pendentes(callback) {
+    var instrucaoSql = `
+   SELECT 
+	sensor.id AS id_sensor,
+    sensor.identificador as identificador,
+            empresa.nome AS empresa,
+            CASE WHEN sensor.ativo = 0 THEN 'PENDENTE' ELSE 'ENVIADO' END AS status
+        FROM sensor
+        INNER JOIN unidade u ON u.id = sensor.id_unidade
+		INNER JOIN empresa ON u.id_empresa = empresa.id
+        WHERE sensor.ativo = 0;
+    `;
+    try {
+        let resultado = await database.executar(instrucaoSql);
+        callback(null, resultado);
+    } catch (erro) {
+        callback(erro, null);
+    }
+}
+
+
+
+/*
 function buscarUltimasMedidas(unidadeAtual) {
     var dataAtual = new Date();
     var mesAtual = dataAtual.getMonth() + 1;
@@ -61,9 +86,10 @@ function buscarUmidadeMedia(idUnidade) {
     console.log("Executando a instrução SQL para média de umidade: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
-
+*/
 
 module.exports = {
     get_obterDados,
-    post_obterDados
+    post_obterDados,
+    get_sensores_pendentes
 }

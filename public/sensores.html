@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Umido - Sensores Pendentes</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="./css/dashboard.css">
+</head>
+
+<body>
+  <header class="i_header">
+    <div class="container">
+      <div class="logo"></div>
+      <nav>
+        
+      </nav>
+      <div class="div_perfil">
+        <div>
+          <h4 id="nome_usuario_dashboard"></h4>
+          <h5 id="nivel_usuario_dashboard"></h5>
+        </div>
+        <img src="./assets/icons/user.png" style="width: 40px; height: 40px;" alt="perfil">
+      </div>
+    </div>
+  </header>
+  <div class="layout_principal">
+    <div class="menu_lateral menu_expandido">
+      <div class="botao_expandir" id="botao_expandir" onclick="botao_abrir_fechar_menu()">
+        <img src="./assets/icons/seta.png" style="width: 20px; height: 20px;">
+      </div>
+      <ul class="itens_menu">
+        <li style="gap: 20px;" onclick="window.location.href = 'pendentes.html'">
+          <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
+          <span>Empresas Pendentes</span>
+        </li>
+        <li style="gap: 20px;" onclick="window.location.href = 'aprovadas.html'">
+          <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
+          <span>Empresas Aprovadas</span>
+        </li>
+  <li style="gap: 20px;" onclick="window.location.href = 'sensores.html'" class="ativo">
+    <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
+    <span>Sensores Pendentes</span>
+  </li>
+      </ul>
+    </div>
+
+    <section class="conteudo_principal">
+      <div class="principal_g">
+        <div class="cartao">
+          <h2 style="margin-bottom: 20px; color: #00a8ff;">Sensores Solicitados por Empresas</h2>
+
+          <div class="grupo_formulario">
+            <label for="ipt_busca">Buscar por sensor, empresa ou área:</label>
+            <div style="display: flex; gap: 10px;">
+              <input type="text" id="ipt_busca" class="selecionar_unidade" placeholder="Digite o nome do sensor, empresa ou área">
+              <button class="botao_buscar" onclick="buscarSensores()">Buscar</button>
+            </div>
+          </div>
+
+          <div id="lista_sensores" style="margin-top: 20px;"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let sensoresPendentes = [];
+
+    
+    async function obterSensoresPendentes() {
+      sensoresPendentes = [];
+      let dados = await fetch(`/root/sensores_pendentes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      let res = await dados.json();
+      res = res.dados || res; 
+
+      
+      sensoresPendentes = res
+      exibirSensores(sensoresPendentes);
+    }
+    obterSensoresPendentes();
+
+    function botao_abrir_fechar_menu() {
+      const menuLateral = document.querySelector('.menu_lateral');
+      menuLateral.classList.toggle('menu_expandido');
+      botao_expandir.classList.toggle('girar');
+    }
+
+    function buscarSensores() {
+      var busca = document.getElementById("ipt_busca").value.toLowerCase();
+      var resultado = sensoresPendentes.filter(sensor =>
+        (sensor.nome_sensor && sensor.nome_sensor.toLowerCase().includes(busca)) ||
+        (sensor.empresa && sensor.empresa.toLowerCase().includes(busca)) ||
+        (sensor.area && sensor.area.toLowerCase().includes(busca))
+      );
+      if (resultado.length === 0) {
+        alert("Nenhum sensor encontrado com esse termo.");
+        return;
+      }
+      exibirSensores(resultado);
+    }
+
+    function exibirSensores(lista) {
+      const container = document.getElementById("lista_sensores");
+      container.innerHTML = "";
+
+      if (lista.length === 0) {
+        container.innerHTML = "<p>Nenhum sensor pendente encontrado.</p>";
+        return;
+      }
+
+      lista.forEach(sensor => {
+        const div = document.createElement("div");
+        div.className = "cartao";
+        div.innerHTML = `
+          <strong>Sensor: ${sensor.identificador || "N/A"}</strong><br>
+          <span style="font-size: 14px;">Empresa: ${sensor.empresa || "N/A"}</span><br>
+          <span style="font-size: 14px;">Status: <b style="color: orange">${sensor.status}</b></span>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Preencher nome do usuário e nível
+    document.getElementById("nome_usuario_dashboard").innerText = sessionStorage.NOME_USUARIO || "Usuário";
+    document.getElementById("nivel_usuario_dashboard").innerText = sessionStorage.NIVEL_DE_ACESSO === "admin" ? "Administrador" : "Comum";
+  </script>
+</body>
+</html>
