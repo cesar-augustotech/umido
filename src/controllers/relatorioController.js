@@ -1,7 +1,7 @@
 var relatorioModel = require("../models/relatorioModel");
 
 function buscarListaAlertas(req, res) {
-let idUnidade = req.params.idUnidade;
+    let idUnidade = req.params.idUnidade;
 
     relatorioModel.buscarListaAlertas(idUnidade).then(function (resultado) {
         if (resultado.length > 0) {
@@ -18,7 +18,7 @@ let idUnidade = req.params.idUnidade;
 
 function buscarUmidadeMediaUnidade(req, res) {
     let idUnidade = req.params.idUnidade;
-     relatorioModel.buscarUmidadeMediaUnidade(idUnidade).then(function (resultado) {
+    relatorioModel.buscarUmidadeMediaUnidade(idUnidade).then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
@@ -33,7 +33,7 @@ function buscarUmidadeMediaUnidade(req, res) {
 
 function buscarUmidadeMediaUltimasSemanas(req, res) {
     let idUnidade = req.params.idUnidade;
-     relatorioModel.buscarUmidadeMediaUltimasSemanas(idUnidade).then(function (resultado) {
+    relatorioModel.buscarUmidadeMediaUltimasSemanas(idUnidade).then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
@@ -48,7 +48,7 @@ function buscarUmidadeMediaUltimasSemanas(req, res) {
 
 function buscarQuantidadeDeAlertas(req, res) {
     let idUnidade = req.params.idUnidade;
-     relatorioModel.buscarQuantidadeDeAlertas(idUnidade).then(function (resultado) {
+    relatorioModel.buscarQuantidadeDeAlertas(idUnidade).then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
@@ -63,7 +63,7 @@ function buscarQuantidadeDeAlertas(req, res) {
 
 function buscarUmidadePorSensor(req, res) {
     let idUnidade = req.params.idUnidade;
-     relatorioModel.buscarUmidadePorSensor(idUnidade).then(function (resultado) {
+    relatorioModel.buscarUmidadePorSensor(idUnidade).then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
@@ -77,9 +77,9 @@ function buscarUmidadePorSensor(req, res) {
 }
 
 module.exports = {
-buscarListaAlertas,
- buscarUmidadeMediaUnidade,
- buscarUmidadePorSensor,
- buscarUmidadeMediaUltimasSemanas,
- buscarQuantidadeDeAlertas
+    buscarListaAlertas,
+    buscarUmidadeMediaUnidade,
+    buscarUmidadePorSensor,
+    buscarUmidadeMediaUltimasSemanas,
+    buscarQuantidadeDeAlertas
 }
