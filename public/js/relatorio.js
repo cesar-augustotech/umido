@@ -51,10 +51,11 @@ function buscarUmidadePorSensor(idUnidade) {
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
-                
+                    /*
+                    let 
+                    console.log("Unidades com sensores:", resposta.filter(u => u.identificador));
+*/
                     console.log(resposta)
-
-
                     //  mostrar_modal_sensor(resposta)
 
                 });
