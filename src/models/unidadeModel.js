@@ -181,6 +181,7 @@ async function buscarIndicadoresPorUnidade(idUsuario, idUnidade) {
         WHERE m.alerta in( 1, 0)
           AND day(m.data_hora) = day(CURRENT_DATE())
           AND uu.id_usuario = ${idUsuario}
+          AND u.id = ${idUnidade}
       ) AS quantidade_alerta,
 
       (SELECT ROUND(avg(m.umidade), 2)

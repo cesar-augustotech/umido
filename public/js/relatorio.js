@@ -464,11 +464,12 @@ function select_unidade() {
     const select = document.getElementById("selecionar_unidade");
     idUnidadeSelecionada = select.value;
 
-
+    lista_sensores.innerHTML = ''
     lista_area.innerHTML = ''
     graficoUmidadeSemana?.destroy()
     graficoAlertasPie?.destroy()
     graficoUmidadeMedia?.destroy()
+
 
 
     buscarQuantidadeDeAlertas(idUnidadeSelecionada)
