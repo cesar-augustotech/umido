@@ -1,23 +1,55 @@
--- drop database umido;
 -- Criação do banco de dados
 CREATE DATABASE IF NOT EXISTS umido;
 USE umido;
 
--- Tabela de empresas
+select * from usuario;
+
+select avg(m.umidade) as umidade,extract(month from m.data_hora) as mes 
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where u.id = 1
+group by mes
+order by mes desc
+limit 6;
+
+select avg(m.umidade) as umidade,extract(week from m.data_hora) as semana
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where u.id = 1
+group by semana
+order by semana desc
+limit 4;
+
+desc medicao;
+select count(alerta),id_sensor
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where u.id = 1
+group by id_sensor;
+
+
+select avg(m.umidade) as umidade,extract(hour from m.data_hora) as hora 
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where s.id = 1
+group by hora
+order by hora desc
+limit 24;
+
+
+
+       
 CREATE TABLE empresa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cnpj VARCHAR(20) UNIQUE,
     telefone VARCHAR(20),
-    ativo INT DEFAULT 0
+    ativo int default  0
 );
-
--- Força a UMIDO a ser id = 1
-INSERT INTO empresa (id, nome, cnpj, telefone, ativo)
-VALUES (1, 'UMIDO', '1234567-123', '1191091010', 1);
-
--- Ajusta o AUTO_INCREMENT para que outras empresas comecem no 2
-ALTER TABLE empresa AUTO_INCREMENT = 2;
 
 -- Tabela de usuários
 CREATE TABLE usuario (
@@ -28,13 +60,7 @@ CREATE TABLE usuario (
     nivel_de_acesso ENUM('admin', 'comum') NOT NULL
 );
 
--- Força o usuário da UMIDO a ser id = 1
-INSERT INTO usuario (id, nome, email, senha, nivel_de_acesso)
-VALUES (1, 'Usuário Admin da Umido', 'umidoRoot', 'Sptech#2024', 'admin');
-
-ALTER TABLE usuario AUTO_INCREMENT = 2;
-
--- Tabela de unidades
+-- Tabela de unidades (fazendas)
 CREATE TABLE unidade ( 
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -42,24 +68,6 @@ CREATE TABLE unidade (
     id_empresa INT NOT NULL,
     FOREIGN KEY (id_empresa) REFERENCES empresa(id)
 );
-
--- Força a unidade da UMIDO a ser id = 1
-INSERT INTO unidade (id, nome, codigo_cnir, id_empresa)
-VALUES (1, 'Unidade UMIDO', 'CNIR-UMIDO', 1);
-
-ALTER TABLE unidade AUTO_INCREMENT = 2;
-
--- Relacionamento muitos-para-muitos
-CREATE TABLE unidade_usuario (
-    id_unidade INT NOT NULL,
-    id_usuario INT NOT NULL,
-    PRIMARY KEY (id_unidade, id_usuario),
-    FOREIGN KEY (id_unidade) REFERENCES unidade(id),
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id)
-);
-
--- Liga o usuário da UMIDO à unidade da UMIDO
-INSERT INTO unidade_usuario (id_unidade, id_usuario) VALUES (1, 1);
 
 -- Tabela de sensores
 CREATE TABLE sensor (
@@ -80,6 +88,14 @@ CREATE TABLE medicao (
     FOREIGN KEY (id_sensor) REFERENCES sensor(id)
 );
 
+-- Relacionamento entre usuários e unidades (muitos-para-muitos)
+CREATE TABLE unidade_usuario (
+    id_unidade INT NOT NULL,
+    id_usuario INT NOT NULL,
+    PRIMARY KEY (id_unidade, id_usuario),
+    FOREIGN KEY (id_unidade) REFERENCES unidade(id),
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+);
 
 
 -- Criação dos usuários do sistema com permissões específicas
@@ -90,19 +106,16 @@ CREATE USER IF NOT EXISTS 'umidoInsert'@'localhost' IDENTIFIED BY 'Sptech#2024';
 GRANT INSERT ON umido.medicao TO 'umidoInsert'@'localhost';
 
 FLUSH PRIVILEGES;
-
-
 -- Inserção de dados iniciais
 
--- Continua a partir daqui com os outros dados normalmente
--- Inserção das demais empresas
-INSERT INTO empresa (nome, cnpj, ativo) VALUES
+-- Empresas
+INSERT INTO empresa (nome, cnpj,ativo) VALUES
     ('Sentinela','12.345.678/0001-99',1),
     ('Hydroscan','98.765.432/0001-11',1),
     ('CodeBerry', '10.765.432/0001-12',1),
     ('Projeto10','34.565.432/0001-11',0);
 
--- Inserção de demais usuários
+-- Usuários
 INSERT INTO usuario (nome, email, senha, nivel_de_acesso) VALUES
     ('César Augusto','cesar@email','Sptech#2024','admin'),
     ('Bill Hebert','bill@email','Sptech#2024','comum'),
@@ -113,64 +126,48 @@ INSERT INTO usuario (nome, email, senha, nivel_de_acesso) VALUES
     ('Pedro Rico','rico@email','Sptech#2024','comum'),
     ('Erick Araujo','erick@email','Sptech#2024','admin');
 
--- Inserção de outras unidades
+-- Unidades
 INSERT INTO unidade (nome, codigo_cnir, id_empresa) VALUES
-    ('Unidade Sentinela 1', 'CNIR-11', 2),
-    ('Unidade Sentinela 2', 'CNIR-12', 2),
-    ('Unidade Sentinela 3', 'CNIR-13', 2),
-    ('Unidade Sentinela 4', 'CNIR-14', 2),
-    ('Unidade Sentinela 5', 'CNIR-15', 2),
-    ('Unidade HydroScan 1', 'CNIR-21', 3),
-    ('Unidade HydroScan 2', 'CNIR-22', 3),
-    ('Unidade CodeBerry 1', 'CNIR-31', 4);
+    ('Unidade Sentinela 1', 'CNIR-11', 1),
+    ('Unidade Sentinela 2', 'CNIR-12', 1),
+    ('Unidade Sentinela 3', 'CNIR-13', 1),
+    ('Unidade Sentinela 4', 'CNIR-14', 1),
+    ('Unidade Sentinela 5', 'CNIR-15', 1),
+    ('Unidade HydroScan 1', 'CNIR-21', 2),
+    ('Unidade HydroScan 2', 'CNIR-22', 2),
+    ('Unidade CodeBerry 1', 'CNIR-31', 3);
 
--- Associações de USUÁRIOS ADMINISTRADORES às unidades de suas empresas
+-- Associação de usuários administradores a TODAS as unidades da empresa
 
--- César (id_usuario = 2) -> Empresa 2 (Umido)
+-- César (empresa 1)
 INSERT INTO unidade_usuario (id_unidade, id_usuario)
-SELECT id, 2 FROM unidade WHERE id_empresa = 2;
+SELECT id, 1 FROM unidade WHERE id_empresa = 1;
 
--- Felipe (id_usuario = 6) -> Empresa 1 (Umido)
+-- Rafael (empresa 2)
 INSERT INTO unidade_usuario (id_unidade, id_usuario)
 SELECT id, 6 FROM unidade WHERE id_empresa = 2;
 
-
--- Erick (id_usuario = 8) -> Empresa 3 (CodeBerry)
+-- Erick (empresa 3)
 INSERT INTO unidade_usuario (id_unidade, id_usuario)
 SELECT id, 8 FROM unidade WHERE id_empresa = 3;
 
-
-
--- Associações de USUÁRIOS COMUNS a unidades específicas
-
--- Bill (id_usuario = 3) em Unidade Sentinela 2 (id_unidade = 2)
-INSERT INTO unidade_usuario (id_unidade, id_usuario) VALUES (2, 3);
-
--- Pedro Giraldi (id_usuario = 4) em Unidade Sentinela 3 (id_unidade = 3)
-INSERT INTO unidade_usuario (id_unidade, id_usuario) VALUES (3, 4);
-
--- Felipe Hideki (id_usuario = 5) em Unidade HydroScan 1 (id_unidade = 6)
-INSERT INTO unidade_usuario (id_unidade, id_usuario) VALUES (6, 5);
-
--- Pedro Rico (id_usuario = 7) em Unidade HydroScan 2 (id_unidade = 7)
-INSERT INTO unidade_usuario (id_unidade, id_usuario) VALUES (7, 7);
+-- Associação de usuários comuns a unidades específicas
+INSERT INTO unidade_usuario (id_unidade, id_usuario) VALUES
+    (1, 2),
+    (2, 3),
+    (3, 4),
+    (6, 5),
+    (7, 7);
 
 -- Sensores
 INSERT INTO sensor (id_unidade, identificador) VALUES
-    (2, 'SENT-1A'),
-    (3, 'SENT-1B'),
-    (4, 'SENT-2A'),
+    (1, 'SENT-1A'),
+    (1, 'SENT-1B'),
+    (2, 'SENT-2A'),
     (6, 'HYDR-1A'),
     (8, 'CODE-1A');
 
 -- Medições (dados simulados)
-INSERT INTO medicao (id_sensor, umidade, alerta) VALUES
-(1, 25.0, null);
-
-insert into sensor (id_unidade, identificador, ativo) values (2,'SENT-1C',false);
-INSERT INTO medicao (id_sensor, umidade, alerta) VALUES
-(2, 10.0, null);
-
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
 (1, 45.2, '2025-05-01 08:00:00', 0),
 (1, 28.7, '2025-05-01 10:00:00', 1),
@@ -332,10 +329,8 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
 (1, 27.3, '2025-05-27 10:00:00', 1),
 (1, 37.7, '2025-05-27 12:00:00', 0),
 (1, 43.0, '2025-05-27 14:00:00', NULL),
-(1, 50.6, '2025-05-27 16:00:00', NULL);
+(1, 50.6, '2025-05-27 16:00:00', NULL),
 
-
-/*
 (1, 49.4, '2025-05-28 08:00:00', NULL),
 (1, 26.0, '2025-05-28 10:00:00', 1),
 (1, 38.4, '2025-05-28 12:00:00', 0),
@@ -383,28 +378,7 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
 (1, 49.7, '2025-06-05 08:00:00', 0),
 (1, 28.1, '2025-06-05 10:00:00', 1),
 (1, 37.5, '2025-06-05 12:00:00', 0),
-(1, 53.9, '2025-06-05 14:00:00', NULL),
-(1, 55.5, '2025-06-05 16:00:00', NULL),
-(1, 47.1, '2025-06-06 08:00:00', 0),
-(1, 29.7, '2025-06-06 10:00:00', 1),
-(1, 36.9, '2025-06-06 12:00:00', 0),
-(1, 52.5, '2025-06-06 14:00:00', NULL),
-(1, 54.3, '2025-06-06 16:00:00', NULL),
-(1, 48.3, '2025-06-07 08:00:00', 0),
-(1, 26.9, '2025-06-07 10:00:00', 1),
-(1, 39.6, '2025-06-07 12:00:00', 0),
-(1, 51.3, '2025-06-07 14:00:00', NULL),
-(1, 53.8, '2025-06-07 16:00:00', NULL),
-(1, 46.7, '2025-06-08 08:00:00', 0),
-(1, 27.4, '2025-06-08 10:00:00', 1),
-(1, 35.8, '2025-06-08 12:00:00', 0),
-(1, 50.6, '2025-06-08 14:00:00', NULL),
-(1, 54.0, '2025-06-08 16:00:00', NULL),
-(1, 49.0, '2025-06-09 08:00:00', 0),
-(1, 25.1, '2025-06-09 10:00:00', 1),
-(1, 38.4, '2025-06-09 12:00:00', 0),
-(1, 52.7, '2025-06-09 14:00:00', NULL),
-(1, 55.1, '2025-06-09 16:00:00', NULL);
+(1, 53.9, '2025-06-05 14:00:00', NULL);
 
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
 (1, 28.0, '2025-01-01 08:00:00', 1),
@@ -529,4 +503,192 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
 (1, 45.0, '2025-04-29 08:00:00', 0),
 (1, 52.0, '2025-04-30 08:00:00', NULL);
 
-*/
+
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
+(2, 28.0, '2025-01-01 08:00:00', 1),
+(2, 45.0, '2025-01-02 08:00:00', 0),
+(2, 52.0, '2025-01-03 08:00:00', NULL),
+(2, 28.0, '2025-01-04 08:00:00', 1),
+(2, 45.0, '2025-01-05 08:00:00', 0),
+(2, 52.0, '2025-01-06 08:00:00', NULL),
+(2, 28.0, '2025-01-07 08:00:00', 1),
+(2, 45.0, '2025-01-08 08:00:00', 0),
+(2, 52.0, '2025-01-09 08:00:00', NULL),
+(2, 28.0, '2025-01-10 08:00:00', 1),
+(2, 45.0, '2025-01-11 08:00:00', 0),
+(2, 52.0, '2025-01-12 08:00:00', NULL),
+(2, 28.0, '2025-01-13 08:00:00', 1),
+(2, 45.0, '2025-01-14 08:00:00', 0),
+(2, 52.0, '2025-01-15 08:00:00', NULL),
+(2, 28.0, '2025-01-16 08:00:00', 1),
+(2, 45.0, '2025-01-17 08:00:00', 0),
+(2, 52.0, '2025-01-18 08:00:00', NULL),
+(2, 28.0, '2025-01-19 08:00:00', 1),
+(2, 45.0, '2025-01-20 08:00:00', 0),
+(2, 52.0, '2025-01-21 08:00:00', NULL),
+(2, 28.0, '2025-01-22 08:00:00', 1),
+(2, 45.0, '2025-01-23 08:00:00', 0),
+(2, 52.0, '2025-01-24 08:00:00', NULL),
+(2, 28.0, '2025-01-25 08:00:00', 1),
+(2, 45.0, '2025-01-26 08:00:00', 0),
+(2, 52.0, '2025-01-27 08:00:00', NULL),
+(2, 28.0, '2025-01-28 08:00:00', 1),
+(2, 45.0, '2025-01-29 08:00:00', 0),
+(2, 52.0, '2025-01-30 08:00:00', NULL),
+(2, 28.0, '2025-01-31 08:00:00', 1),
+(2, 45.0, '2025-02-01 08:00:00', 0),
+(2, 52.0, '2025-02-02 08:00:00', NULL),
+(2, 28.0, '2025-02-03 08:00:00', 1),
+(2, 45.0, '2025-02-04 08:00:00', 0),
+(2, 52.0, '2025-02-05 08:00:00', NULL),
+(2, 28.0, '2025-02-06 08:00:00', 1),
+(2, 45.0, '2025-02-07 08:00:00', 0),
+(2, 52.0, '2025-02-08 08:00:00', NULL),
+(2, 28.0, '2025-02-09 08:00:00', 1),
+(2, 45.0, '2025-02-10 08:00:00', 0),
+(2, 52.0, '2025-02-11 08:00:00', NULL),
+(2, 28.0, '2025-02-12 08:00:00', 1),
+(2, 45.0, '2025-02-13 08:00:00', 0),
+(2, 52.0, '2025-02-14 08:00:00', NULL),
+(2, 28.0, '2025-02-15 08:00:00', 1),
+(2, 45.0, '2025-02-16 08:00:00', 0),
+(2, 52.0, '2025-02-17 08:00:00', NULL),
+(2, 28.0, '2025-02-18 08:00:00', 1),
+(2, 45.0, '2025-02-19 08:00:00', 0),
+(2, 52.0, '2025-02-20 08:00:00', NULL),
+(2, 28.0, '2025-02-21 08:00:00', 1),
+(2, 45.0, '2025-02-22 08:00:00', 0),
+(2, 52.0, '2025-02-23 08:00:00', NULL),
+(2, 28.0, '2025-02-24 08:00:00', 1),
+(2, 45.0, '2025-02-25 08:00:00', 0),
+(2, 52.0, '2025-02-26 08:00:00', NULL),
+(2, 28.0, '2025-02-27 08:00:00', 1),
+(2, 45.0, '2025-02-28 08:00:00', 0),
+(2, 52.0, '2025-03-01 08:00:00', NULL),
+(2, 28.0, '2025-03-02 08:00:00', 1),
+(2, 28.0, '2025-03-02 08:00:00', 1),
+(2, 45.0, '2025-03-03 08:00:00', 0),
+(2, 52.0, '2025-03-04 08:00:00', NULL),
+(1, 28.0, '2025-03-05 08:00:00', 1),
+(2, 45.0, '2025-03-06 08:00:00', 0),
+(2, 52.0, '2025-03-07 08:00:00', NULL),
+(2, 28.0, '2025-03-08 08:00:00', 1),
+(2, 45.0, '2025-03-09 08:00:00', 0),
+(2, 52.0, '2025-03-10 08:00:00', NULL),
+(2, 28.0, '2025-03-11 08:00:00', 1),
+(2, 45.0, '2025-03-12 08:00:00', 0),
+(2, 52.0, '2025-03-13 08:00:00', NULL),
+(2, 28.0, '2025-03-14 08:00:00', 1),
+(2, 45.0, '2025-03-15 08:00:00', 0),
+(2, 52.0, '2025-03-16 08:00:00', NULL),
+(2, 28.0, '2025-03-17 08:00:00', 1),
+(2, 45.0, '2025-03-18 08:00:00', 0),
+(2, 52.0, '2025-03-19 08:00:00', NULL),
+(2, 28.0, '2025-03-20 08:00:00', 1),
+(2, 45.0, '2025-03-21 08:00:00', 0),
+(2, 52.0, '2025-03-22 08:00:00', NULL),
+(2, 28.0, '2025-03-23 08:00:00', 1),
+(2, 45.0, '2025-03-24 08:00:00', 0),
+(2, 52.0, '2025-03-25 08:00:00', NULL),
+(2, 28.0, '2025-03-26 08:00:00', 1),
+(2, 45.0, '2025-03-27 08:00:00', 0),
+(2, 52.0, '2025-03-28 08:00:00', NULL),
+(2, 28.0, '2025-03-29 08:00:00', 1),
+(2, 45.0, '2025-03-30 08:00:00', 0),
+(2, 52.0, '2025-03-31 08:00:00', NULL),
+(2, 28.0, '2025-04-01 08:00:00', 1),
+(2, 45.0, '2025-04-02 08:00:00', 0),
+(2, 52.0, '2025-04-03 08:00:00', NULL),
+(2, 28.0, '2025-04-04 08:00:00', 1),
+(2, 45.0, '2025-04-05 08:00:00', 0),
+(2, 52.0, '2025-04-06 08:00:00', NULL),
+(2, 28.0, '2025-04-07 08:00:00', 1),
+(2, 45.0, '2025-04-08 08:00:00', 0),
+(2, 52.0, '2025-04-09 08:00:00', NULL),
+(2, 28.0, '2025-04-10 08:00:00', 1),
+(2, 45.0, '2025-04-11 08:00:00', 0),
+(2, 52.0, '2025-04-12 08:00:00', NULL),
+(2, 28.0, '2025-04-13 08:00:00', 1),
+(2, 45.0, '2025-04-14 08:00:00', 0),
+(2, 52.0, '2025-04-15 08:00:00', NULL),
+(2, 28.0, '2025-04-16 08:00:00', 1),
+(2, 45.0, '2025-04-17 08:00:00', 0),
+(2, 52.0, '2025-04-18 08:00:00', NULL),
+(2, 28.0, '2025-04-19 08:00:00', 1),
+(2, 45.0, '2025-04-20 08:00:00', 0),
+(2, 52.0, '2025-04-21 08:00:00', NULL),
+(2, 28.0, '2025-04-22 08:00:00', 1),
+(2, 45.0, '2025-04-23 08:00:00', 0),
+(2, 52.0, '2025-04-24 08:00:00', NULL),
+(2, 28.0, '2025-04-25 08:00:00', 1),
+(2, 45.0, '2025-04-26 08:00:00', 0),
+(2, 52.0, '2025-04-27 08:00:00', NULL),
+(2, 28.0, '2025-04-28 08:00:00', 1),
+(2, 45.0, '2025-04-29 08:00:00', 0),
+(2, 52.0, '2025-04-30 08:00:00', NULL);
+
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
+(1, 52.0, '2025-06-07 01:00:00', NULL),
+(1, 28.0, '2025-06-07 02:00:00', 1),
+(1, 45.0, '2025-06-07 03:00:00', 0),
+(1, 52.0, '2025-06-07 04:00:00', NULL),
+(1, 28.0, '2025-06-07 05:00:00', 1),
+(1, 45.0, '2025-06-07 06:00:00', 0),
+(1, 52.0, '2025-06-07 07:00:00', NULL),
+(1, 28.0, '2025-06-07 08:00:00', 1),
+(1, 45.0, '2025-06-07 09:00:00', 0),
+(1, 52.0, '2025-06-07 10:00:00', NULL),
+(1, 28.0, '2025-06-07 11:00:00', 1),
+(1, 45.0, '2025-06-07 12:00:00', 0),
+(1, 52.0, '2025-06-07 13:00:00', NULL),
+(1, 28.0, '2025-06-07 14:00:00', 1),
+(1, 45.0, '2025-06-07 15:00:00', 0),
+(1, 52.0, '2025-06-07 16:00:00', NULL),
+(1, 28.0, '2025-06-07 17:00:00', 1),
+(1, 45.0, '2025-06-07 18:00:00', 0),
+(1, 52.0, '2025-06-07 19:00:00', NULL),
+(1, 28.0, '2025-06-07 20:00:00', 1),
+(1, 45.0, '2025-06-07 21:00:00', 0),
+(1, 52.0, '2025-06-07 22:00:00', NULL),
+(1, 28.0, '2025-06-07 23:00:00', 1),
+(1, 28.0, '2025-06-07 00:00:00', 1);
+
+select * from usuario;
+ select m.id_sensor,s.identificador,
+HOUR(m.data_hora) AS hora_do_dia,
+avg(m.umidade)
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where u.id = 1 and data_hora >= DATE_SUB(now(), INTERVAL 24 hour)
+group by m.id_sensor, hora_do_dia
+order by m.id_sensor;
+ 
+
+ select count(alerta) as alerta,id_sensor as sensor
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where u.id = 1
+group by id_sensor;
+
+ select truncate(avg(m.umidade),1) as umidade,extract(week from m.data_hora) as semana
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where u.id = 1
+group by semana
+order by semana desc
+limit 4;
+
+
+
+SELECT s.identificador,
+m.umidade,
+DATE_FORMAT(m.data_hora, '%H:%i:%s  %d/%m/%Y') as data,m.data_hora
+from  medicao as m
+inner join sensor as s on s.id = m.id_sensor
+where id_unidade = 1  and data_hora >= DATE_SUB(now(), INTERVAL 48 hour) and alerta = (0 or 1)
+order by data_hora desc
+limit 28;
+
