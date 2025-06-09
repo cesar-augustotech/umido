@@ -399,6 +399,7 @@ function mostrar_modal_sensor(posicao) {
         titulo_modal_sensor.innerHTML = dados.identificador;
         umidadeSensor.textContent = dados.medicoes[dados.medicoes.length - 1].medicao;
         statusSensor.textContent = dados.medicoes[dados.medicoes.length - 1].status == null ? "Sem Alerta" : (dados.medicoes[dados.medicoes.length - 1].status == "0" ? "Possivel Queimada" : "Alerta Critico");
+        umidade_sensor.innerHTML = dados.medicoes[dados.medicoes.length - 1].medicao
     }, 200)
     modal.style.display = 'block';
     let horas = []
