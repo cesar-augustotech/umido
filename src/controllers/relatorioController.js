@@ -64,7 +64,6 @@ function buscarQuantidadeDeAlertas(req, res) {
 function buscarUmidadePorSensor(req, res) {
     let idUnidade = req.params.idUnidade;
     let idSensor = req.params.idSensor;
-
     relatorioModel.buscarUmidadePorSensor(idUnidade, idSensor).then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);

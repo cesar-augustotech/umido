@@ -373,8 +373,18 @@ function criar_grafico_modal_sensor(horas, dados, idUnidade, idSensor) {
             }
         }
     });
+    let ultima = ""
     setIntervalGrafico = setInterval(async () => {
-        let res = await fetch(`/relatorios/buscarUmidadeMediaUnidade/${idUnidade}/${idSensor}`)
+        let res = await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}/${idSensor}`, { cache: 'no-store' })
+        res = await res.json()
+        if (res[0].umidade != ultima) {
+            window.graficoHistoricoSensor.data.labels.shift();
+            window.graficoHistoricoSensor.data.datasets[0].data.shift();
+            window.graficoHistoricoSensor.data.labels.push(res[0].data_hora.split("T")[1].replace(".000Z", ""));
+            window.graficoHistoricoSensor.data.datasets[0].data.push(parseFloat(res[0].umidade));
+            window.graficoHistoricoSensor.update();
+            ultima = res[0].umidade
+        }
     }, 1000)
 
 
@@ -398,9 +408,11 @@ function mostrar_modal_sensor(posicao) {
         dados_grafico.push(dados.medicoes[dados.medicoes.length - i].medicao)
         horas.push(pre_data)
     }
+    /*
     horas = horas.reverse()
     dados_grafico = dados_grafico.reverse()
-    criar_grafico_modal_sensor(horas, dados_grafico, dadosSensores[posicao]);
+    */
+    criar_grafico_modal_sensor(horas, dados_grafico, posicao, dados.unidade);
 }
 
 function mostrar_modal_unidade() {
@@ -412,6 +424,9 @@ function mostrar_modal_adicionar_sensor() {
 }
 
 function fechar_modal() {
+    try {
+        clearTimeout(setIntervalGrafico)
+    } catch (e) { }
     modal_sensor.style.display = 'none';
 }
 
