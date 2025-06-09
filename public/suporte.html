@@ -7,12 +7,66 @@
     <title>BobIA</title>
     <link rel="stylesheet" href="css/suporte.css">
 </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Umido - Admin</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="./css/dashboard.css">
+</head>
 
 <body>
-    <header>
-        <h1>BobAi - N3/Umido</h1>
-    </header>
-    <section>
+
+
+  <header class="i_header">
+    <div class="container">
+      <div class="logo"></div>
+      <nav>
+     
+      </nav>
+      <div class="div_perfil">
+        <div>
+          <h4>Usuário Umido</h4>
+          <h5>Administrador</h5>
+        </div>
+        <img src="./assets/icons/user.png" style="width: 40px; height: 40px;" alt="perfil">
+      </div>
+    </div>
+  </header>
+  <div class="layout_principal">
+    <div class="menu_lateral menu_expandido">
+      <div class="botao_expandir" id="botao_expandir" onclick="botao_abrir_fechar_menu()">
+        <img src="./assets/icons/seta.png" style="width: 20px; height: 20px;">
+      </div>
+      <ul class="itens_menu">
+
+
+
+        <li style="gap: 20px;" onclick="window.location.href = 'suporte.html'" class="ativo">
+          <img src="./assets/icons/monitoramento.png" style="width: 30px; height: 30px;">
+          <span>Chat Bob.IA</span>
+        </li>
+
+           <a href="https://umido.atlassian.net/jira/servicedesk/projects/AAC/boards/1">
+          <li style="gap: 20px;" onclick="">
+            <img src="../assets/icons/alert.png" style="width: 30px; height: 30px;">
+            <span>Tickets</span>
+          </li>
+        </a>
+            <a href="../assets/Manual usuario projeto Umido.pdf" download="Manual_usuario_projeto_Umido.pdf">
+          <li style="gap: 20px;" onclick="">
+            <img src="../assets/icons/icone download.png" style="width: 30px; height: 30px;">
+            <span>Manual</span>
+          </li>
+        </a>
+      
+  <li style="gap: 20px;" onclick="window.location.href = 'index.html'" >
+    <img src="./assets/icons/sair.png" style="width: 30px; height: 30px;">
+    <span>Sair</span>
+  </li>
+      </ul>
+    </div>
+        <section>
         <div id="chat_container" class="chat-container">
         </div>
         <div class="input-container">
@@ -22,6 +76,11 @@
             </a>
         </div>
     </section>
+        </div>
+      </div>
+    </div>
+<body>
+
 </body>
 <script>
 
@@ -42,6 +101,13 @@
 
         chat_container.innerHTML += `<div class="chat-output">${data.resultado}</div>`
     }
+
+
+function botao_abrir_fechar_menu() {
+    const menuLateral = document.querySelector('.menu_lateral');
+    menuLateral.classList.toggle('menu_expandido');
+    botao_expandir.classList.toggle('girar');
+}
 
 </script>
 
