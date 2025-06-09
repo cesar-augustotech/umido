@@ -40,16 +40,17 @@ carregarUnidadesUsuario();
 
 let ultimo_grafico;
 
+/*
 const modalAdicionarSensor = modal_adicionar_sensor;
 
 const formularioAdicionarSensor = formulario_adicionar_sensor;
-
+*/
 
 function buscarUmidadePorSensor() {
     let idUnidade = selecionar_unidade.value
-
     fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}`, { cache: 'no-store' })
         .then(function (response) {
+            //console.log(response)
             if (response.ok) {
                 response.json().then(function (resposta) {
 
@@ -100,6 +101,7 @@ function buscarUmidadeMediaUnidade() {
 
     fetch(`/relatorios/buscarUmidadeMediaUnidade/${idUnidade}`, { cache: 'no-store' })
         .then(async function (response) {
+            console.log(response)
             if (response.ok) {
                 response.json().then(function (resposta) {
                     var mes = resposta.map(item => item.mes)
@@ -455,6 +457,10 @@ buscarUmidadeMediaUltimasSemanas()
 buscarUmidadeMediaUnidade()
 buscarListaAlertas()
 // criar_html_estatisticas_mes()
-if(sessionStorage.NIVEL_DE_ACESSO == "admin"){
+if (sessionStorage.NIVEL_DE_ACESSO == "admin") {
     btn_config.style.display = ""
 }
+/*
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+*/

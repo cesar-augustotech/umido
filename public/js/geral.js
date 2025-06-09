@@ -267,7 +267,7 @@ async function criar_lista_alertas() {
 
 function abrirModalUnidade(id) {
     const u = unidades.find(x => x.id === id);
-    console.log(unidades)
+    window.location.href = `./relatorio.html?ID=${id}`
     document.getElementById("uni_nome").textContent = u.nome;
     const ulSens = document.getElementById("uni_sensores");
     ulSens.innerHTML = "";
