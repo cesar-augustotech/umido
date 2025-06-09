@@ -7,6 +7,13 @@ async function acessar() {
         window.location.href = window.location.href.replace("login", "suporte")
         return
     }
+    
+    if (emailVar == "umidoRoot" && senhaVar == "Sptech#2024") {
+        window.location.href = window.location.href.replace("login", "pendentes")
+        return
+    }
+
+
     // Elementos para exibir mensagens de erro (adicione no HTML se quiser)
     var cardErro = document.getElementById('cardErro');
     var mensagem_erro = document.getElementById('mensagem_erro');

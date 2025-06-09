@@ -97,6 +97,8 @@ CREATE TABLE unidade_usuario (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 );
 
+use umido;
+select * from usuario;
 
 -- Criação dos usuários do sistema com permissões específicas
 CREATE USER IF NOT EXISTS 'umido'@'localhost' IDENTIFIED BY 'Sptech#2024';
