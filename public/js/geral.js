@@ -175,7 +175,7 @@ async function atualizarPaginaInicial() {
 
         card.innerHTML = `
     <h4>${u.nome}</h4>
-    <p>Menor umidade:<br><span class="valor_indicador"> ${menorUmidade !== Infinity ? menorUmidade.toFixed(2) + "%" : "Sem dados"}</span></p>
+    <p>Menor umidade:<br><span class="valor_indicador" style="color: ${menorUmidade > 50 && menorUmidade !== Infinity ? 'green"' : menorUmidade > 30 && menorUmidade ==! Infinity ? 'yellow"' : 'red"' }> ${menorUmidade !== Infinity ? menorUmidade.toFixed(2) + "%" : "Sem dados"}</span></p>
     ${u.sensores.some(s => s.alerta === 1)
                 ? '<p class="info_adicional" style="color:#e84118;">Alerta ativo!</p>'
                 : ''
