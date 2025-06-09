@@ -54,7 +54,7 @@ function buscarUmidadePorSensor(idUnidade) {
                     /*
                     let 
                     console.log("Unidades com sensores:", resposta.filter(u => u.identificador));
-*/
+                    */
                     console.log(resposta)
                     //  mostrar_modal_sensor(resposta)
 
