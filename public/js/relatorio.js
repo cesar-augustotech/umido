@@ -313,7 +313,7 @@ function criar_grafico_alertas_pie(sensor, alerta) {
 
 
     graficoAlertasPie = new Chart(contexto, {
-        type: 'pie',
+        type: 'polarArea',
         data: {
             labels: sensor,
             datasets: [{
