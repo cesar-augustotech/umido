@@ -41,11 +41,11 @@ carregarUnidadesUsuario();
 
 let ultimo_grafico;
 
-/*
+
 const modalAdicionarSensor = modal_adicionar_sensor;
 
 const formularioAdicionarSensor = formulario_adicionar_sensor;
-*/
+
 
 function buscarUmidadePorSensor(idUnidade) {
     fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}`, { cache: 'no-store' })

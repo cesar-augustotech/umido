@@ -416,6 +416,7 @@ header {
     background-image: url(../assets/background_2.png);
     background-size: cover;
     align-items: center;
+    justify-content: center;
     
 
 
