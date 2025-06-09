@@ -7,7 +7,7 @@ nivel_usuario_dashboard.innerHTML = nivelAcesso == 'admin' ? 'Administrador' : '
 var graficoUmidadeSemana
 var graficoAlertasPie
 var graficoUmidadeMedia
-
+var dadosSensores = {}
 // Função para buscar as unidades relacionadas ao usuário logado
 async function carregarUnidadesUsuario() {
 
@@ -51,12 +51,19 @@ function buscarUmidadePorSensor(idUnidade) {
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
-                    /*
-                    let 
-                    console.log("Unidades com sensores:", resposta.filter(u => u.identificador));
-                    */
-                    console.log(resposta)
-                    //  mostrar_modal_sensor(resposta)
+
+                    let sensores = []
+                    resposta.filter(u => {
+                        if (sensores.includes(u.identificador) == false) {
+                            lista_sensores.innerHTML += `<li style=" display: flex; justify-content: space-around; width: 100%;">${u.identificador}<button class="botao_adicionar" onclick="mostrar_modal_sensor(${u.id_sensor})">Ver Mais</button></li>`
+                            sensores.push(u.identificador)
+                        }
+                        dadosSensores[u.id_sensor] ??= { medicoes: [], identificador: u.identificador }
+                        dadosSensores[u.id_sensor].medicoes.push({ data: u.data_hora, medicao: u.umidade, status: u.alerta })
+                    }
+                    )
+
+                    //  
 
                 });
             }
@@ -369,17 +376,25 @@ function criar_grafico_modal_sensor(horas, dados) {
 
 function mostrar_modal_sensor(posicao) {
     const modal = modal_sensor;
-    const titulomodal = titulo_modal_sensor;
     const umidadeSensor = umidade_sensor;
     const statusSensor = status_sensor;
-
-    titulomodal.textContent = 's';
-    umidadeSensor.textContent = 's';
-    statusSensor.textContent = 's';
-
+    let dados = dadosSensores[posicao]
+    setTimeout(() => {
+        titulo_modal_sensor.innerHTML = dados.identificador;
+        umidadeSensor.textContent = dados.medicoes[dados.medicoes.length - 1].medicao;
+        statusSensor.textContent = dados.medicoes[dados.medicoes.length - 1].status == null ? "Sem Alerta" : (dados.medicoes[dados.medicoes.length - 1].status == "0" ? "Possivel Queimada" : "Alerta Critico");
+    }, 200)
     modal.style.display = 'block';
-
-    criar_grafico_modal_sensor(dadosSensores[posicao][5]);
+    let horas = []
+    let dados_grafico = []
+    for (let i = 1; i < 11; i++) {
+        let pre_data = dados.medicoes[dados.medicoes.length - i].data.split("T")[1].replace(".000Z", "")
+        dados_grafico.push(dados.medicoes[dados.medicoes.length - i].medicao)
+        horas.push(pre_data)
+    }
+    horas = horas.reverse()
+    dados_grafico = dados_grafico.reverse()
+    criar_grafico_modal_sensor(horas, dados_grafico);
 }
 
 function mostrar_modal_unidade() {

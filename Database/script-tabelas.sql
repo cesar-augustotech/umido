@@ -694,3 +694,9 @@ where id_unidade = 1  and data_hora >= DATE_SUB(now(), INTERVAL 48 hour) and ale
 order by data_hora desc
 limit 28;
 
+select s.identificador, m.*
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+where s.id_unidade = 1 
+order by id desc
+limit 1000;

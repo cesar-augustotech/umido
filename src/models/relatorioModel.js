@@ -62,23 +62,18 @@ group by id_sensor;
 
 function buscarUmidadePorSensor(idUnidade) {
     var instrucaoSql = ` 
- select m.id_sensor,s.identificador,
-HOUR(m.data_hora) AS hora_do_dia,
-avg(m.umidade)
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-inner join unidade as u on u.id = s.id_unidade
-where u.id = ${idUnidade} and data_hora >= DATE_SUB(now(), INTERVAL 24 hour)
-group by m.id_sensor, hora_do_dia
-order by m.id_sensor;
+    select s.identificador, m.*
+    from medicao as m
+    inner join sensor as s on s.id = m.id_sensor
+    where s.id_unidade = ${idUnidade};
 `;
-return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql);
 }
 
 module.exports = {
-buscarListaAlertas,
- buscarUmidadeMediaUnidade,
- buscarUmidadePorSensor,
- buscarUmidadeMediaUltimasSemanas,
- buscarQuantidadeDeAlertas
+    buscarListaAlertas,
+    buscarUmidadeMediaUnidade,
+    buscarUmidadePorSensor,
+    buscarUmidadeMediaUltimasSemanas,
+    buscarQuantidadeDeAlertas
 }
