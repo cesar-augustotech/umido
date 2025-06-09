@@ -183,7 +183,7 @@ async function buscarIndicadoresPorUnidade(idUsuario, idUnidade) {
           AND uu.id_usuario = ${idUsuario}
       ) AS quantidade_alerta,
 
-      (SELECT ROUND(min(m.umidade), 2)
+      (SELECT ROUND(avg(m.umidade), 2)
          FROM medicao m
          JOIN sensor s ON m.id_sensor = s.id
          JOIN unidade u ON s.id_unidade = u.id
