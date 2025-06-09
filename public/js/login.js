@@ -26,8 +26,8 @@ async function acessar() {
 
     if (emailVar === "" || senhaVar === "") {
         if (cardErro && mensagem_erro) {
-            cardErro.style.display = "block";
-            mensagem_erro.innerHTML = "Preencha todos os campos!";
+           // cardErro.style.display = "flex";
+            alert ("Preencha todos os campos!");
             setTimeout(sumirMensagem, 5000);
         }
         return false;
@@ -63,8 +63,8 @@ async function acessar() {
             } else {
                 sessionStorage.EMPRESA_ATIVO = "false";
                 if (cardErro && mensagem_erro) {
-                    cardErro.style.display = "block";
-                    mensagem_erro.innerHTML = "Empresa não está ativa!";
+                    //cardErro.style.display = "block";
+                    alert( "Empresa não está ativa!");
                     setTimeout(sumirMensagem, 5000);
                 }
                 return false;
@@ -86,15 +86,15 @@ async function acessar() {
         } else {
             const texto = await resposta.text();
             if (cardErro && mensagem_erro) {
-                cardErro.style.display = "block";
-                mensagem_erro.innerHTML = texto || "Houve um erro ao tentar realizar o login!";
+               // cardErro.style.display = "block";
+                alert( texto || "Houve um erro ao tentar realizar o login!");
                 setTimeout(sumirMensagem, 5000);
             }
         }
     } catch (erro) {
         if (cardErro && mensagem_erro) {
-            cardErro.style.display = "block";
-            mensagem_erro.innerHTML = "Erro de conexão!";
+            // cardErro.style.display = "block";
+            alert( "Erro de conexão!");
             setTimeout(sumirMensagem, 5000);
         }
     }
