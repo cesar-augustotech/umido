@@ -14,7 +14,7 @@ limit 28;
        
        `
 
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    //console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
 
@@ -60,7 +60,8 @@ group by id_sensor;
     return database.executar(instrucaoSql);
 }
 
-function buscarUmidadePorSensor(idUnidade) {
+function buscarUmidadePorSensor(idUnidade, idSensor) {
+    console.log(64, idSensor)
     var instrucaoSql = ` 
     select s.identificador, m.*
     from medicao as m

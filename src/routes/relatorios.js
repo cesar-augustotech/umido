@@ -23,7 +23,7 @@ router.get("/buscarQuantidadeDeAlertas/:idUnidade", function (req, res) {
 });
 
 
-router.get("/buscarUmidadePorSensor/:idUnidade", function (req, res) {
+router.get("/buscarUmidadePorSensor/:idUnidade/:idSensor?", function (req, res) {
    relatorioController.buscarUmidadePorSensor(req, res);
 });
 

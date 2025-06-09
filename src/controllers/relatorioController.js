@@ -10,8 +10,8 @@ function buscarListaAlertas(req, res) {
             res.status(204).send("Nenhum resultado encontrado!")
         }
     }).catch(function (erro) {
-        console.log(erro);
-        console.log("Houve um erro ao buscar a lista de alertas.", erro.sqlMessage);
+        //console.log(erro);
+        //console.log("Houve um erro ao buscar a lista de alertas.", erro.sqlMessage);
         res.status(500).json(erro.sqlMessage);
     });
 }
@@ -25,8 +25,8 @@ function buscarUmidadeMediaUnidade(req, res) {
             res.status(204).send("Nenhum resultado encontrado!")
         }
     }).catch(function (erro) {
-        console.log(erro);
-        console.log("Houve um erro ao buscar a lista de alertas.", erro.sqlMessage);
+        //console.log(erro);
+        //console.log("Houve um erro ao buscar a lista de alertas.", erro.sqlMessage);
         res.status(500).json(erro.sqlMessage);
     });
 }
@@ -40,8 +40,8 @@ function buscarUmidadeMediaUltimasSemanas(req, res) {
             res.status(204).send("Nenhum resultado encontrado!")
         }
     }).catch(function (erro) {
-        console.log(erro);
-        console.log("Houve um erro ao buscar a lista de alertas.", erro.sqlMessage);
+        //console.log(erro);
+        //console.log("Houve um erro ao buscar a lista de alertas.", erro.sqlMessage);
         res.status(500).json(erro.sqlMessage);
     });
 }
@@ -55,23 +55,25 @@ function buscarQuantidadeDeAlertas(req, res) {
             res.status(204).send("Nenhum resultado encontrado!")
         }
     }).catch(function (erro) {
-        console.log(erro);
-        console.log("Houve um erro ao buscar a lista de alertas.", erro.sqlMessage);
+        //console.log(erro);
+        //console.log("Houve um erro ao buscar a lista de alertas.", erro.sqlMessage);
         res.status(500).json(erro.sqlMessage);
     });
 }
 
 function buscarUmidadePorSensor(req, res) {
     let idUnidade = req.params.idUnidade;
-    relatorioModel.buscarUmidadePorSensor(idUnidade).then(function (resultado) {
+    let idSensor = req.params.idSensor;
+
+    relatorioModel.buscarUmidadePorSensor(idUnidade, idSensor).then(function (resultado) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
             res.status(204).send("Nenhum resultado encontrado!")
         }
     }).catch(function (erro) {
-        console.log(erro);
-        console.log("Houve um erro ao buscar a lista de alertas.", erro.sqlMessage);
+        //console.log(erro);
+        //console.log("Houve um erro ao buscar a lista de alertas.", erro.sqlMessage);
         res.status(500).json(erro.sqlMessage);
     });
 }

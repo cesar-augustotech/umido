@@ -8,6 +8,7 @@ var graficoUmidadeSemana
 var graficoAlertasPie
 var graficoUmidadeMedia
 var dadosSensores = {}
+var setIntervalGrafico;
 // Função para buscar as unidades relacionadas ao usuário logado
 async function carregarUnidadesUsuario() {
 
@@ -58,7 +59,7 @@ function buscarUmidadePorSensor(idUnidade) {
                             lista_sensores.innerHTML += `<li style=" display: flex; justify-content: space-around; width: 100%;">${u.identificador}<button class="botao_adicionar" onclick="mostrar_modal_sensor(${u.id_sensor})">Ver Mais</button></li>`
                             sensores.push(u.identificador)
                         }
-                        dadosSensores[u.id_sensor] ??= { medicoes: [], identificador: u.identificador }
+                        dadosSensores[u.id_sensor] ??= { medicoes: [], identificador: u.identificador, unidade: idUnidade }
                         dadosSensores[u.id_sensor].medicoes.push({ data: u.data_hora, medicao: u.umidade, status: u.alerta })
                     }
                     )
@@ -103,7 +104,7 @@ function buscarUmidadeMediaUltimasSemanas(idUnidade) {
 function buscarUmidadeMediaUnidade(idUnidade) {
     fetch(`/relatorios/buscarUmidadeMediaUnidade/${idUnidade}`, { cache: 'no-store' })
         .then(async function (response) {
-            console.log(response)
+            //console.log(response)
             if (response.ok) {
                 response.json().then(function (resposta) {
                     var mes = resposta.map(item => item.mes)
@@ -339,14 +340,14 @@ function criar_grafico_alertas_pie(sensor, alerta) {
     })
 };
 
-function criar_grafico_modal_sensor(horas, dados) {
-
+function criar_grafico_modal_sensor(horas, dados, idUnidade, idSensor) {
+    try {
+        clearTimeout(setIntervalGrafico)
+    } catch (e) { }
     const contexto = document.getElementById('grafico_historico_sensor').getContext('2d');
     if (window.graficoHistoricoSensor) {
         window.graficoHistoricoSensor.destroy();
     }
-
-
     window.graficoHistoricoSensor = new Chart(contexto, {
         type: 'line',
         data: {
@@ -372,6 +373,11 @@ function criar_grafico_modal_sensor(horas, dados) {
             }
         }
     });
+    setIntervalGrafico = setInterval(async () => {
+        let res = await fetch(`/relatorios/buscarUmidadeMediaUnidade/${idUnidade}/${idSensor}`)
+    }, 1000)
+
+
 }
 
 function mostrar_modal_sensor(posicao) {
@@ -394,7 +400,7 @@ function mostrar_modal_sensor(posicao) {
     }
     horas = horas.reverse()
     dados_grafico = dados_grafico.reverse()
-    criar_grafico_modal_sensor(horas, dados_grafico);
+    criar_grafico_modal_sensor(horas, dados_grafico, dadosSensores[posicao]);
 }
 
 function mostrar_modal_unidade() {
@@ -445,9 +451,9 @@ function select_unidade() {
 
 
     lista_area.innerHTML = ''
-    graficoUmidadeSemana.destroy()
-    graficoAlertasPie.destroy()
-    graficoUmidadeMedia.destroy()
+    graficoUmidadeSemana?.destroy()
+    graficoAlertasPie?.destroy()
+    graficoUmidadeMedia?.destroy()
 
 
     buscarQuantidadeDeAlertas(idUnidadeSelecionada)
