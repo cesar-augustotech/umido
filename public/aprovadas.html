@@ -7,7 +7,7 @@
   <title>Umido - Admin</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="./css/dashboard.css">
-     <link rel="shortcut icon" type="image/x-icon" href="assets/Logo-UMIDO.png">
+  <link rel="shortcut icon" type="image/x-icon" href="assets/Logo-UMIDO.png">
 </head>
 
 <body>
@@ -17,7 +17,7 @@
     <div class="container">
       <div class="logo"></div>
       <nav>
-     
+
       </nav>
       <div class="div_perfil">
         <div>
@@ -42,15 +42,19 @@
           <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Empresas Aprovadas</span>
         </li>
-  <li style="gap: 20px;" onclick="window.location.href = 'sensores.html'" >
-    <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
-    <span>Sensores Pendentes</span>
-  </li>
-      
-  <li style="gap: 20px;" onclick="window.location.href = 'index.html'" >
-    <img src="./assets/icons/sair.png" style="width: 30px; height: 30px;">
-    <span>Sair</span>
-  </li>
+        <li style="gap: 20px;" onclick="window.location.href = 'sensores.html'">
+          <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
+          <span>Sensores Pendentes</span>
+        </li>
+        <li style="gap: 20px;" onclick="window.location.href = 'unidades.html'">
+          <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
+          <span>Unidades Pendentes</span>
+        </li>
+
+        <li style="gap: 20px;" onclick="window.location.href = 'index.html'">
+          <img src="./assets/icons/sair.png" style="width: 30px; height: 30px;">
+          <span>Sair</span>
+        </li>
       </ul>
     </div>
 
@@ -75,25 +79,25 @@
     </div>
 
     <script>
-    
-let empresasAprovadas = [];
+
+      let empresasAprovadas = [];
 
       async function obterDados() {
-  const params = new URLSearchParams(
-    {
-      emailServer: sessionStorage.EMAIL_USUARIO
-    }
-  );
-  let dados = await fetch(`/root/dados_empresas?${params.toString()}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-  let res = await dados.json()
-  empresasAprovadas = res.dados.filter(emp => emp.ativo == 1);
-  renderizarAprovadas(empresasAprovadas);
-}
+        const params = new URLSearchParams(
+          {
+            emailServer: sessionStorage.EMAIL_USUARIO
+          }
+        );
+        let dados = await fetch(`/root/dados_empresas?${params.toString()}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        let res = await dados.json()
+        empresasAprovadas = res.dados.filter(emp => emp.ativo == 1);
+        renderizarAprovadas(empresasAprovadas);
+      }
       obterDados()
 
       function botao_abrir_fechar_menu() {
