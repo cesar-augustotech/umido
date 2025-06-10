@@ -572,9 +572,6 @@ setInterval(async () => {
             console.log(res[0])
             alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`)
         }
-        try {
-            criar_kpis(idUnidade)
-        } catch (e) { }
     }
 }, 1000)
 setInterval(() => {
