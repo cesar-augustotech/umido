@@ -190,11 +190,14 @@ async function montarIndicadores() {
     const resposta = await fetch(`/unidades/indicadores/${usuarioId}`);
     const dados = await resposta.json();
     let valor = (dados.quantidade_alerta * 100 / dados.total_alertas).toFixed(2)
+    let umidade_media = dados.umidade_media
     if (typeof valor != "number")
       valor = 0
+    if (typeof umidade_media != "number")
+      umidade_media = 0
     const itensIndicadores = [
       { valor: valor + '%', descricao: 'Porcentagem de alertas', complemento: '(Dia atual)' },
-      { valor: dados.umidade_media + '%', descricao: 'Umidade média', complemento: '(tempo real)' },
+      { valor: umidade_media + '%', descricao: 'Umidade média', complemento: '(tempo real)' },
       { valor: dados.sensores_desativados, descricao: 'Sensores desativados', complemento: '' },
       { valor: dados.hora_atualizacao, descricao: 'Hora atualização', complemento: dados.data_atualizacao }
     ];
