@@ -29,6 +29,7 @@ CREATE TABLE unidade (
     nome VARCHAR(100) NOT NULL,
     codigo_cnir VARCHAR(30),
     id_empresa INT NOT NULL,
+    ativo   INT default 1,
     FOREIGN KEY (id_empresa) REFERENCES empresa(id)
 );
 
