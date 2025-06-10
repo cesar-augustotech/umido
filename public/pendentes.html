@@ -7,7 +7,7 @@
   <title>Umido - Admin</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="./css/dashboard.css">
-     <link rel="shortcut icon" type="image/x-icon" href="assets/Logo-UMIDO.png">
+  <link rel="shortcut icon" type="image/x-icon" href="assets/Logo-UMIDO.png">
 </head>
 
 <body>
@@ -42,16 +42,20 @@
           <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Empresas Aprovadas</span>
         </li>
-  <li style="gap: 20px;" onclick="window.location.href = 'sensores.html'" >
-    <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
-    <span>Sensores Pendentes</span>
-  </li>
+        <li style="gap: 20px;" onclick="window.location.href = 'sensores.html'">
+          <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
+          <span>Sensores Pendentes</span>
+        </li>
+        <li style="gap: 20px;" onclick="window.location.href = 'unidades.html'">
+          <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
+          <span>Unidades Pendentes</span>
+        </li>
 
-  <li style="gap: 20px;" onclick="window.location.href = 'index.html'" >
-    <img src="./assets/icons/sair.png" style="width: 30px; height: 30px;">
-    <span>Sair</span>
-  </li>
-  
+        <li style="gap: 20px;" onclick="window.location.href = 'index.html'">
+          <img src="./assets/icons/sair.png" style="width: 30px; height: 30px;">
+          <span>Sair</span>
+        </li>
+
       </ul>
     </div>
 
@@ -75,7 +79,7 @@
 
   <script>
 
-let lista = []
+    let lista = []
 
     async function obterDados() {
       lista = []
@@ -92,7 +96,7 @@ let lista = []
       })
       let res = await dados.json()
       res = res.dados
-      
+
       for (let i = 0; i < res.length; i++) {
         if (res[i].ativo == 0) {
           lista.push(res[i])
@@ -131,30 +135,30 @@ let lista = []
     }
 
     async function aprovarEmpresa(id) {
-  await fetch(`/root/dados_empresas`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      empresa: id, // Use o id da empresa recebida no botão
-      emailServer: sessionStorage.EMAIL_USUARIO
-    })
-  });
+      await fetch(`/root/dados_empresas`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          empresa: id, // Use o id da empresa recebida no botão
+          emailServer: sessionStorage.EMAIL_USUARIO
+        })
+      });
 
       obterDados()
 
     }
 
-  function recusarEmpresa(cnpj) {
-  alert("Empresa com CNPJ " + cnpj + " recusada!");
+    function recusarEmpresa(cnpj) {
+      alert("Empresa com CNPJ " + cnpj + " recusada!");
 
-  var index = lista.findIndex(emp => emp.cnpj === cnpj);
-  if (index !== -1) {
-    lista.splice(index, 1);
-    exibirEmpresas(lista);
-  }
-}
+      var index = lista.findIndex(emp => emp.cnpj === cnpj);
+      if (index !== -1) {
+        lista.splice(index, 1);
+        exibirEmpresas(lista);
+      }
+    }
     function exibirEmpresas(lista) {
       const container = document.getElementById("lista_empresas");
       container.innerHTML = "";

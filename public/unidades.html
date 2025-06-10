@@ -26,6 +26,7 @@
       </div>
     </div>
   </header>
+
   <div class="layout_principal">
     <div class="menu_lateral menu_expandido">
       <div class="botao_expandir" id="botao_expandir" onclick="botao_abrir_fechar_menu()">
@@ -40,11 +41,11 @@
           <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Empresas Aprovadas</span>
         </li>
-        <li style="gap: 20px;" onclick="window.location.href = 'sensores.html'" class="ativo">
+        <li style="gap: 20px;" onclick="window.location.href = 'sensores.html'">
           <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Sensores Pendentes</span>
         </li>
-        <li style="gap: 20px;" onclick="window.location.href = 'unidades.html'">
+        <li style="gap: 20px;" onclick="window.location.href = 'unidades.html'" class="ativo">
           <img src="./assets/icons/configuracao.png" style="width: 30px; height: 30px;">
           <span>Unidades Pendentes</span>
         </li>
@@ -60,10 +61,10 @@
     <section class="conteudo_principal">
       <div class="principal_g">
         <div class="cartao">
-          <h2 style="margin-bottom: 20px; color: #00a8ff;">Sensores Solicitados por Empresas</h2>
+          <h2 style="margin-bottom: 20px; color: #00a8ff;">Unidades Solicitadas por Empresas</h2>
 
           <div class="grupo_formulario">
-            <label for="ipt_busca">Buscar por sensor, empresa ou área:</label>
+            <label for="ipt_busca">ID: empresa</label>
             <div style="display: flex; gap: 10px;">
               <input type="text" id="ipt_busca" class="selecionar_unidade"
                 placeholder="Digite o nome do sensor, empresa ou área">
