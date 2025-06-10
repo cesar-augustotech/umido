@@ -567,11 +567,10 @@ setInterval(async () => {
         ultima = res[0].umidade
         data = res[0].data_hora
         umidade_sensor.innerHTML = ultima
-        document.querySelector("#div_indicado").innerHTML = ultima
+        document.querySelector("#div_media").innerHTML = ultima
         if (res[0].alerta == "1" || res[0].alerta == 1) {
             let valor = Number(div_alerta.innerHTML) + 1
             div_alerta.innerHTML=valor
-            console.log(res[0])
             alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`)
         }
     }
