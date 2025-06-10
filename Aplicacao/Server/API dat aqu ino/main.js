@@ -19,11 +19,11 @@ const serial = async (
     // conexão com o banco de dados MySQL
     let poolBancoDados = mysql.createPool(
         {
-            host: '127.0.0.1',
-            user: 'umidoInsert',
-            password: 'Sptech#2024',
+            host: 'localhost',
+            user: 'root',
+            password: '1571',
             database: 'umido',
-            port: 3307
+            port: 3306
         }
     ).promise();
 
@@ -61,23 +61,23 @@ const serial = async (
 
             // este insert irá inserir os dados na tabela "medida"
             if (sensorAnalogico < 30) {
-    await poolBancoDados.execute(
-        `insert into medicao (umidade, fk_sensor, alerta) VALUES (?, 1, 1)`,
-        [sensorAnalogico]
-    )
-} else if (sensorAnalogico >= 30 && sensorAnalogico <= 50) {
-    await poolBancoDados.execute(
-        `insert into medicao (umidade, fk_sensor, alerta) VALUES (?, 1, 0)`,
-        [sensorAnalogico]
-    )
-} else {
-    await poolBancoDados.execute(
-        `insert into medicao (umidade, fk_sensor, alerta) VALUES (?, 1, null)`,
-        [sensorAnalogico]
-    )
-}
+                await poolBancoDados.execute(
+                    `insert into medicao (umidade, id_sensor, alerta) VALUES (?, 1, 1)`,
+                    [sensorAnalogico]
+                )
+            } else if (sensorAnalogico >= 30 && sensorAnalogico <= 50) {
+                await poolBancoDados.execute(
+                    `insert into medicao (umidade, id_sensor, alerta) VALUES (?, 1, 0)`,
+                    [sensorAnalogico]
+                )
+            } else {
+                await poolBancoDados.execute(
+                    `insert into medicao (umidade, id_sensor, alerta) VALUES (?, 1, null)`,
+                    [sensorAnalogico]
+                )
+            }
 
-// No codigo acima, caso a umidade seja < 30, insere 1, alerta maximo, se não e <= 50, 0, alerta medio, caso contraio, null, sem alerta
+            // No codigo acima, caso a umidade seja < 30, insere 1, alerta maximo, se não e <= 50, 0, alerta medio, caso contraio, null, sem alerta
 
             console.log("valores inseridos no banco: ", sensorAnalogico);
         }
