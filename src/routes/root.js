@@ -20,4 +20,8 @@ router.post("/adicionarSensor", function(req,res) {
    dados.adicionarSensor(req, res);
 });
 
+router.post("/adicionarUnidade", function(req,res) {
+    dados.adicionarUnidade(req, res);
+})
+
 module.exports = router;

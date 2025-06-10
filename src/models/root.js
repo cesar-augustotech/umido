@@ -56,6 +56,15 @@ async function adicionarSensor(nome, idUnidade) {
     return database.executar(instrucaoSql);
 }
 
+
+async function adicionarUnidade(nome, cnir, idEmpresa) {
+
+ const instrucaoSql = `INSERT INTO unidade (nome, codigo_cnir, id_empresa, ativo)
+    VALUES ('${nome}, ${cnir}, ${idEmpresa}, 0)`;
+
+ return database.executar(instrucaoSql)
+    
+}
 /*
 function buscarUltimasMedidas(unidadeAtual) {
     var dataAtual = new Date();
@@ -98,5 +107,6 @@ module.exports = {
     get_obterDados,
     post_obterDados,
     get_sensores_pendentes,
-    adicionarSensor
+    adicionarSensor,
+    adicionarUnidade
 }

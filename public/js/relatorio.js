@@ -1,5 +1,6 @@
 
 const idUsuario = sessionStorage.getItem("ID_USUARIO"); // Pega o ID do usuário logado ou usa 1 como padrão
+const idEmpresa = sessionStorage.getItem("EMPRESA_ID")
 const nomeUsuario = sessionStorage.getItem("NOME_USUARIO") || "Usuário";
 const nivelAcesso = sessionStorage.getItem("NIVEL_DE_ACESSO");
 nome_usuario_dashboard.innerHTML = nomeUsuario;
@@ -456,7 +457,36 @@ function fechar_modal_adicionar_sensor() {
 }
 
 function botao_salvar_unidade() {
-    selecionar_unidade.innerHTML += `<option value="${nome_unidade.value}">${nome_unidade.value}</option>`
+    selecionar_unidade.innerHTML += `<option value="${nome_unidade.value}">${nome_unidade.value}</option>
+`
+    const nome = nome_unidade.value;
+    const cnir = cnir_unidade.value;
+
+    fetch('/root/adicionarUnidade', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            nome: nome,
+            idEmpresa: idEmpresa,
+            cnir: cnir
+        })
+    })
+        .then(response => {
+            if(!response.ok){
+                throw new Error('Erro ao adicionar unidade');
+            }
+            return response.json();
+        })
+        .then(data => {
+            buscarUmidadePorSensor(idUnidadeSelecionada);
+            criar_kpis(idUnidadeSelecionada);
+            fechar_modal_unidade();
+        })
+        .catch(error => { 
+            alert('Falha ao adicionar unidade:' + error.message);
+        })
     modal_unidade.style.display = 'none';
     return false;
 

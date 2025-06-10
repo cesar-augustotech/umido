@@ -33,9 +33,25 @@ async function adicionarSensor(req, res) {
         res.status(500).json({ erro: "Erro ao adicionar sensor" });
     }
 }
+
+async function adicionarUnidade(req, res) {
+    const {nome, cnir, idEmpresa} = req.body;
+    console.log('adicionando unidade com ' + nome + cnir + idEmpresa)
+    if(!nome){
+        return res.status(400).json({erro: "Nome da unidade é obrigatório"});
+    }
+    try {
+        const resultado = await root.adicionarUnidade(nome, cnir, idEmpresa);
+        res.status(201).json(resultado);
+    } catch (erro) {
+        res.status(500).json({erro: "Erro ao adicionar unidade"});
+    }
+    
+}
 module.exports = {
     post_dados_empresas,
     get_dados_empresas,
     get_sensores_pendentes,
-    adicionarSensor
+    adicionarSensor,
+    adicionarUnidade
 }
