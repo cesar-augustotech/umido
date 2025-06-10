@@ -552,6 +552,8 @@ buscarQuantidadeDeAlertas(idUnidade)
 buscarUmidadePorSensor(idUnidade)
 buscarUmidadeMediaUltimasSemanas(idUnidade)
 buscarUmidadeMediaUnidade(idUnidade)
+let ultima = ""
+let hora = ""
 setInterval(async () => {
     let res = await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}/1`, { cache: 'no-store' })
     res = await res.json()
