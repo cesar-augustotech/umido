@@ -262,7 +262,7 @@ async function criar_kpis(idUnidadeSelecionada) {
             umidade_media = 0
         let dadosIndicadores = [
             [dados.quantidade_alerta, "incidentes", "(Mês atual)"],
-            [umidade_media + "%", "umidade média atual", "(Mês atual)"],
+            [umidade_media, "Minima medição Atual", "(Tempo real)"],
 
             [dados.sensores_desativados, "sensores desativados", ""],
             [dados.hora_atualizacao, "", "última atualização"]
@@ -271,7 +271,7 @@ async function criar_kpis(idUnidadeSelecionada) {
         for (let i = 0; i < dadosIndicadores.length; i++) {
             indicadores.innerHTML += `
         <div class="cartao">
-            <div class="valor_indicador">${dadosIndicadores[i][0]}</div>
+            <div class="valor_indicador" id="div_indicado">${dadosIndicadores[i][0]}</div>
             <div class="descricao_indicador">${dadosIndicadores[i][1]}</div>
             <div class="info_adicional">${dadosIndicadores[i][2]}</div>
         </div>`;
@@ -386,7 +386,7 @@ function criar_grafico_modal_sensor(horas, dados, idUnidade, idSensor) {
     });
     let ultima = ""
     let data = ""
-    setIntervalGrafico = setInterval(async () => {
+    setInterval(async () => {
         let res = await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}/${idSensor}`, { cache: 'no-store' })
         res = await res.json()
         if (res[0].umidade != ultima || res[0].data_hora != data) {
@@ -398,6 +398,7 @@ function criar_grafico_modal_sensor(horas, dados, idUnidade, idSensor) {
             ultima = res[0].umidade
             data = res[0].data_hora
             umidade_sensor.innerHTML = ultima
+            div_indicado.innerHTML = ultima
         }
     }, 1000)
 
@@ -473,7 +474,7 @@ function botao_salvar_unidade() {
         })
     })
         .then(response => {
-            if(!response.ok){
+            if (!response.ok) {
                 throw new Error('Erro ao adicionar unidade');
             }
             return response.json();
@@ -483,7 +484,7 @@ function botao_salvar_unidade() {
             criar_kpis(idUnidadeSelecionada);
             fechar_modal_unidade();
         })
-        .catch(error => { 
+        .catch(error => {
             alert('Falha ao adicionar unidade:' + error.message);
         })
     modal_unidade.style.display = 'none';
