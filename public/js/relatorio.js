@@ -568,8 +568,8 @@ setInterval(async () => {
         data = res[0].data_hora
         umidade_sensor.innerHTML = ultima
         document.querySelector("#div_indicado").innerHTML = ultima
-        console.log(res[0])
-        if (res[0].alerta == "1") {
+        if (res[0].alerta == "1" || res[0].alerta == 1) {
+            console.log(res[0])
             alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`)
         }
     }
