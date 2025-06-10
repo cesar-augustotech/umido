@@ -66,7 +66,7 @@
             <label for="ipt_busca">Buscar por sensor, empresa ou área:</label>
             <div style="display: flex; gap: 10px;">
               <input type="text" id="ipt_busca" class="selecionar_unidade"
-                placeholder="Digite o nome do sensor, empresa ou área">
+                placeholder="Digite o nome do sensor, empresa ou área" oninput="buscarSensores()">
               <button class="botao_buscar" onclick="buscarSensores()">Buscar</button>
             </div>
           </div>
@@ -107,9 +107,8 @@
     function buscarSensores() {
       var busca = document.getElementById("ipt_busca").value.toLowerCase();
       var resultado = sensoresPendentes.filter(sensor =>
-        (sensor.nome_sensor && sensor.nome_sensor.toLowerCase().includes(busca)) ||
-        (sensor.empresa && sensor.empresa.toLowerCase().includes(busca)) ||
-        (sensor.area && sensor.area.toLowerCase().includes(busca))
+        (sensor.identificador && sensor.identificador.toLowerCase().includes(busca)) ||
+        (sensor.empresa && sensor.empresa.toLowerCase().includes(busca))
       );
       if (resultado.length === 0) {
         alert("Nenhum sensor encontrado com esse termo.");
