@@ -563,12 +563,15 @@ setInterval(async () => {
             window.graficoHistoricoSensor.data.labels.push(res[0].data_hora.split("T")[1].replace(".000Z", ""));
             window.graficoHistoricoSensor.data.datasets[0].data.push(parseFloat(res[0].umidade));
             window.graficoHistoricoSensor.update();
-        } catch (e) {}
+        } catch (e) { }
         ultima = res[0].umidade
         data = res[0].data_hora
         umidade_sensor.innerHTML = ultima
         document.querySelector("#div_indicado").innerHTML = ultima
         console.log(res[0])
+        if (res[0].alerta == "1") {
+            alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`)
+        }
     }
 }, 1000)
 setInterval(() => {
