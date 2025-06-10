@@ -164,7 +164,7 @@ function criar_lista_alertas(identificador, data, umidade) {
         <div class="lista_alertas">
             <div class="titulo_grafico">ALERTAS</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                <div style='width: 600px;'> <b> Identificador do sensor  | data do alerta | umidade </b></div>
+                <div style='width: 600px;'> <b> Identificador do área  | data do alerta | umidade </b></div>
 
             </div>
             <ul>

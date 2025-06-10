@@ -256,7 +256,7 @@ container.innerHTML = `
 <div class="valor_indicador">ALERTAS</div>
 <div class="descricao_indicador">Últimos alertas registrados (24h)</div>
 <table class="tabela_grafico">
-<tr><th>Unidade</th><th>Sensor</th><th>Umidade</th><th>Data</th></tr>
+<tr><th>Unidade</th><th>Área</th><th>Umidade</th><th>Data</th></tr>
 ${linhasTabela}
 </table>
 </div>`;
