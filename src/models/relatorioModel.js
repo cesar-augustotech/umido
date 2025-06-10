@@ -62,24 +62,23 @@ group by id_sensor;
 
 function buscarUmidadePorSensor(idUnidade, idSensor) {
     if (idSensor) {
-        console.log(64, idUnidade, idSensor)
-        var instrucaoSql = ` 
-            select s.identificador, m.*
-            from medicao as m
-            inner join sensor as s on s.id = m.id_sensor
-            where s.id_unidade = ${idUnidade} and s.id = ${idSensor}
-            order by id desc
-            limit 1;
+        var instrucaoSql = `
+            SELECT s.id as id_sensor, s.identificador, m.*
+            FROM sensor s
+            LEFT JOIN medicao m ON s.id = m.id_sensor
+            WHERE s.id_unidade = ${idUnidade} AND s.id = ${idSensor}
+            ORDER BY m.id DESC
+            LIMIT 1;
         `;
     } else {
-        var instrucaoSql = ` 
-        select s.identificador, m.*
-        from medicao as m
-        inner join sensor as s on s.id = m.id_sensor
-        where s.id_unidade = ${idUnidade}
-        order by id desc
-        limit 1000;
-    `;
+        var instrucaoSql = `
+            SELECT s.id as id_sensor, s.identificador, m.*
+            FROM sensor s
+            LEFT JOIN medicao m ON s.id = m.id_sensor
+            WHERE s.id_unidade = ${idUnidade}
+            ORDER BY m.id DESC
+            LIMIT 1000;
+        `;
     }
     return database.executar(instrucaoSql);
 }

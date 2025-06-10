@@ -52,24 +52,35 @@ function buscarUmidadePorSensor(idUnidade) {
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
+                    let sensores = [];
+                    lista_sensores.innerHTML = ""; 
 
-                    let sensores = []
-                    resposta.filter(u => {
-                        if (sensores.includes(u.identificador) == false) {
-                            lista_sensores.innerHTML += `<li style=" display: flex; justify-content: space-around; width: 100%;">${u.identificador}<button class="botao_adicionar" onclick="mostrar_modal_sensor(${u.id_sensor})">Ver Mais</button></li>`
-                            sensores.push(u.identificador)
+                    resposta.forEach(u => {
+                       
+                        if (!sensores.includes(u.identificador)) {
+                            
+                            const pendente = !u.data_hora || u.umidade == null;
+                            lista_sensores.innerHTML += `
+                                <li style="display: flex; justify-content: space-around; width: 100%;">
+                                    ${u.identificador}
+                                    <span style="color: ${pendente ? '#e1b12c' : '#44bd32'}; font-size: 0.9em;">
+                                        ${pendente ? 'Pendente' : ''}
+                                    </span>
+                                    <button class="botao_adicionar" onclick="mostrar_modal_sensor(${u.id_sensor})">Ver Mais</button>
+                                </li>`;
+                            sensores.push(u.identificador);
                         }
-                        dadosSensores[u.id_sensor] ??= { medicoes: [], identificador: u.identificador, unidade: idUnidade }
-                        dadosSensores[u.id_sensor].medicoes.push({ data: u.data_hora, medicao: u.umidade, status: u.alerta })
-                    }
-                    )
-
-                    //  
-
+                       
+                        dadosSensores[u.id_sensor] ??= { medicoes: [], identificador: u.identificador, unidade: idUnidade };
+                     
+                        if (u.data_hora && u.umidade != null) {
+                            dadosSensores[u.id_sensor].medicoes.push({ data: u.data_hora, medicao: u.umidade, status: u.alerta });
+                        }
+                    });
                 });
             }
-        })
-};
+        });
+}
 
 function buscarQuantidadeDeAlertas(idUnidade) {
     fetch(`/relatorios/buscarQuantidadeDeAlertas/${idUnidade}`, { cache: 'no-store' })
@@ -422,6 +433,7 @@ function mostrar_modal_unidade() {
 
 function mostrar_modal_adicionar_sensor() {
     modalAdicionarSensor.style.display = 'block';
+    
 }
 
 function fechar_modal() {
@@ -449,9 +461,34 @@ function botao_salvar_unidade() {
 
 function botao_salvar_formulario() {
     const nome = nome_sensor.value;
-    dadosSensores.push([nome, "Ativo", "100%", "10%", "Ativo", [0]])
-    criar_kpis()
-    fechar_modal_adicionar_sensor();
+    //console.log("Adicionando sensor:", nome, "para unidade:", idUnidadeSelecionada);
+
+    fetch('/root/adicionarSensor', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            nome: nome,
+            idUnidade: idUnidade
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao adicionar sensor');
+        }
+        return response.json();
+    })
+    .then(data => {
+        
+        buscarUmidadePorSensor(idUnidadeSelecionada);
+        criar_kpis(idUnidadeSelecionada);
+        fechar_modal_adicionar_sensor();
+    })
+    .catch(error => {
+        alert('Falha ao adicionar sensor: ' + error.message);
+    });
+
     return false;
 }
 
@@ -479,6 +516,7 @@ function select_unidade() {
     buscarUmidadeMediaUnidade(idUnidadeSelecionada)
     buscarListaAlertas(idUnidadeSelecionada)
     criar_kpis(idUnidadeSelecionada)
+
 }
 
 // criar_html_estatisticas_mes()

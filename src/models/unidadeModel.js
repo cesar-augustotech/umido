@@ -78,19 +78,26 @@ async function buscarIndicadores(idUsuario) {
          JOIN sensor s ON m.id_sensor = s.id
          JOIN unidade u ON s.id_unidade = u.id
          JOIN unidade_usuario uu ON uu.id_unidade = u.id
-        WHERE m.alerta in( 1, 0)
-          AND day(m.data_hora) = day(CURRENT_DATE())
+        WHERE m.alerta in(1, 0)
+          AND DATE(m.data_hora) = CURDATE()
           AND uu.id_usuario = ${idUsuario}
       ) AS quantidade_alerta,
 
-      (SELECT ROUND(min(m.umidade), 2)
-         FROM medicao m
-         JOIN sensor s ON m.id_sensor = s.id
-         JOIN unidade u ON s.id_unidade = u.id
-         JOIN unidade_usuario uu ON uu.id_unidade = u.id
-        WHERE MONTH(m.data_hora) = MONTH(CURRENT_DATE())
-          AND YEAR(m.data_hora) = YEAR(CURRENT_DATE())
-          AND uu.id_usuario = ${idUsuario}
+      (SELECT ROUND(AVG(ultimas.umidade), 2)
+         FROM (
+           SELECT m.umidade
+           FROM sensor s
+           JOIN unidade u ON s.id_unidade = u.id
+           JOIN unidade_usuario uu ON uu.id_unidade = u.id
+           JOIN medicao m ON m.id_sensor = s.id
+           WHERE uu.id_usuario = ${idUsuario}
+             AND s.ativo = true
+             AND m.id = (
+               SELECT MAX(m2.id)
+               FROM medicao m2
+               WHERE m2.id_sensor = s.id
+             )
+         ) AS ultimas
       ) AS umidade_media,
 
       (SELECT COUNT(*)
@@ -126,7 +133,7 @@ async function buscarIndicadores(idUsuario) {
          JOIN sensor s ON m.id_sensor = s.id
          JOIN unidade u ON s.id_unidade = u.id
          JOIN unidade_usuario uu ON uu.id_unidade = u.id
-        WHERE day(m.data_hora) = day(CURRENT_DATE())
+        WHERE DATE(m.data_hora) = CURDATE()
           AND uu.id_usuario = ${idUsuario}
       ) AS total_alertas
   `;
@@ -178,21 +185,28 @@ async function buscarIndicadoresPorUnidade(idUsuario, idUnidade) {
          JOIN sensor s ON m.id_sensor = s.id
          JOIN unidade u ON s.id_unidade = u.id
          JOIN unidade_usuario uu ON uu.id_unidade = u.id
-        WHERE m.alerta in( 1, 0)
-          AND day(m.data_hora) = day(CURRENT_DATE())
+        WHERE m.alerta in(1, 0)
+          AND DATE(m.data_hora) = CURDATE()
           AND uu.id_usuario = ${idUsuario}
           AND u.id = ${idUnidade}
       ) AS quantidade_alerta,
 
-      (SELECT ROUND(avg(m.umidade), 2)
-         FROM medicao m
-         JOIN sensor s ON m.id_sensor = s.id
-         JOIN unidade u ON s.id_unidade = u.id
-         JOIN unidade_usuario uu ON uu.id_unidade = u.id
-        WHERE MONTH(m.data_hora) = MONTH(CURRENT_DATE())
-          AND YEAR(m.data_hora) = YEAR(CURRENT_DATE())
-          AND uu.id_usuario = ${idUsuario}
-          AND u.id = ${idUnidade}
+      (SELECT ROUND(AVG(ultimas.umidade), 2)
+         FROM (
+           SELECT m.umidade
+           FROM sensor s
+           JOIN unidade u ON s.id_unidade = u.id
+           JOIN unidade_usuario uu ON uu.id_unidade = u.id
+           JOIN medicao m ON m.id_sensor = s.id
+           WHERE uu.id_usuario = ${idUsuario}
+             AND u.id = ${idUnidade}
+             AND s.ativo = true
+             AND m.id = (
+               SELECT MAX(m2.id)
+               FROM medicao m2
+               WHERE m2.id_sensor = s.id
+             )
+         ) AS ultimas
       ) AS umidade_media,
 
       (SELECT COUNT(*)

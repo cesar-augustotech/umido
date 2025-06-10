@@ -48,7 +48,13 @@ async function get_sensores_pendentes(callback) {
     }
 }
 
-
+async function adicionarSensor(nome, idUnidade) {
+    const instrucaoSql = `
+        INSERT INTO sensor (identificador, id_unidade, ativo)
+        VALUES ('${nome}', ${idUnidade}, 0);
+    `;
+    return database.executar(instrucaoSql);
+}
 
 /*
 function buscarUltimasMedidas(unidadeAtual) {
@@ -91,5 +97,6 @@ function buscarUmidadeMedia(idUnidade) {
 module.exports = {
     get_obterDados,
     post_obterDados,
-    get_sensores_pendentes
+    get_sensores_pendentes,
+    adicionarSensor
 }

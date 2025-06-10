@@ -1,296 +1,266 @@
+// dashboard.js - versão sem .map() e sem .some(), variáveis descritivas
 
-let unidades = [];
+// ======= Seletores =======
+const botaoExpandir = document.getElementById('botao_expandir');
+const nomeUsuarioDisplay = document.getElementById('nome_usuario_dashboard');
+const nivelUsuarioDisplay = document.getElementById('nivel_usuario_dashboard');
+const areaUnidadesDisplay = document.getElementById('areaUnidades');
+const areaAlertasDisplay = document.getElementById('areaAlertas');
+const indicadoresDisplay = document.getElementById('indicadores');
+const listaAlertasDisplay = document.getElementById('areaListaAlertas');
 
-const idUsuario = sessionStorage.getItem("ID_USUARIO"); // Pega o ID do usuário logado ou usa 1 como padrão
-const nomeUsuario = sessionStorage.getItem("NOME_USUARIO") || "Usuário";
-const nivelAcesso = sessionStorage.getItem("NIVEL_DE_ACESSO");
-nome_usuario_dashboard.innerHTML = nomeUsuario;
-nivel_usuario_dashboard.innerHTML = nivelAcesso == 'admin' ? 'Administrador' : 'comum';
 
-function botao_abrir_fechar_menu() {
-    const menuLateral = document.querySelector('.menu_lateral');
-    menuLateral.classList.toggle('menu_expandido');
-    botao_expandir.classList.toggle('girar');
+let listaUnidades = [];
+const usuarioId = sessionStorage.getItem('ID_USUARIO');
+const usuarioNome = sessionStorage.getItem('NOME_USUARIO') || 'Usuário';
+const usuarioNivel = sessionStorage.getItem('NIVEL_DE_ACESSO');
+
+// ======= Inicialização =======
+async function inicializarDashboard() {
+  configurarMenuLateral();
+  mostrarDadosDoUsuario();
+  if (!usuarioId) {
+    limparSessaoELogoff();
+    return;
+  }
+  await carregarUnidadesComSensores();
+  if (usuarioNivel === 'admin') mostrarBotaoConfiguracoes();
 }
 
+// ======= Menu =======
+function configurarMenuLateral() {
+  botaoExpandir.onclick = function() {
+    const menu = document.querySelector('.menu_lateral');
+    menu.classList.toggle('menu_expandido');
+    botaoExpandir.classList.toggle('girar');
+  };
+}
 
+// ======= Usuário =======
+function mostrarDadosDoUsuario() {
+  nomeUsuarioDisplay.textContent = usuarioNome;
+  nivelUsuarioDisplay.textContent = (usuarioNivel === 'admin') ? 'Administrador' : 'Comum';
+}
 
+function mostrarBotaoConfiguracoes() {
+  const botaoConfig = document.getElementById('btn_config');
+  botaoConfig.style.display = 'block';
+}
 
-let paginaAtual = 1;
-const itensPorPagina = 10;
+function limparSessaoELogoff() {
+  sessionStorage.clear();
+  window.location.href = '../index.html';
+}
 
+// ======= Carregamento de Unidades e Sensores =======
+async function carregarUnidadesComSensores() {
+  const unidadesTexto = sessionStorage.getItem('UNIDADES');
+  listaUnidades = unidadesTexto ? JSON.parse(unidadesTexto) : [];
 
-async function atualizarPaginaInicial() {
-    // Recupera as unidades do sessionStorage
-    unidades = sessionStorage.getItem("UNIDADES") ? JSON.parse(sessionStorage.getItem("UNIDADES")) : [];
-
-    // Para cada unidade, busca os sensores e a última medida de cada sensor
-    for (const unidade of unidades) {
-        // Busca sensores da unidade
-        let sensores = [];
-        try {
-            const respSensores = await fetch(`/unidades/sensores/unidade/${unidade.id}`);
-            if (respSensores.ok) {
-                // Só tenta ler o JSON se houver conteúdo
-                if (respSensores.status !== 204) {
-                    sensores = await respSensores.json();
-                } else {
-                    sensores = [];
-                }
-            }
-        } catch (error) {
-            console.error(`Erro ao buscar sensores da unidade ${unidade.id}:`, error);
-        }
-
-        unidade.sensores = await Promise.all(sensores.map(async sensor => {
-            let ultimaMedida = null;
-            try {
-                const respMedida = await fetch(`/medidas/ultima/${sensor.id}`);
-                if (respMedida.ok && respMedida.status !== 204) {
-                    ultimaMedida = await respMedida.json();
-                }
-            } catch (error) {
-                console.error(`Erro ao buscar última medida do sensor ${sensor.id}:`, error);
-            }
-            return {
-                ...sensor,
-                ultimaMedida
-            };
-        }));
+  for (let indiceUnidade = 0; indiceUnidade < listaUnidades.length; indiceUnidade++) {
+    const unidadeAtual = listaUnidades[indiceUnidade];
+    unidadeAtual.sensores = await buscarSensoresDaUnidade(unidadeAtual.id);
+    for (let indiceSensor = 0; indiceSensor < unidadeAtual.sensores.length; indiceSensor++) {
+      const sensorAtual = unidadeAtual.sensores[indiceSensor];
+      sensorAtual.ultimaMedida = await buscarUltimaMedidaDoSensor(sensorAtual.id);
     }
+  }
 
-    /*[
-    { id: 1, id_unidade: 1, identificador: 'SENT-1A', ativo: 1 },
-    { id: 2, id_unidade: 1, identificador: 'SENT-1B', ativo: 1 }
-  ]
-  [
-    {
-      id: 200,
-      id_sensor: 1,
-      umidade: '55.10',
-      data_hora: 2025-06-09T19:00:00.000Z,
-      alerta: null
+  if (listaUnidades.length === 0) {
+    areaUnidadesDisplay.innerHTML = '<p>Nenhuma unidade encontrada.</p>';
+    return;
+  }
+
+  separarUnidadesEExibir();
+  await montarIndicadores();
+  await montarListaDeAlertas();
+}
+
+async function buscarSensoresDaUnidade(idUnidade) {
+  try {
+    const resposta = await fetch(`/unidades/sensores/unidade/${idUnidade}`);
+    if (resposta.ok && resposta.status !== 204) {
+      return await resposta.json();
     }
-  ]
-  []
-  [ { id: 3, id_unidade: 2, identificador: 'SENT-2A', ativo: 1 } ]
-  []
-  []
-  []
-  []
-  [
-    { id: 1, id_unidade: 1, identificador: 'SENT-1A', ativo: 1 },
-    { id: 2, id_unidade: 1, identificador: 'SENT-1B', ativo: 1 }
-  ]
-  []
-  [
-    {
-      id: 200,
-      id_sensor: 1,
-      umidade: '55.10',
-      data_hora: 2025-06-09T19:00:00.000Z,
-      alerta: null
+  } catch (erro) {
+    console.error('Erro ao buscar sensores da unidade', erro);
+  }
+  return [];
+}
+
+async function buscarUltimaMedidaDoSensor(idSensor) {
+  try {
+    const resposta = await fetch(`/medidas/ultima/${idSensor}`);
+    if (resposta.ok && resposta.status !== 204) {
+      return await resposta.json();
     }
-  ]
-  [ { id: 3, id_unidade: 2, identificador: 'SENT-2A', ativo: 1 } ]
-  []
-  []
-  []
-  []
-  */
+  } catch (erro) {
+    console.error('Erro ao buscar última medida do sensor', erro);
+  }
+  return null;
+}
+
+// ======= Separar unides e exibir =======
+function separarUnidadesEExibir() {
+  areaUnidadesDisplay.innerHTML = '';
+
+  
+  for (let i = 0; i < listaUnidades.length; i++) {
+    calcularMenorUmidadeDaUnidade(listaUnidades[i]);
+  }
 
 
-    if (!unidades || unidades.length === 0) {
-        document.getElementById("areaUnidades").innerHTML = "<p>Nenhuma unidade encontrada.</p>";
-        return;
+  listaUnidades.sort((a, b) => {
+    if (a.menorUmidade == null && b.menorUmidade == null) return 0;
+    if (a.menorUmidade == null) return 1;
+    if (b.menorUmidade == null) return -1;
+    return a.menorUmidade - b.menorUmidade;
+  });
+
+  for (let i = 0; i < listaUnidades.length; i++) {
+    criarCartaoDeUnidade(listaUnidades[i]);
+  }
+
+  
+}
+
+function calcularMenorUmidadeDaUnidade(unidade) {
+  let valorMenor = null;
+  for (let i = 0; i < unidade.sensores.length; i++) {
+    const medida = unidade.sensores[i].ultimaMedida;
+    if (medida && medida.umidade != null) {
+      const valorAtual = parseFloat(medida.umidade);
+      if (!isNaN(valorAtual) && (valorMenor === null || valorAtual < valorMenor)) {
+        valorMenor = valorAtual;
+      }
     }
+  }
+  unidade.menorUmidade = valorMenor;
+}
 
+function criarCartaoDeUnidade(unidade) {
+  const elementoCartao = document.createElement('div');
+  elementoCartao.className = 'cartao';
+  elementoCartao.style.cursor = 'pointer';
+  elementoCartao.onclick = function() { abrirRelatorioDaUnidade(unidade.id); };
 
+  const textoUmidade = (unidade.menorUmidade != null)
+    ? unidade.menorUmidade.toFixed(2) + '%'
+    : 'Sem dados';
 
-    console.log("Unidades carregadas:", unidades);
+  const corTexto = definirCorPorUmidade(unidade.menorUmidade);
 
-    const areaAlertas = document.getElementById("areaAlertas");
-    const areaUnidades = document.getElementById("areaUnidades");
-
-    areaUnidades.innerHTML = "";
-
-    // Ordena as unidades pela menor umidade registrada entre os sensores de cada unidade
-    unidades.sort((a, b) => {
-        const umidadesA = a.sensores
-            .map(s => (s.ultimaMedida && s.ultimaMedida.umidade !== undefined && s.ultimaMedida.umidade !== null)
-                ? parseFloat(s.ultimaMedida.umidade)
-                : null)
-            .filter(v => v !== null && !isNaN(v));
-        const umidadesB = b.sensores
-            .map(s => (s.ultimaMedida && s.ultimaMedida.umidade !== undefined && s.ultimaMedida.umidade !== null)
-                ? parseFloat(s.ultimaMedida.umidade)
-                : null)
-            .filter(v => v !== null && !isNaN(v));
-
-        const menorA = umidadesA.length ? Math.min(...umidadesA) : Infinity;
-        const menorB = umidadesB.length ? Math.min(...umidadesB) : Infinity;
-
-        return menorA - menorB;
-    });
-
-    console.log("Unidades ordenadas:", unidades);
-    console.log("Unidades com sensores:", unidades.filter(u => u.sensores.length > 0));
-
-    console.log("Unidades com alertas:", unidades.filter(u => u.sensores.some(s => s.ultimaMedida && s.ultimaMedida.alerta == "1")));
-
-    const alertas = unidades.filter(u => u.sensores.some(s => s.ultimaMedida && s.ultimaMedida.alerta == "1"))
-    const normais = unidades.filter(u => !alertas.includes(u));
-
-    if (alertas.length) {
-        const divAlerta = document.createElement("div");
-        divAlerta.className = "cartao";
-        divAlerta.innerHTML = `<h2>Unidades com Alerta</h2>`;
-        alertas.forEach(u => {
-            const btn = document.createElement("button");
-            btn.className = "botao_buscar";
-            btn.textContent = u.nome;
-            btn.onclick = () => abrirModalUnidade(u.id);
-            divAlerta.appendChild(btn);
-        });
-        areaAlertas.appendChild(divAlerta);
-    }
-
-    normais.concat(alertas).forEach(u => {
-        const card = document.createElement("div");
-        card.className = "cartao";
-        card.style.cursor = "pointer";
-        card.onclick = () => abrirModalUnidade(u.id);
-
-        const menorUmidade = Math.min(
-            ...u.sensores
-                .map(s =>
-                    s.ultimaMedida &&
-                        s.ultimaMedida.umidade !== undefined &&
-                        s.ultimaMedida.umidade !== null &&
-                        !isNaN(parseFloat(s.ultimaMedida.umidade))
-                        ? parseFloat(s.ultimaMedida.umidade)
-                        : Infinity
-                )
-        );
-
-        card.innerHTML = `
-    <h4>${u.nome}</h4>
-    <p>Menor umidade:<br><span class="valor_indicador" style="color: ${menorUmidade > 50 && menorUmidade !== Infinity ? 'green"' : menorUmidade > 30 && menorUmidade ==! Infinity ? 'yellow"' : 'red"' }> ${menorUmidade !== Infinity ? menorUmidade.toFixed(2) + "%" : "Sem dados"}</span></p>
-    ${u.sensores.some(s => s.alerta === 1)
-                ? '<p class="info_adicional" style="color:#e84118;">Alerta ativo!</p>'
-                : ''
-            }
+  elementoCartao.innerHTML = `
+    <h4>${unidade.nome}</h4>
+    <p>Menor umidade:<br>
+      <span class="valor_indicador" style="color:${corTexto}">${textoUmidade}</span>
+    </p>
   `;
-        areaUnidades.appendChild(card);
-    });
 
-    criar_lista_alertas();
-    criar_kpis();
-
+  areaUnidadesDisplay.appendChild(elementoCartao);
 }
 
-async function criar_kpis() {
-    indicadores.innerHTML = "";
-    //TROCAR ID DA EMPRESA AQUIIIIIIIIIIIIIIIIIIIII
-    try {
-        const response = await fetch(`/unidades/indicadores/${idUsuario}`);
-        const dados = await response.json();
-        console.log(dados);
-
-        let dadosIndicadores = [
-            [(dados.quantidade_alerta * 100 / dados.total_alertas).toFixed(2), "Porcentagem de alertas", "(Dia atual)"],
-            [dados.umidade_media + "%", "menor umidade atual", "(em tempo atual)"],
-
-            [dados.sensores_desativados, "sensores desativados", ""],
-            [dados.hora_atualizacao, dados.data_atualizacao, "última atualização"]
-        ];
-
-        for (let i = 0; i < dadosIndicadores.length; i++) {
-            indicadores.innerHTML += `
-        <div class="cartao">
-            <div class="valor_indicador">${dadosIndicadores[i][0]}</div>
-            <div class="descricao_indicador">${dadosIndicadores[i][1]}</div>
-            <div class="info_adicional">${dadosIndicadores[i][2]}</div>
-        </div>`;
-        }
-    } catch (error) {
-        console.error("Erro ao buscar indicadores:", error);
-    }
+function definirCorPorUmidade(valor) {
+  if (valor == null) return 'gray';
+  if (valor > 50) return 'green';
+  if (valor > 30) return 'yellow';
+  return 'red';
 }
 
-async function criar_lista_alertas() {
-    let html_lista = "";
-    let areaListaAlertas = document.getElementById("areaListaAlertas");
+function criarPainelDeBotoesAlerta(listaComAlerta) {
+  const painel = document.createElement('div');
+  painel.className = 'cartao';
+  painel.innerHTML = '<h2>Unidades com Alerta</h2>';
 
-    try {
-        //TROCAR ID DA EMPRESA AQUIIIIIIIIIIIIIIIIIIIII
-        const resposta = await fetch(`/unidades/alertas/${idUsuario}`);
-        const alertas = await resposta.json();
+  for (let i = 0; i < listaComAlerta.length; i++) {
+    const botao = document.createElement('button');
+    botao.className = 'botao_buscar';
+    botao.textContent = listaComAlerta[i].nome;
+    botao.onclick = function() { abrirRelatorioDaUnidade(listaComAlerta[i].id); };
+    painel.appendChild(botao);
+  }
 
-        if (alertas.length === 0) {
-            html_lista = `<tr><td colspan="2">Nenhum alerta nas últimas 24h</td></tr>`;
-        } else {
-            alertas.forEach(a => {
-                html_lista += `
-                
-                  <td>${a.unidade_nome}</td>
-                  <td>${a.sensor_nome}</td>
-                  <td>${a.umidade}%</td>
-                  <td>${new Date(a.data_hora).toLocaleString()}</td>
-                </tr>
-              `;
-            });
-        }
-    } catch (error) {
-        html_lista = `<tr><td colspan="2">Erro ao buscar alertas</td></tr>`;
+  areaAlertasDisplay.appendChild(painel);
+}
+
+// ======= Indicadores (KPIs) =======
+async function montarIndicadores() {
+  indicadoresDisplay.innerHTML = '';
+  try {
+    const resposta = await fetch(`/unidades/indicadores/${usuarioId}`);
+    const dados = await resposta.json();
+    const itensIndicadores = [
+      { valor: (dados.quantidade_alerta * 100 / dados.total_alertas).toFixed(2) + '%', descricao: 'Porcentagem de alertas', complemento: '(Dia atual)' },
+      { valor: dados.umidade_media + '%', descricao: 'Umidade média', complemento: '(tempo real)' },
+      { valor: dados.sensores_desativados, descricao: 'Sensores desativados', complemento: '' },
+      { valor: dados.hora_atualizacao, descricao: 'Hora atualização', complemento: dados.data_atualizacao }
+    ];
+
+    for (let i = 0; i < itensIndicadores.length; i++) {
+      const item = itensIndicadores[i];
+      const div = document.createElement('div');
+      div.className = 'cartao';
+      div.innerHTML = `
+        <div class="valor_indicador">${item.valor}</div>
+        <div class="descricao_indicador">${item.descricao}</div>
+        <div class="info_adicional">${item.complemento}</div>
+      `;
+      indicadoresDisplay.appendChild(div);
+    }
+  } catch (erro) {
+    console.error('Erro ao montar indicadores:', erro);
+  }
+}
+
+// ======= Lista de Alertas =======
+async function montarListaDeAlertas() {
+  listaAlertasDisplay.innerHTML = '';
+  try {
+    const resposta = await fetch(`/unidades/alertas/${usuarioId}`);
+    const alertas = await resposta.json();
+    let linhasTabela = '';
+
+    if (alertas.length === 0) {
+      linhasTabela = '<tr><td colspan="4">Nenhum alerta nas últimas 24h</td></tr>';
+    } else {
+      for (let i = 0; i < alertas.length; i++) {
+        const alerta = alertas[i];
+        linhasTabela += `
+          <tr>
+            <td>${alerta.unidade_nome}</td>
+            <td>${alerta.sensor_nome}</td>
+            <td>${alerta.umidade}%</td>
+            <td>${new Date(alerta.data_hora).toLocaleString()}</td>
+          </tr>`;
+      }
     }
 
-    let html = `
-    <div class="container_grafico_mensal">
+    const container = document.createElement('div');
+    container.className = 'container_grafico_mensal';
+    container.innerHTML = `
       <div class="cartao">
         <div class="valor_indicador">ALERTAS</div>
-        <div class="descricao_indicador">Últimos alertas registrados (24h)</div><br>
+        <div class="descricao_indicador">Últimos alertas registrados (24h)</div>
         <table class="tabela_grafico">
-          <tr>
-            <th>Unidade</th>
-            <th>Sensor</th>
-            <th>Umidade</th>
-            <th>Data</th>
-          </tr>
-          ${html_lista}
+          <tr><th>Unidade</th><th>Sensor</th><th>Umidade</th><th>Data</th></tr>
+          ${linhasTabela}
         </table>
-      </div>
-    </div>
-  `;
-    areaListaAlertas.innerHTML = html;
+      </div>`;
+
+    listaAlertasDisplay.appendChild(container);
+  } catch (erro) {
+    console.error('Erro ao montar lista de alertas:', erro);
+  }
 }
 
-function abrirModalUnidade(id) {
-    const u = unidades.find(x => x.id === id);
-    window.location.href = `./relatorio.html?ID=${id}`
-    document.getElementById("uni_nome").textContent = u.nome;
-    const ulSens = document.getElementById("uni_sensores");
-    ulSens.innerHTML = "";
-    u.sensores.forEach(s => {
-        const li = document.createElement("li");
-        li.textContent = `${s.nome} ${s.umidade} ${s.alerta === 1 ? " ⚠️ (ALERTA)" : ""}`;
-        ulSens.appendChild(li);
-    });
-    document.getElementById("uni_infos").textContent = u.outrasInfos;
-    document.getElementById("modalUnidade").style.display = "block";
+// ======= Ações =======
+function abrirRelatorioDaUnidade(idUnidade) {
+  window.location.href = `./relatorio.html?ID=${idUnidade}`;
 }
-
-function fecharModalUnidade() {
-    document.getElementById("modalUnidade").style.display = "none";
-}
-
 
 function logout() {
-    sessionStorage.clear()
-    window.location.href = '../index.html'
+  limparSessaoELogoff();
 }
 
-atualizarPaginaInicial();
-if (sessionStorage.NIVEL_DE_ACESSO == "admin") {
-    btn_config.style.display = ""
-}
+// ======= Executa =======
+inicializarDashboard();

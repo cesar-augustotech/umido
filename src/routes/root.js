@@ -16,4 +16,8 @@ router.get("/sensores_pendentes", function (req, res) {
     dados.get_sensores_pendentes(req, res);
 });
 
+router.post("/adicionarSensor", function(req,res) {
+   dados.adicionarSensor(req, res);
+});
+
 module.exports = router;

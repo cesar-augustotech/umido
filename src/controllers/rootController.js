@@ -20,9 +20,22 @@ function get_sensores_pendentes(req, res) {
     });
 }
 
-
+async function adicionarSensor(req, res) {
+    const { nome, idUnidade } = req.body;
+    console.log("Adicionando sensor:", nome, "para unidade:", idUnidade);
+    if (!nome || !idUnidade) {
+        return res.status(400).json({ erro: "Nome e idUnidade são obrigatórios" });
+    }
+    try {
+        const resultado = await root.adicionarSensor(nome, idUnidade);
+        res.status(201).json(resultado);
+    } catch (erro) {
+        res.status(500).json({ erro: "Erro ao adicionar sensor" });
+    }
+}
 module.exports = {
     post_dados_empresas,
     get_dados_empresas,
-    get_sensores_pendentes
+    get_sensores_pendentes,
+    adicionarSensor
 }
