@@ -260,18 +260,17 @@ async function criar_kpis(idUnidadeSelecionada) {
         let umidade_media = dados.umidade_media
         if (typeof umidade_media != "number")
             umidade_media = 0
-        console.log(dados)
         let dadosIndicadores = [
-            [umidade_media, "Minima medição Atual", "(Tempo real)"],
-            [dados.quantidade_alerta, "incidentes", "(Mês atual)"],
-            [dados.sensores_desativados, "sensores desativados", ""],
-            [dados.hora_atualizacao, "", "última atualização"]
+            [umidade_media, "Minima medição Atual", "(Tempo real)", "div_media"],
+            [dados.quantidade_alerta, "incidentes", "(Mês atual)", "div_alerta"],
+            [dados.sensores_desativados, "sensores desativados", "", "div_sensor"],
+            [dados.hora_atualizacao, "", "última atualização", "div_hora"]
         ];
 
         for (let i = 0; i < dadosIndicadores.length; i++) {
             indicadores.innerHTML += `
         <div class="cartao">
-            <div class="valor_indicador" id="div_indicado">${dadosIndicadores[i][0]}</div>
+            <div class="valor_indicador" id="${dadosIndicadores[i][3]}">${dadosIndicadores[i][0]}</div>
             <div class="descricao_indicador">${dadosIndicadores[i][1]}</div>
             <div class="info_adicional">${dadosIndicadores[i][2]}</div>
         </div>`;
@@ -570,6 +569,8 @@ setInterval(async () => {
         umidade_sensor.innerHTML = ultima
         document.querySelector("#div_indicado").innerHTML = ultima
         if (res[0].alerta == "1" || res[0].alerta == 1) {
+            let valor = Number(div_alerta.innerHTML) + 1
+            div_alerta.innerHTML=valor
             console.log(res[0])
             alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`)
         }
