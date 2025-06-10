@@ -261,9 +261,8 @@ async function criar_kpis(idUnidadeSelecionada) {
         if (typeof umidade_media != "number")
             umidade_media = 0
         let dadosIndicadores = [
-            [dados.quantidade_alerta, "incidentes", "(Mês atual)"],
             [umidade_media, "Minima medição Atual", "(Tempo real)"],
-
+            [dados.quantidade_alerta, "incidentes", "(Mês atual)"],
             [dados.sensores_desativados, "sensores desativados", ""],
             [dados.hora_atualizacao, "", "última atualização"]
         ];
