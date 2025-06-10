@@ -1,47 +1,6 @@
 -- Criação do banco de dados
 CREATE DATABASE IF NOT EXISTS umido;
 USE umido;
-
-select * from usuario;
-
-select avg(m.umidade) as umidade,extract(month from m.data_hora) as mes 
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-inner join unidade as u on u.id = s.id_unidade
-where u.id = 1
-group by mes
-order by mes desc
-limit 6;
-
-select avg(m.umidade) as umidade,extract(week from m.data_hora) as semana
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-inner join unidade as u on u.id = s.id_unidade
-where u.id = 1
-group by semana
-order by semana desc
-limit 4;
-
-desc medicao;
-select count(alerta),id_sensor
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-inner join unidade as u on u.id = s.id_unidade
-where u.id = 1
-group by id_sensor;
-
-
-select avg(m.umidade) as umidade,extract(hour from m.data_hora) as hora 
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-inner join unidade as u on u.id = s.id_unidade
-where s.id = 1
-group by hora
-order by hora desc
-limit 24;
-
-
-
        
 CREATE TABLE empresa (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -700,3 +659,43 @@ inner join sensor as s on s.id = m.id_sensor
 where s.id_unidade = 1 
 order by id desc
 limit 1000;
+
+select * from usuario;
+
+select avg(m.umidade) as umidade,extract(month from m.data_hora) as mes 
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where u.id = 1
+group by mes
+order by mes desc
+limit 6;
+
+select avg(m.umidade) as umidade,extract(week from m.data_hora) as semana
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where u.id = 1
+group by semana
+order by semana desc
+limit 4;
+
+desc medicao;
+select count(alerta),id_sensor
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where u.id = 1
+group by id_sensor;
+
+
+select avg(m.umidade) as umidade,extract(hour from m.data_hora) as hora 
+from medicao as m
+inner join sensor as s on s.id = m.id_sensor
+inner join unidade as u on u.id = s.id_unidade
+where s.id = 1
+group by hora
+order by hora desc
+limit 24;
+
+select * from usuario;

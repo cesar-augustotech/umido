@@ -263,13 +263,15 @@ async function criar_kpis(idUnidadeSelecionada) {
     try {
         const response = await fetch(`/unidades/${idUnidadeSelecionada}/indicadores/${idUsuario}`);
         const dados = await response.json();
-
+        let umidade_media = dados.umidade_media
+        if (typeof umidade_media != "number")
+            umidade_media = 0
         let dadosIndicadores = [
             [dados.quantidade_alerta, "incidentes", "(Mês atual)"],
-            [dados.umidade_media + "%", "umidade média atual", "(Mês atual)"],
+            [umidade_media + "%", "umidade média atual", "(Mês atual)"],
 
             [dados.sensores_desativados, "sensores desativados", ""],
-            [dados.hora_atualizacao, dados.data_atualizacao, "última atualização"]
+            [dados.hora_atualizacao, "", "última atualização"]
         ];
 
         for (let i = 0; i < dadosIndicadores.length; i++) {
