@@ -29,7 +29,7 @@ async function inicializarDashboard() {
 
 // ======= Menu =======
 function configurarMenuLateral() {
-  botaoExpandir.onclick = function() {
+  botaoExpandir.onclick = function () {
     const menu = document.querySelector('.menu_lateral');
     menu.classList.toggle('menu_expandido');
     botaoExpandir.classList.toggle('girar');
@@ -104,7 +104,7 @@ async function buscarUltimaMedidaDoSensor(idSensor) {
 function separarUnidadesEExibir() {
   areaUnidadesDisplay.innerHTML = '';
 
-  
+
   for (let i = 0; i < listaUnidades.length; i++) {
     calcularMenorUmidadeDaUnidade(listaUnidades[i]);
   }
@@ -121,7 +121,7 @@ function separarUnidadesEExibir() {
     criarCartaoDeUnidade(listaUnidades[i]);
   }
 
-  
+
 }
 
 function calcularMenorUmidadeDaUnidade(unidade) {
@@ -142,7 +142,7 @@ function criarCartaoDeUnidade(unidade) {
   const elementoCartao = document.createElement('div');
   elementoCartao.className = 'cartao';
   elementoCartao.style.cursor = 'pointer';
-  elementoCartao.onclick = function() { abrirRelatorioDaUnidade(unidade.id); };
+  elementoCartao.onclick = function () { abrirRelatorioDaUnidade(unidade.id); };
 
   const textoUmidade = (unidade.menorUmidade != null)
     ? unidade.menorUmidade.toFixed(2) + '%'
@@ -176,7 +176,7 @@ function criarPainelDeBotoesAlerta(listaComAlerta) {
     const botao = document.createElement('button');
     botao.className = 'botao_buscar';
     botao.textContent = listaComAlerta[i].nome;
-    botao.onclick = function() { abrirRelatorioDaUnidade(listaComAlerta[i].id); };
+    botao.onclick = function () { abrirRelatorioDaUnidade(listaComAlerta[i].id); };
     painel.appendChild(botao);
   }
 
@@ -189,8 +189,11 @@ async function montarIndicadores() {
   try {
     const resposta = await fetch(`/unidades/indicadores/${usuarioId}`);
     const dados = await resposta.json();
+    let valor = (dados.quantidade_alerta * 100 / dados.total_alertas).toFixed(2)
+    if (typeof valor != "number")
+      valor = 0
     const itensIndicadores = [
-      { valor: (dados.quantidade_alerta * 100 / dados.total_alertas).toFixed(2) + '%', descricao: 'Porcentagem de alertas', complemento: '(Dia atual)' },
+      { valor: valor + '%', descricao: 'Porcentagem de alertas', complemento: '(Dia atual)' },
       { valor: dados.umidade_media + '%', descricao: 'Umidade média', complemento: '(tempo real)' },
       { valor: dados.sensores_desativados, descricao: 'Sensores desativados', complemento: '' },
       { valor: dados.hora_atualizacao, descricao: 'Hora atualização', complemento: dados.data_atualizacao }

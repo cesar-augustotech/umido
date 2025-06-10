@@ -53,26 +53,29 @@ function buscarUmidadePorSensor(idUnidade) {
             if (response.ok) {
                 response.json().then(function (resposta) {
                     let sensores = [];
-                    lista_sensores.innerHTML = ""; 
+                    lista_sensores.innerHTML = "";
 
                     resposta.forEach(u => {
-                       
+
                         if (!sensores.includes(u.identificador)) {
-                            
+
                             const pendente = !u.data_hora || u.umidade == null;
                             lista_sensores.innerHTML += `
                                 <li style="display: flex; justify-content: space-around; width: 100%;">
                                     ${u.identificador}
-                                    <span style="color: ${pendente ? '#e1b12c' : '#44bd32'}; font-size: 0.9em;">
+                                    ${pendente ? `
+                                        <span style="color: ${pendente ? '#e1b12c' : '#44bd32'}; font-size: 0.9em;">
                                         ${pendente ? 'Pendente' : ''}
                                     </span>
-                                    <button class="botao_adicionar" onclick="mostrar_modal_sensor(${u.id_sensor})">Ver Mais</button>
+                                        `: `
+                                        <button class="botao_adicionar" onclick="mostrar_modal_sensor(${u.id_sensor})">Ver Mais</button>
+                                        `}
                                 </li>`;
                             sensores.push(u.identificador);
                         }
-                       
+
                         dadosSensores[u.id_sensor] ??= { medicoes: [], identificador: u.identificador, unidade: idUnidade };
-                     
+
                         if (u.data_hora && u.umidade != null) {
                             dadosSensores[u.id_sensor].medicoes.push({ data: u.data_hora, medicao: u.umidade, status: u.alerta });
                         }
@@ -433,7 +436,7 @@ function mostrar_modal_unidade() {
 
 function mostrar_modal_adicionar_sensor() {
     modalAdicionarSensor.style.display = 'block';
-    
+
 }
 
 function fechar_modal() {
@@ -473,21 +476,21 @@ function botao_salvar_formulario() {
             idUnidade: idUnidade
         })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Erro ao adicionar sensor');
-        }
-        return response.json();
-    })
-    .then(data => {
-        
-        buscarUmidadePorSensor(idUnidadeSelecionada);
-        criar_kpis(idUnidadeSelecionada);
-        fechar_modal_adicionar_sensor();
-    })
-    .catch(error => {
-        alert('Falha ao adicionar sensor: ' + error.message);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao adicionar sensor');
+            }
+            return response.json();
+        })
+        .then(data => {
+
+            buscarUmidadePorSensor(idUnidadeSelecionada);
+            criar_kpis(idUnidadeSelecionada);
+            fechar_modal_adicionar_sensor();
+        })
+        .catch(error => {
+            alert('Falha ao adicionar sensor: ' + error.message);
+        });
 
     return false;
 }
@@ -535,7 +538,7 @@ buscarUmidadeMediaUltimasSemanas(idUnidade)
 buscarUmidadeMediaUnidade(idUnidade)
 buscarListaAlertas(idUnidade)
 setTimeout(() => {
-    if (id >= 0) {
+    if (id >= 0 && id) {
         selecionar_unidade.value = id
     }
 }, 500)
