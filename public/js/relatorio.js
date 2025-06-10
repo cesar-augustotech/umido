@@ -377,7 +377,7 @@ function criar_grafico_modal_sensor(horas, dados, idUnidade, idSensor) {
             scales: {
                 y: {
                     beginAtZero: false,
-                    min: 0,
+                    min: 20,
                     max: 100
                 }
             }
