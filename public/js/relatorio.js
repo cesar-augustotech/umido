@@ -558,11 +558,13 @@ setInterval(async () => {
     let res = await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}/1`, { cache: 'no-store' })
     res = await res.json()
     if (res[0].umidade != ultima || res[0].data_hora != data) {
-        window.graficoHistoricoSensor.data.labels.shift();
-        window.graficoHistoricoSensor.data.datasets[0].data.shift();
-        window.graficoHistoricoSensor.data.labels.push(res[0].data_hora.split("T")[1].replace(".000Z", ""));
-        window.graficoHistoricoSensor.data.datasets[0].data.push(parseFloat(res[0].umidade));
-        window.graficoHistoricoSensor.update();
+        try {
+            window.graficoHistoricoSensor.data.labels.shift();
+            window.graficoHistoricoSensor.data.datasets[0].data.shift();
+            window.graficoHistoricoSensor.data.labels.push(res[0].data_hora.split("T")[1].replace(".000Z", ""));
+            window.graficoHistoricoSensor.data.datasets[0].data.push(parseFloat(res[0].umidade));
+            window.graficoHistoricoSensor.update();
+        } catch (e) {}
         ultima = res[0].umidade
         data = res[0].data_hora
         umidade_sensor.innerHTML = ultima
