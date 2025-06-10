@@ -270,7 +270,7 @@ async function criar_kpis(idUnidadeSelecionada) {
             [umidade_media + "%", "umidade média atual", "(Mês atual)"],
 
             [dados.sensores_desativados, "sensores desativados", ""],
-            [dados.hora_atualizacao, dados.data_atualizacao, "última atualização"]
+            [dados.hora_atualizacao, "", "última atualização"]
         ];
 
         for (let i = 0; i < dadosIndicadores.length; i++) {
