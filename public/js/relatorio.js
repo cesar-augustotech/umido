@@ -568,6 +568,7 @@ setInterval(async () => {
         data = res[0].data_hora
         umidade_sensor.innerHTML = ultima
         document.querySelector("#div_indicado").innerHTML = ultima
+        console.log(res[0])
     }
 }, 1000)
 setInterval(() => {
