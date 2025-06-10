@@ -51,7 +51,7 @@ async function get_sensores_pendentes(callback) {
 async function adicionarSensor(nome, idUnidade) {
     const instrucaoSql = `
         INSERT INTO sensor (identificador, id_unidade, ativo)
-        VALUES ('${nome}', ${idUnidade}, 0);
+        VALUES ('${nome}', ${idUnidade}, 1);
     `;
     return database.executar(instrucaoSql);
 }
