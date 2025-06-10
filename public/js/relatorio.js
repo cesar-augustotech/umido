@@ -567,6 +567,7 @@ setInterval(async () => {
         ultima = res[0].umidade
         data = res[0].data_hora
         umidade_sensor.innerHTML = ultima
+        div_media.innerHTML = ultima
         document.querySelector("#div_media").innerHTML = ultima
         if (res[0].alerta == "1" || res[0].alerta == 1) {
             let valor = Number(div_alerta.innerHTML) + 1
