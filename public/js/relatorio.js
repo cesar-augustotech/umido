@@ -585,7 +585,3 @@ setTimeout(() => {
 }, 500)
 /*
 */
-setInterval(() => {
-    criar_kpis()
-    criar_lista_alertas()
-}, 2000)
