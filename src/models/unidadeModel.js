@@ -186,7 +186,7 @@ async function buscarIndicadoresPorUnidade(idUsuario, idUnidade) {
          JOIN unidade u ON s.id_unidade = u.id
          JOIN unidade_usuario uu ON uu.id_unidade = u.id
         WHERE m.alerta in(1, 0)
-          AND DATE(m.data_hora) = CURDATE()
+          AND data_hora >= DATE_SUB(now(), INTERVAL 48 hour)
           AND uu.id_usuario = ${idUsuario}
           AND u.id = ${idUnidade}
       ) AS quantidade_alerta,
