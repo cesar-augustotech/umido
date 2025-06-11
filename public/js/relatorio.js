@@ -570,8 +570,7 @@ setInterval(async () => {
         div_media.innerHTML = ultima
         document.querySelector("#div_media").innerHTML = ultima
         if (res[0].alerta == "1" || res[0].alerta == 1) {
-            let valor = Number(div_alerta.innerHTML) + 1
-            div_alerta.innerHTML=valor
+            
             alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`)
         }
     }
@@ -586,3 +585,7 @@ setTimeout(() => {
 }, 500)
 /*
 */
+setInterval(() => {
+    criar_kpis()
+    criar_lista_alertas()
+}, 2000)

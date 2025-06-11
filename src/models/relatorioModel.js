@@ -8,7 +8,7 @@ m.umidade,
 DATE_FORMAT(m.data_hora, '%H:%i:%s  %d/%m/%Y') as data,m.data_hora
 from  medicao as m
 inner join sensor as s on s.id = m.id_sensor
-where id_unidade = ${idUnidade}  and data_hora >= DATE_SUB(now(), INTERVAL 48 hour) and alerta = (0 or 1)
+where id_unidade = ${idUnidade}  and data_hora >= DATE_SUB(now(), INTERVAL 48 hour) and alerta in (0,1)
 order by data_hora desc
 limit 28;
        
