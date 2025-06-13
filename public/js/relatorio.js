@@ -79,7 +79,7 @@ function inicializarRelatorio(idUnidade) {
             div_media.innerHTML = ultima;
             document.querySelector("#div_media").innerHTML = ultima;
             if (res[0].alerta == "1" || res[0].alerta == 1) {
-                alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`);
+                alert(`A unidade ${idUnidade} tem incidente em: ${res[0].identificador}`);
             }
         }
     }, 1000);
