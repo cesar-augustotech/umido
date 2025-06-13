@@ -32,6 +32,61 @@ async function carregarUnidadesUsuario() {
         option.textContent = unidade.nome;
         select.appendChild(option);
     });
+
+    
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("ID");
+    if (id) {
+        select.value = id;
+        idUnidadeSelecionada = id;
+    } else if (unidades.length > 0) {
+        select.value = unidades[0].id;
+        idUnidadeSelecionada = unidades[0].id;
+    }
+
+    inicializarRelatorio(idUnidadeSelecionada);
+}
+
+function inicializarRelatorio(idUnidade) {
+   
+    clearInterval(window.intervalUmidade);
+    clearInterval(window.intervalAlertas);
+
+    criar_kpis(idUnidade);
+    buscarQuantidadeDeAlertas(idUnidade);
+    buscarUmidadePorSensor(idUnidade);
+    buscarUmidadeMediaUltimasSemanas(idUnidade);
+    buscarUmidadeMediaUnidade(idUnidade);
+    buscarListaAlertas(idUnidade);
+
+    let ultima = "";
+    let data = "";
+
+    window.intervalUmidade = setInterval(async () => {
+        let res = await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}/1`, { cache: 'no-store' });
+        res = await res.json();
+        if (res[0] && (res[0].umidade != ultima || res[0].data_hora != data)) {
+            try {
+                window.graficoHistoricoSensor.data.labels.shift();
+                window.graficoHistoricoSensor.data.datasets[0].data.shift();
+                window.graficoHistoricoSensor.data.labels.push(res[0].data_hora.split("T")[1].replace(".000Z", ""));
+                window.graficoHistoricoSensor.data.datasets[0].data.push(parseFloat(res[0].umidade));
+                window.graficoHistoricoSensor.update();
+            } catch (e) { }
+            ultima = res[0].umidade;
+            data = res[0].data_hora;
+            umidade_sensor.innerHTML = ultima;
+            div_media.innerHTML = ultima;
+            document.querySelector("#div_media").innerHTML = ultima;
+            if (res[0].alerta == "1" || res[0].alerta == 1) {
+                alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`);
+            }
+        }
+    }, 1000);
+
+    window.intervalAlertas = setInterval(() => {
+        buscarListaAlertas(idUnidade);
+    }, 1000);
 }
 
 carregarUnidadesUsuario();
@@ -388,8 +443,7 @@ function botao_salvar_unidade() {
             selecionar_unidade.appendChild(option);
             selecionar_unidade.value = data.id;
             idUnidadeSelecionada = data.id;
-            buscarUmidadePorSensor(idUnidadeSelecionada);
-            criar_kpis(idUnidadeSelecionada);
+            inicializarRelatorio(idUnidadeSelecionada);
             fechar_modal_unidade();
         })
         .catch(error => {
@@ -400,6 +454,10 @@ function botao_salvar_unidade() {
 }
 
 function botao_salvar_formulario() {
+    if (!idUnidadeSelecionada) {
+        alert('Selecione uma unidade antes de adicionar um sensor.');
+        return false;
+    }
     const nome = nome_sensor.value;
     fetch('/root/adicionarSensor', {
         method: 'POST',
@@ -438,59 +496,9 @@ function select_unidade() {
     graficoUmidadeSemana?.destroy();
     graficoAlertasPie?.destroy();
     graficoUmidadeMedia?.destroy();
-    buscarQuantidadeDeAlertas(idUnidadeSelecionada);
-    buscarUmidadePorSensor(idUnidadeSelecionada);
-    buscarUmidadeMediaUltimasSemanas(idUnidadeSelecionada);
-    buscarUmidadeMediaUnidade(idUnidadeSelecionada);
-    buscarListaAlertas(idUnidadeSelecionada);
-    criar_kpis(idUnidadeSelecionada);
+    inicializarRelatorio(idUnidadeSelecionada);
 }
 
 if (sessionStorage.NIVEL_DE_ACESSO == "admin") {
     btn_config.style.display = "";
 }
-
-const params = new URLSearchParams(window.location.search);
-const id = params.get("ID");
-let idUnidade = id || selecionar_unidade.value;
-
-criar_kpis(idUnidade);
-buscarQuantidadeDeAlertas(idUnidade);
-buscarUmidadePorSensor(idUnidade);
-buscarUmidadeMediaUltimasSemanas(idUnidade);
-buscarUmidadeMediaUnidade(idUnidade);
-
-let ultima = "";
-let hora = "";
-
-setInterval(async () => {
-    let res = await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}/1`, { cache: 'no-store' });
-    res = await res.json();
-    if (res[0].umidade != ultima || res[0].data_hora != data) {
-        try {
-            window.graficoHistoricoSensor.data.labels.shift();
-            window.graficoHistoricoSensor.data.datasets[0].data.shift();
-            window.graficoHistoricoSensor.data.labels.push(res[0].data_hora.split("T")[1].replace(".000Z", ""));
-            window.graficoHistoricoSensor.data.datasets[0].data.push(parseFloat(res[0].umidade));
-            window.graficoHistoricoSensor.update();
-        } catch (e) { }
-        ultima = res[0].umidade;
-        data = res[0].data_hora;
-        umidade_sensor.innerHTML = ultima;
-        div_media.innerHTML = ultima;
-        document.querySelector("#div_media").innerHTML = ultima;
-        if (res[0].alerta == "1" || res[0].alerta == 1) {
-            alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`);
-        }
-    }
-}, 1000);
-
-setInterval(() => {
-    buscarListaAlertas(idUnidade);
-}, 1000);
-
-setTimeout(() => {
-    if (id >= 0 && id) {
-        selecionar_unidade.value = id;
-    }
-}, 500);
