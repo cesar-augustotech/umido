@@ -1,5 +1,3 @@
-
-
 var database = require("../database/config");
 
 []
@@ -58,12 +56,10 @@ async function adicionarSensor(nome, idUnidade) {
 
 
 async function adicionarUnidade(nome, cnir, idEmpresa) {
-
- const instrucaoSql = `INSERT INTO unidade (nome, codigo_cnir, id_empresa, ativo)
-    VALUES ('${nome}, ${cnir}, ${idEmpresa}, 0)`;
-
- return database.executar(instrucaoSql)
-    
+    const instrucaoSql = `
+        INSERT INTO unidade (nome, codigo_cnir, id_empresa, ativo)
+        VALUES ('${nome}', '${cnir}', ${idEmpresa}, 0);`
+    return database.executar(instrucaoSql);
 }
 /*
 function buscarUltimasMedidas(unidadeAtual) {

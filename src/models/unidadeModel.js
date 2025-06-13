@@ -39,31 +39,24 @@ function buscarSensoresPorUnidade(idUnidade) {
 async function buscarAlertas(idUsuario) {
   var instrucaoSql = `
     SELECT 
-      u.id AS unidade_id, u.nome AS unidade_nome,
-      us.nome AS responsavel_nome,
-      s.id AS sensor_id, s.identificador AS sensor_nome,
-      m1.umidade, m1.alerta, m1.data_hora
+      s.identificador AS sensor_nome,
+      m.umidade,
+      DATE_FORMAT(m.data_hora, '%H:%i:%s  %d/%m/%Y') as data,
+      m.data_hora,
+      u.id AS unidade_id,
+      u.nome AS unidade_nome
     FROM unidade u
-    JOIN unidade_usuario uu ON uu.id_unidade = u.id
-    JOIN usuario us ON us.id = uu.id_usuario
-    LEFT JOIN sensor s ON s.id_unidade = u.id
-    JOIN medicao m1 ON m1.id_sensor = s.id
-      AND m1.alerta = '1'
-      AND m1.data_hora BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW()
-    LEFT JOIN medicao m0 
-      ON m0.id_sensor = m1.id_sensor 
-      AND m0.data_hora = (
-        SELECT MAX(m2.data_hora)
-        FROM medicao m2
-        WHERE m2.id_sensor = m1.id_sensor
-          AND m2.data_hora < m1.data_hora
-      )
+    INNER JOIN unidade_usuario uu ON uu.id_unidade = u.id
+    INNER JOIN sensor s ON s.id_unidade = u.id
+    INNER JOIN medicao m ON m.id_sensor = s.id
     WHERE uu.id_usuario = ${idUsuario}
-      AND (m0.alerta IS NULL OR m0.alerta <> '1')
-    ORDER BY u.id, s.id, m1.data_hora DESC
+      AND m.data_hora >= DATE_SUB(NOW(), INTERVAL 48 HOUR)
+      AND m.alerta = 1
+    ORDER BY m.data_hora DESC
+    LIMIT 28
   `;
 
-  console.log("Executando a instrução SQL para buscar alertas iniciados nas últimas 24h: \n" + instrucaoSql);
+  console.log("Executando a instrução SQL para buscar alertas das últimas 48h: \n" + instrucaoSql);
   const rows = await database.executar(instrucaoSql);
 
   return rows;
