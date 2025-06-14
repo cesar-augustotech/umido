@@ -41,7 +41,7 @@ inner join sensor as s on s.id = m.id_sensor
 inner join unidade as u on u.id = s.id_unidade
 where u.id = ${idUnidade}
 group by semana
-order by semana desc
+order by semana
 limit 4;
     `;
     return database.executar(instrucaoSql);
@@ -50,12 +50,14 @@ limit 4;
 
 function buscarQuantidadeDeAlertas(idUnidade) {
     var instrucaoSql = `
-      select count(alerta) as alerta,id_sensor as sensor
+    select count(m.alerta) as alerta,s.identificador as sensor
 from medicao as m
 inner join sensor as s on s.id = m.id_sensor
 inner join unidade as u on u.id = s.id_unidade
-where u.id = ${idUnidade}
+where u.id = ${idUnidade} and data_hora >= DATE_SUB(now(), INTERVAL 1 month ) and alerta = 1
+or u.id = ${idUnidade} and data_hora >= DATE_SUB(now(), INTERVAL 1 month ) and alerta = 0
 group by id_sensor;
+
     `;
     return database.executar(instrucaoSql);
 }
