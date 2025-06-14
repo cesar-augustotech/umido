@@ -56,646 +56,371 @@ CREATE TABLE unidade_usuario (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 );
 
-use umido;
-select * from usuario;
 
--- Criação dos usuários do sistema com permissões específicas
-CREATE USER IF NOT EXISTS 'umido'@'localhost' IDENTIFIED BY 'Sptech#2024';
-GRANT ALL PRIVILEGES ON umido.* TO 'umido'@'localhost';
+select  * from usuario;
+select  * from unidade_usuario;
+select  * from sensor;
+select  * from medicao;
+select  * from unidade_usuario;
+select * from empresa;
 
-CREATE USER IF NOT EXISTS 'umidoInsert'@'localhost' IDENTIFIED BY 'Sptech#2024';
-GRANT INSERT ON umido.medicao TO 'umidoInsert'@'localhost';
-
-FLUSH PRIVILEGES;
--- Inserção de dados iniciais
-
--- Empresas
-INSERT INTO empresa (nome, cnpj,ativo) VALUES
-    ('Sentinela','12.345.678/0001-99',1),
-    ('Hydroscan','98.765.432/0001-11',1),
-    ('CodeBerry', '10.765.432/0001-12',1),
-    ('Projeto10','34.565.432/0001-11',0);
-
--- Usuários
-INSERT INTO usuario (nome, email, senha, nivel_de_acesso) VALUES
-    ('César Augusto','cesar@email','Sptech#2024','admin'),
-    ('Bill Hebert','bill@email','Sptech#2024','comum'),
-    ('Pedro Giraldi','pedro@email','Sptech#2024','comum'),
-    ('Enzo Servilha','enzo@email.com','Sptech#2024','comum'),
-    ('Felipe Hideki','felipe@email','Sptech#2024','comum'),
-    ('Rafael','rafael@email','Sptech#2024','admin'),
-    ('Pedro Rico','rico@email','Sptech#2024','comum'),
-    ('Erick Araujo','erick@email','Sptech#2024','admin');
-
--- Unidades
-INSERT INTO unidade (nome, codigo_cnir, id_empresa) VALUES
-    ('Unidade Sentinela 1', 'CNIR-11', 1),
-    ('Unidade Sentinela 2', 'CNIR-12', 1),
-    ('Unidade Sentinela 3', 'CNIR-13', 1),
-    ('Unidade Sentinela 4', 'CNIR-14', 1),
-    ('Unidade Sentinela 5', 'CNIR-15', 1),
-    ('Unidade HydroScan 1', 'CNIR-21', 2),
-    ('Unidade HydroScan 2', 'CNIR-22', 2),
-    ('Unidade CodeBerry 1', 'CNIR-31', 3);
-
--- Associação de usuários administradores a TODAS as unidades da empresa
-
--- César (empresa 1)
-INSERT INTO unidade_usuario (id_unidade, id_usuario)
-SELECT id, 1 FROM unidade WHERE id_empresa = 1;
-
--- Rafael (empresa 2)
-INSERT INTO unidade_usuario (id_unidade, id_usuario)
-SELECT id, 6 FROM unidade WHERE id_empresa = 2;
-
--- Erick (empresa 3)
-INSERT INTO unidade_usuario (id_unidade, id_usuario)
-SELECT id, 8 FROM unidade WHERE id_empresa = 3;
-
--- Associação de usuários comuns a unidades específicas
-INSERT INTO unidade_usuario (id_unidade, id_usuario) VALUES
-    (1, 2),
-    (2, 3),
-    (3, 4),
-    (6, 5),
-    (7, 7);
-
--- Sensores
-INSERT INTO sensor (id_unidade, identificador) VALUES
-    (1, 'SENT-1A'),
-    (1, 'SENT-1B'),
-    (2, 'SENT-2A'),
-    (6, 'HYDR-1A'),
-    (8, 'CODE-1A');
-
--- Medições (dados simulados)
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
-(1, 45.2, '2025-05-01 08:00:00', 0),
-(1, 28.7, '2025-05-01 10:00:00', 1),
-(1, 39.5, '2025-05-01 12:00:00', 0),
-(1, 42.3, '2025-05-01 14:00:00', 0),
-(1, 50.1, '2025-05-01 16:00:00', NULL),
-
-(1, 43.0, '2025-05-02 08:00:00', 0),
-(1, 25.9, '2025-05-02 10:00:00', 1),
-(1, 31.2, '2025-05-02 12:00:00', 0),
-(1, 48.5, '2025-05-02 14:00:00', 0),
-(1, 53.7, '2025-05-02 16:00:00', NULL),
-
-(1, 44.7, '2025-05-03 08:00:00', 0),
-(1, 29.0, '2025-05-03 10:00:00', 1),
-(1, 33.4, '2025-05-03 12:00:00', 0),
-(1, 41.0, '2025-05-03 14:00:00', 0),
-(1, 49.9, '2025-05-03 16:00:00', 0),
-
-(1, 46.1, '2025-05-04 08:00:00', 0),
-(1, 27.6, '2025-05-04 10:00:00', 1),
-(1, 38.1, '2025-05-04 12:00:00', 0),
-(1, 44.8, '2025-05-04 14:00:00', 0),
-(1, 52.3, '2025-05-04 16:00:00', NULL),
-
-(1, 48.5, '2025-05-05 08:00:00', 0),
-(1, 26.3, '2025-05-05 10:00:00', 1),
-(1, 37.5, '2025-05-05 12:00:00', 0),
-(1, 43.6, '2025-05-05 14:00:00', 0),
-(1, 51.0, '2025-05-05 16:00:00', NULL),
-
-(1, 45.8, '2025-05-06 08:00:00', 0),
-(1, 29.5, '2025-05-06 10:00:00', 1),
-(1, 35.9, '2025-05-06 12:00:00', 0),
-(1, 46.2, '2025-05-06 14:00:00', 0),
-(1, 54.7, '2025-05-06 16:00:00', NULL),
-
-(1, 47.3, '2025-05-07 08:00:00', 0),
-(1, 27.9, '2025-05-07 10:00:00', 1),
-(1, 38.3, '2025-05-07 12:00:00', 0),
-(1, 45.1, '2025-05-07 14:00:00', 0),
-(1, 53.2, '2025-05-07 16:00:00', NULL),
-
-(1, 49.2, '2025-05-08 08:00:00', 0),
-(1, 25.8, '2025-05-08 10:00:00', 1),
-(1, 33.7, '2025-05-08 12:00:00', 0),
-(1, 42.7, '2025-05-08 14:00:00', 0),
-(1, 50.9, '2025-05-08 16:00:00', NULL),
-
-(1, 46.5, '2025-05-09 08:00:00', 0),
-(1, 28.0, '2025-05-09 10:00:00', 1),
-(1, 36.2, '2025-05-09 12:00:00', 0),
-(1, 44.3, '2025-05-09 14:00:00', 0),
-(1, 51.7, '2025-05-09 16:00:00', NULL),
-
-(1, 48.0, '2025-05-10 08:00:00', 0),
-(1, 26.7, '2025-05-10 10:00:00', 1),
-(1, 39.1, '2025-05-10 12:00:00', 0),
-(1, 47.5, '2025-05-10 14:00:00', 0),
-(1, 55.3, '2025-05-10 16:00:00', NULL),
-
-(1, 45.6, '2025-05-11 08:00:00', 0),
-(1, 27.2, '2025-05-11 10:00:00', 1),
-(1, 34.9, '2025-05-11 12:00:00', 0),
-(1, 41.8, '2025-05-11 14:00:00', 0),
-(1, 49.0, '2025-05-11 16:00:00', 0),
-
-(1, 47.1, '2025-05-12 08:00:00', 0),
-(1, 25.5, '2025-05-12 10:00:00', 1),
-(1, 37.3, '2025-05-12 12:00:00', 0),
-(1, 43.2, '2025-05-12 14:00:00', 0),
-(1, 51.4, '2025-05-12 16:00:00', NULL),
-
-(1, 49.5, '2025-05-13 08:00:00', 0),
-(1, 28.8, '2025-05-13 10:00:00', 1),
-(1, 38.6, '2025-05-13 12:00:00', 0),
-(1, 44.9, '2025-05-13 14:00:00', 0),
-(1, 52.8, '2025-05-13 16:00:00', NULL),
-
-(1, 46.8, '2025-05-14 08:00:00', 0),
-(1, 27.0, '2025-05-14 10:00:00', 1),
-(1, 34.3, '2025-05-14 12:00:00', 0),
-(1, 43.7, '2025-05-14 14:00:00', 0),
-(1, 50.5, '2025-05-14 16:00:00', NULL),
-
-(1, 48.2, '2025-05-15 08:00:00', 0),
-(1, 29.4, '2025-05-15 10:00:00', 1),
-(1, 35.8, '2025-05-15 12:00:00', 0),
-(1, 45.0, '2025-05-15 14:00:00', 0),
-(1, 53.1, '2025-05-15 16:00:00', NULL),
-
-(1, 45.4, '2025-05-16 08:00:00', 0),
-(1, 25.7, '2025-05-16 10:00:00', 1),
-(1, 37.9, '2025-05-16 12:00:00', 0),
-(1, 42.6, '2025-05-16 14:00:00', 0),
-(1, 49.6, '2025-05-16 16:00:00', 0),
-
-(1, 47.7, '2025-05-17 08:00:00', 0),
-(1, 28.3, '2025-05-17 10:00:00', 1),
-(1, 33.6, '2025-05-17 12:00:00', 0),
-(1, 43.4, '2025-05-17 14:00:00', 0),
-(1, 51.2, '2025-05-17 16:00:00', NULL),
-
-(1, 49.0, '2025-05-18 08:00:00', 0),
-(1, 26.9, '2025-05-18 10:00:00', 1),
-(1, 39.2, '2025-05-18 12:00:00', 0),
-(1, 44.6, '2025-05-18 14:00:00', NULL),
-(1, 52.0, '2025-05-18 16:00:00', NULL),
-
-(1, 46.3, '2025-05-19 08:00:00', NULL),
-(1, 27.5, '2025-05-19 10:00:00', 1),
-(1, 35.1, '2025-05-19 12:00:00', 0),
-(1, 42.9, '2025-05-19 14:00:00', NULL),
-(1, 50.3, '2025-05-19 16:00:00', NULL),
-
-(1, 48.6, '2025-05-20 08:00:00', NULL),
-(1, 29.1, '2025-05-20 10:00:00', 1),
-(1, 38.0, '2025-05-20 12:00:00', 0),
-(1, 44.2, '2025-05-20 14:00:00', NULL),
-(1, 53.0, '2025-05-20 16:00:00', NULL),
-
-(1, 45.9, '2025-05-21 08:00:00', NULL),
-(1, 25.4, '2025-05-21 10:00:00', 1),
-(1, 34.8, '2025-05-21 12:00:00', 0),
-(1, 41.5, '2025-05-21 14:00:00', NULL),
-(1, 49.7, '2025-05-21 16:00:00', NULL),
-
-(1, 47.4, '2025-05-22 08:00:00', NULL),
-(1, 28.6, '2025-05-22 10:00:00', 1),
-(1, 37.1, '2025-05-22 12:00:00', 0),
-(1, 43.9, '2025-05-22 14:00:00', NULL),
-(1, 52.4, '2025-05-22 16:00:00', NULL),
-
-(1, 49.1, '2025-05-23 08:00:00', NULL),
-(1, 26.2, '2025-05-23 10:00:00', 1),
-(1, 36.5, '2025-05-23 12:00:00', 0),
-(1, 45.3, '2025-05-23 14:00:00', NULL),
-(1, 53.6, '2025-05-23 16:00:00', NULL),
-
-(1, 46.6, '2025-05-24 08:00:00', NULL),
-(1, 27.8, '2025-05-24 10:00:00', 1),
-(1, 39.0, '2025-05-24 12:00:00', 0),
-(1, 42.8, '2025-05-24 14:00:00', NULL),
-(1, 50.8, '2025-05-24 16:00:00', NULL),
-
-(1, 48.3, '2025-05-25 08:00:00', NULL),
-(1, 25.6, '2025-05-25 10:00:00', 1),
-(1, 33.9, '2025-05-25 12:00:00', 0),
-(1, 44.5, '2025-05-25 14:00:00', NULL),
-(1, 51.9, '2025-05-25 16:00:00', NULL),
-
-(1, 45.7, '2025-05-26 08:00:00', NULL),
-(1, 29.2, '2025-05-26 10:00:00', 1),
-(1, 35.6, '2025-05-26 12:00:00', 0),
-(1, 42.1, '2025-05-26 14:00:00', NULL),
-(1, 49.4, '2025-05-26 16:00:00', NULL),
-
-(1, 47.0, '2025-05-27 08:00:00', NULL),
-(1, 27.3, '2025-05-27 10:00:00', 1),
-(1, 37.7, '2025-05-27 12:00:00', 0),
-(1, 43.0, '2025-05-27 14:00:00', NULL),
-(1, 50.6, '2025-05-27 16:00:00', NULL),
-
-(1, 49.4, '2025-05-28 08:00:00', NULL),
-(1, 26.0, '2025-05-28 10:00:00', 1),
-(1, 38.4, '2025-05-28 12:00:00', 0),
-(1, 44.7, '2025-05-28 14:00:00', NULL),
-(1, 53.4, '2025-05-28 16:00:00', NULL),
-
-(1, 46.9, '2025-05-29 08:00:00', NULL),
-(1, 28.4, '2025-05-29 10:00:00', 1),
-(1, 34.5, '2025-05-29 12:00:00', 0),
-(1, 43.3, '2025-05-29 14:00:00', NULL),
-(1, 51.1, '2025-05-29 16:00:00', NULL),
-
-(1, 47.2, '2025-05-30 08:00:00', NULL),
-(1, 27.4, '2025-05-30 10:00:00', 1),
-(1, 38.7, '2025-05-30 12:00:00', 0),
-(1, 44.1, '2025-05-30 14:00:00', NULL),
-(1, 51.0, '2025-05-30 16:00:00', NULL);
-
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
-(1, 46.2, '2025-05-31 08:00:00', 0),
-(1, 28.5, '2025-05-31 10:00:00', 1),
-(1, 33.7, '2025-05-31 12:00:00', 0),
-(1, 52.1, '2025-05-31 14:00:00', NULL),
-(1, 55.3, '2025-05-31 16:00:00', NULL),
-(1, 47.8, '2025-06-01 08:00:00', 0),
-(1, 29.4, '2025-06-01 10:00:00', 1),
-(1, 34.9, '2025-06-01 12:00:00', 0),
-(1, 50.7, '2025-06-01 14:00:00', NULL),
-(1, 53.2, '2025-06-01 16:00:00', NULL),
-(1, 48.1, '2025-06-02 08:00:00', 0),
-(1, 26.3, '2025-06-02 10:00:00', 1),
-(1, 36.2, '2025-06-02 12:00:00', 0),
-(1, 51.6, '2025-06-02 14:00:00', NULL),
-(1, 54.9, '2025-06-02 16:00:00', NULL),
-(1, 45.9, '2025-06-03 08:00:00', 0),
-(1, 27.8, '2025-06-03 10:00:00', 1),
-(1, 39.0, '2025-06-03 12:00:00', 0),
-(1, 53.4, '2025-06-03 14:00:00', NULL),
-(1, 56.1, '2025-06-03 16:00:00', NULL),
-(1, 46.5, '2025-06-04 08:00:00', 0),
-(1, 25.6, '2025-06-04 10:00:00', 1),
-(1, 35.3, '2025-06-04 12:00:00', 0),
-(1, 50.9, '2025-06-04 14:00:00', NULL),
-(1, 52.8, '2025-06-04 16:00:00', NULL),
-(1, 49.7, '2025-06-05 08:00:00', 0),
-(1, 28.1, '2025-06-05 10:00:00', 1),
-(1, 37.5, '2025-06-05 12:00:00', 0),
-(1, 53.9, '2025-06-05 14:00:00', NULL);
-
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
-(1, 28.0, '2025-01-01 08:00:00', 1),
-(1, 45.0, '2025-01-02 08:00:00', 0),
-(1, 52.0, '2025-01-03 08:00:00', NULL),
-(1, 28.0, '2025-01-04 08:00:00', 1),
-(1, 45.0, '2025-01-05 08:00:00', 0),
-(1, 52.0, '2025-01-06 08:00:00', NULL),
-(1, 28.0, '2025-01-07 08:00:00', 1),
-(1, 45.0, '2025-01-08 08:00:00', 0),
-(1, 52.0, '2025-01-09 08:00:00', NULL),
-(1, 28.0, '2025-01-10 08:00:00', 1),
-(1, 45.0, '2025-01-11 08:00:00', 0),
-(1, 52.0, '2025-01-12 08:00:00', NULL),
-(1, 28.0, '2025-01-13 08:00:00', 1),
-(1, 45.0, '2025-01-14 08:00:00', 0),
-(1, 52.0, '2025-01-15 08:00:00', NULL),
-(1, 28.0, '2025-01-16 08:00:00', 1),
-(1, 45.0, '2025-01-17 08:00:00', 0),
-(1, 52.0, '2025-01-18 08:00:00', NULL),
-(1, 28.0, '2025-01-19 08:00:00', 1),
-(1, 45.0, '2025-01-20 08:00:00', 0),
-(1, 52.0, '2025-01-21 08:00:00', NULL),
-(1, 28.0, '2025-01-22 08:00:00', 1),
-(1, 45.0, '2025-01-23 08:00:00', 0),
-(1, 52.0, '2025-01-24 08:00:00', NULL),
-(1, 28.0, '2025-01-25 08:00:00', 1),
-(1, 45.0, '2025-01-26 08:00:00', 0),
-(1, 52.0, '2025-01-27 08:00:00', NULL),
-(1, 28.0, '2025-01-28 08:00:00', 1),
-(1, 45.0, '2025-01-29 08:00:00', 0),
-(1, 52.0, '2025-01-30 08:00:00', NULL),
-(1, 28.0, '2025-01-31 08:00:00', 1),
-(1, 45.0, '2025-02-01 08:00:00', 0),
-(1, 52.0, '2025-02-02 08:00:00', NULL),
-(1, 28.0, '2025-02-03 08:00:00', 1),
-(1, 45.0, '2025-02-04 08:00:00', 0),
-(1, 52.0, '2025-02-05 08:00:00', NULL),
-(1, 28.0, '2025-02-06 08:00:00', 1),
-(1, 45.0, '2025-02-07 08:00:00', 0),
-(1, 52.0, '2025-02-08 08:00:00', NULL),
-(1, 28.0, '2025-02-09 08:00:00', 1),
-(1, 45.0, '2025-02-10 08:00:00', 0),
-(1, 52.0, '2025-02-11 08:00:00', NULL),
-(1, 28.0, '2025-02-12 08:00:00', 1),
-(1, 45.0, '2025-02-13 08:00:00', 0),
-(1, 52.0, '2025-02-14 08:00:00', NULL),
-(1, 28.0, '2025-02-15 08:00:00', 1),
-(1, 45.0, '2025-02-16 08:00:00', 0),
-(1, 52.0, '2025-02-17 08:00:00', NULL),
-(1, 28.0, '2025-02-18 08:00:00', 1),
-(1, 45.0, '2025-02-19 08:00:00', 0),
-(1, 52.0, '2025-02-20 08:00:00', NULL),
-(1, 28.0, '2025-02-21 08:00:00', 1),
-(1, 45.0, '2025-02-22 08:00:00', 0),
-(1, 52.0, '2025-02-23 08:00:00', NULL),
-(1, 28.0, '2025-02-24 08:00:00', 1),
-(1, 45.0, '2025-02-25 08:00:00', 0),
-(1, 52.0, '2025-02-26 08:00:00', NULL),
-(1, 28.0, '2025-02-27 08:00:00', 1),
-(1, 45.0, '2025-02-28 08:00:00', 0),
-(1, 52.0, '2025-03-01 08:00:00', NULL),
-(1, 28.0, '2025-03-02 08:00:00', 1),
-(1, 28.0, '2025-03-02 08:00:00', 1),
-(1, 45.0, '2025-03-03 08:00:00', 0),
-(1, 52.0, '2025-03-04 08:00:00', NULL),
-(1, 28.0, '2025-03-05 08:00:00', 1),
-(1, 45.0, '2025-03-06 08:00:00', 0),
-(1, 52.0, '2025-03-07 08:00:00', NULL),
-(1, 28.0, '2025-03-08 08:00:00', 1),
-(1, 45.0, '2025-03-09 08:00:00', 0),
-(1, 52.0, '2025-03-10 08:00:00', NULL),
-(1, 28.0, '2025-03-11 08:00:00', 1),
-(1, 45.0, '2025-03-12 08:00:00', 0),
-(1, 52.0, '2025-03-13 08:00:00', NULL),
-(1, 28.0, '2025-03-14 08:00:00', 1),
-(1, 45.0, '2025-03-15 08:00:00', 0),
-(1, 52.0, '2025-03-16 08:00:00', NULL),
-(1, 28.0, '2025-03-17 08:00:00', 1),
-(1, 45.0, '2025-03-18 08:00:00', 0),
-(1, 52.0, '2025-03-19 08:00:00', NULL),
-(1, 28.0, '2025-03-20 08:00:00', 1),
-(1, 45.0, '2025-03-21 08:00:00', 0),
-(1, 52.0, '2025-03-22 08:00:00', NULL),
-(1, 28.0, '2025-03-23 08:00:00', 1),
-(1, 45.0, '2025-03-24 08:00:00', 0),
-(1, 52.0, '2025-03-25 08:00:00', NULL),
-(1, 28.0, '2025-03-26 08:00:00', 1),
-(1, 45.0, '2025-03-27 08:00:00', 0),
-(1, 52.0, '2025-03-28 08:00:00', NULL),
-(1, 28.0, '2025-03-29 08:00:00', 1),
-(1, 45.0, '2025-03-30 08:00:00', 0),
-(1, 52.0, '2025-03-31 08:00:00', NULL),
-(1, 28.0, '2025-04-01 08:00:00', 1),
-(1, 45.0, '2025-04-02 08:00:00', 0),
-(1, 52.0, '2025-04-03 08:00:00', NULL),
-(1, 28.0, '2025-04-04 08:00:00', 1),
-(1, 45.0, '2025-04-05 08:00:00', 0),
-(1, 52.0, '2025-04-06 08:00:00', NULL),
-(1, 28.0, '2025-04-07 08:00:00', 1),
-(1, 45.0, '2025-04-08 08:00:00', 0),
-(1, 52.0, '2025-04-09 08:00:00', NULL),
-(1, 28.0, '2025-04-10 08:00:00', 1),
-(1, 45.0, '2025-04-11 08:00:00', 0),
-(1, 52.0, '2025-04-12 08:00:00', NULL),
-(1, 28.0, '2025-04-13 08:00:00', 1),
-(1, 45.0, '2025-04-14 08:00:00', 0),
-(1, 52.0, '2025-04-15 08:00:00', NULL),
-(1, 28.0, '2025-04-16 08:00:00', 1),
-(1, 45.0, '2025-04-17 08:00:00', 0),
-(1, 52.0, '2025-04-18 08:00:00', NULL),
-(1, 28.0, '2025-04-19 08:00:00', 1),
-(1, 45.0, '2025-04-20 08:00:00', 0),
-(1, 52.0, '2025-04-21 08:00:00', NULL),
-(1, 28.0, '2025-04-22 08:00:00', 1),
-(1, 45.0, '2025-04-23 08:00:00', 0),
-(1, 52.0, '2025-04-24 08:00:00', NULL),
-(1, 28.0, '2025-04-25 08:00:00', 1),
-(1, 45.0, '2025-04-26 08:00:00', 0),
-(1, 52.0, '2025-04-27 08:00:00', NULL),
-(1, 28.0, '2025-04-28 08:00:00', 1),
-(1, 45.0, '2025-04-29 08:00:00', 0),
-(1, 52.0, '2025-04-30 08:00:00', NULL);
-
-
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
-(2, 28.0, '2025-01-01 08:00:00', 1),
-(2, 45.0, '2025-01-02 08:00:00', 0),
-(2, 52.0, '2025-01-03 08:00:00', NULL),
-(2, 28.0, '2025-01-04 08:00:00', 1),
-(2, 45.0, '2025-01-05 08:00:00', 0),
-(2, 52.0, '2025-01-06 08:00:00', NULL),
-(2, 28.0, '2025-01-07 08:00:00', 1),
-(2, 45.0, '2025-01-08 08:00:00', 0),
-(2, 52.0, '2025-01-09 08:00:00', NULL),
-(2, 28.0, '2025-01-10 08:00:00', 1),
-(2, 45.0, '2025-01-11 08:00:00', 0),
-(2, 52.0, '2025-01-12 08:00:00', NULL),
-(2, 28.0, '2025-01-13 08:00:00', 1),
-(2, 45.0, '2025-01-14 08:00:00', 0),
-(2, 52.0, '2025-01-15 08:00:00', NULL),
-(2, 28.0, '2025-01-16 08:00:00', 1),
-(2, 45.0, '2025-01-17 08:00:00', 0),
-(2, 52.0, '2025-01-18 08:00:00', NULL),
-(2, 28.0, '2025-01-19 08:00:00', 1),
-(2, 45.0, '2025-01-20 08:00:00', 0),
-(2, 52.0, '2025-01-21 08:00:00', NULL),
-(2, 28.0, '2025-01-22 08:00:00', 1),
-(2, 45.0, '2025-01-23 08:00:00', 0),
-(2, 52.0, '2025-01-24 08:00:00', NULL),
-(2, 28.0, '2025-01-25 08:00:00', 1),
-(2, 45.0, '2025-01-26 08:00:00', 0),
-(2, 52.0, '2025-01-27 08:00:00', NULL),
-(2, 28.0, '2025-01-28 08:00:00', 1),
-(2, 45.0, '2025-01-29 08:00:00', 0),
-(2, 52.0, '2025-01-30 08:00:00', NULL),
-(2, 28.0, '2025-01-31 08:00:00', 1),
-(2, 45.0, '2025-02-01 08:00:00', 0),
-(2, 52.0, '2025-02-02 08:00:00', NULL),
-(2, 28.0, '2025-02-03 08:00:00', 1),
-(2, 45.0, '2025-02-04 08:00:00', 0),
-(2, 52.0, '2025-02-05 08:00:00', NULL),
-(2, 28.0, '2025-02-06 08:00:00', 1),
-(2, 45.0, '2025-02-07 08:00:00', 0),
-(2, 52.0, '2025-02-08 08:00:00', NULL),
-(2, 28.0, '2025-02-09 08:00:00', 1),
-(2, 45.0, '2025-02-10 08:00:00', 0),
-(2, 52.0, '2025-02-11 08:00:00', NULL),
-(2, 28.0, '2025-02-12 08:00:00', 1),
-(2, 45.0, '2025-02-13 08:00:00', 0),
-(2, 52.0, '2025-02-14 08:00:00', NULL),
-(2, 28.0, '2025-02-15 08:00:00', 1),
-(2, 45.0, '2025-02-16 08:00:00', 0),
-(2, 52.0, '2025-02-17 08:00:00', NULL),
-(2, 28.0, '2025-02-18 08:00:00', 1),
-(2, 45.0, '2025-02-19 08:00:00', 0),
-(2, 52.0, '2025-02-20 08:00:00', NULL),
-(2, 28.0, '2025-02-21 08:00:00', 1),
-(2, 45.0, '2025-02-22 08:00:00', 0),
-(2, 52.0, '2025-02-23 08:00:00', NULL),
-(2, 28.0, '2025-02-24 08:00:00', 1),
-(2, 45.0, '2025-02-25 08:00:00', 0),
-(2, 52.0, '2025-02-26 08:00:00', NULL),
-(2, 28.0, '2025-02-27 08:00:00', 1),
-(2, 45.0, '2025-02-28 08:00:00', 0),
-(2, 52.0, '2025-03-01 08:00:00', NULL),
-(2, 28.0, '2025-03-02 08:00:00', 1),
-(2, 28.0, '2025-03-02 08:00:00', 1),
-(2, 45.0, '2025-03-03 08:00:00', 0),
-(2, 52.0, '2025-03-04 08:00:00', NULL),
-(1, 28.0, '2025-03-05 08:00:00', 1),
-(2, 45.0, '2025-03-06 08:00:00', 0),
-(2, 52.0, '2025-03-07 08:00:00', NULL),
-(2, 28.0, '2025-03-08 08:00:00', 1),
-(2, 45.0, '2025-03-09 08:00:00', 0),
-(2, 52.0, '2025-03-10 08:00:00', NULL),
-(2, 28.0, '2025-03-11 08:00:00', 1),
-(2, 45.0, '2025-03-12 08:00:00', 0),
-(2, 52.0, '2025-03-13 08:00:00', NULL),
-(2, 28.0, '2025-03-14 08:00:00', 1),
-(2, 45.0, '2025-03-15 08:00:00', 0),
-(2, 52.0, '2025-03-16 08:00:00', NULL),
-(2, 28.0, '2025-03-17 08:00:00', 1),
-(2, 45.0, '2025-03-18 08:00:00', 0),
-(2, 52.0, '2025-03-19 08:00:00', NULL),
-(2, 28.0, '2025-03-20 08:00:00', 1),
-(2, 45.0, '2025-03-21 08:00:00', 0),
-(2, 52.0, '2025-03-22 08:00:00', NULL),
-(2, 28.0, '2025-03-23 08:00:00', 1),
-(2, 45.0, '2025-03-24 08:00:00', 0),
-(2, 52.0, '2025-03-25 08:00:00', NULL),
-(2, 28.0, '2025-03-26 08:00:00', 1),
-(2, 45.0, '2025-03-27 08:00:00', 0),
-(2, 52.0, '2025-03-28 08:00:00', NULL),
-(2, 28.0, '2025-03-29 08:00:00', 1),
-(2, 45.0, '2025-03-30 08:00:00', 0),
-(2, 52.0, '2025-03-31 08:00:00', NULL),
-(2, 28.0, '2025-04-01 08:00:00', 1),
-(2, 45.0, '2025-04-02 08:00:00', 0),
-(2, 52.0, '2025-04-03 08:00:00', NULL),
-(2, 28.0, '2025-04-04 08:00:00', 1),
-(2, 45.0, '2025-04-05 08:00:00', 0),
-(2, 52.0, '2025-04-06 08:00:00', NULL),
-(2, 28.0, '2025-04-07 08:00:00', 1),
-(2, 45.0, '2025-04-08 08:00:00', 0),
-(2, 52.0, '2025-04-09 08:00:00', NULL),
-(2, 28.0, '2025-04-10 08:00:00', 1),
-(2, 45.0, '2025-04-11 08:00:00', 0),
-(2, 52.0, '2025-04-12 08:00:00', NULL),
-(2, 28.0, '2025-04-13 08:00:00', 1),
-(2, 45.0, '2025-04-14 08:00:00', 0),
-(2, 52.0, '2025-04-15 08:00:00', NULL),
-(2, 28.0, '2025-04-16 08:00:00', 1),
-(2, 45.0, '2025-04-17 08:00:00', 0),
-(2, 52.0, '2025-04-18 08:00:00', NULL),
-(2, 28.0, '2025-04-19 08:00:00', 1),
-(2, 45.0, '2025-04-20 08:00:00', 0),
-(2, 52.0, '2025-04-21 08:00:00', NULL),
-(2, 28.0, '2025-04-22 08:00:00', 1),
-(2, 45.0, '2025-04-23 08:00:00', 0),
-(2, 52.0, '2025-04-24 08:00:00', NULL),
-(2, 28.0, '2025-04-25 08:00:00', 1),
-(2, 45.0, '2025-04-26 08:00:00', 0),
-(2, 52.0, '2025-04-27 08:00:00', NULL),
-(2, 28.0, '2025-04-28 08:00:00', 1),
-(2, 45.0, '2025-04-29 08:00:00', 0),
-(2, 52.0, '2025-04-30 08:00:00', NULL);
-
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES
-(1, 52.0, '2025-06-07 01:00:00', NULL),
-(1, 28.0, '2025-06-07 02:00:00', 1),
-(1, 45.0, '2025-06-07 03:00:00', 0),
-(1, 52.0, '2025-06-07 04:00:00', NULL),
-(1, 28.0, '2025-06-07 05:00:00', 1),
-(1, 45.0, '2025-06-07 06:00:00', 0),
-(1, 52.0, '2025-06-07 07:00:00', NULL),
-(1, 28.0, '2025-06-07 08:00:00', 1),
-(1, 45.0, '2025-06-07 09:00:00', 0),
-(1, 52.0, '2025-06-07 10:00:00', NULL),
-(1, 28.0, '2025-06-07 11:00:00', 1),
-(1, 45.0, '2025-06-07 12:00:00', 0),
-(1, 52.0, '2025-06-07 13:00:00', NULL),
-(1, 28.0, '2025-06-07 14:00:00', 1),
-(1, 45.0, '2025-06-07 15:00:00', 0),
-(1, 52.0, '2025-06-07 16:00:00', NULL),
-(1, 28.0, '2025-06-07 17:00:00', 1),
-(1, 45.0, '2025-06-07 18:00:00', 0),
-(2, 52.0, '2025-06-09 19:00:00', NULL),
-(2, 28.0, '2025-06-09 20:00:00', 1),
-(2, 45.0, '2025-06-09 21:00:00', 0),
-(1, 52.0, '2025-06-09 22:00:00', NULL),
-(1, 28.0, '2025-06-09 23:00:00', 1),
-(1, 28.0, '2025-06-09 00:00:00', 1);
-
-select * from usuario;
- select m.id_sensor,s.identificador,
-HOUR(m.data_hora) AS hora_do_dia,
-avg(m.umidade)
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-inner join unidade as u on u.id = s.id_unidade
-where u.id = 1 and data_hora >= DATE_SUB(now(), INTERVAL 24 hour)
-group by m.id_sensor, hora_do_dia
-order by m.id_sensor;
- 
-
- select count(alerta) as alerta,id_sensor as sensor
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-inner join unidade as u on u.id = s.id_unidade
-where u.id = 1
-group by id_sensor;
-
- select truncate(avg(m.umidade),1) as umidade,extract(week from m.data_hora) as semana
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-inner join unidade as u on u.id = s.id_unidade
-where u.id = 1
-group by semana
-order by semana desc
-limit 4;
+delete from usuario;
+delete from medicao;
+delete from empresa;
+delete from unidade;
+delete from unidade_usuario;
+delete from sen sor;
 
 
 
-SELECT s.identificador,
-m.umidade,
-DATE_FORMAT(m.data_hora, '%H:%i:%s  %d/%m/%Y') as data,m.data_hora
-from  medicao as m
-inner join sensor as s on s.id = m.id_sensor
-where id_unidade = 1  and data_hora >= DATE_SUB(now(), INTERVAL 48 hour) and alerta = (0 or 1)
-order by data_hora desc
-limit 28;
+desc empresa;
+desc usuario;
+desc unidade;
+desc unidade_usuario;
+desc sensor;
 
-select s.identificador, m.*
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-where s.id_unidade = 1 
-order by id desc
-limit 1000;
+insert into empresa
+value ('1','Spagro','66.224.085/0001-08','1139887493','1');
+      
+insert into unidade
+value (1,'Unidade Agrícola Santa Vitória','3124567890123','1'),
+       (2,'Unidade Fazenda Boa Esperança','3559876543210','1'),
+		(3,'Unidade Sítio Recanto Verde','4212345678901','1');
+        
+insert into usuario value
+('1','Fernando Brandão','fernando@email.com','Sptech#2024','admin');
 
-select * from usuario;
 
-select avg(m.umidade) as umidade,extract(month from m.data_hora) as mes 
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-inner join unidade as u on u.id = s.id_unidade
-where u.id = 1
-group by mes
-order by mes desc
-limit 6;
 
-select avg(m.umidade) as umidade,extract(week from m.data_hora) as semana
-from medicao as m
-inner join sensor as s on s.id = m.id_sensor
-inner join unidade as u on u.id = s.id_unidade
-where u.id = 1
-group by semana
-order by semana desc
-limit 4;
-
+insert into sensor (id_unidade,identificador)
+value  (1,'A1'),
+		(1,'A2'),
+        (1,'A3'),
+		(1,'A4'),
+        (1,'A5');
+        
+        
+        update sensor set ativo = 0 where id_unidade = 1;
+         update sensor set ativo = 0 where id_unidade = 2;
+         update sensor set ativo = 0 where id_unidade = 3;
+         select * from sensor ; 
+         
+        insert into sensor (id_unidade,identificador)
+value  (3,'C1'),
+		(3,'C2'),
+        (3,'C3'),
+		(3,'C4'),
+        (3,'C5');
+        
+        insert into sensor (id_unidade,identificador)
+value  (2,'B1'),
+		(2,'B2'),
+        (2,'B3'),
+		(2,'B4'),
+        (2,'B5');
+        
+       
+       
 desc medicao;
-select count(alerta),id_sensor
+select * from sensor;
+select * from medicao;
+
+
+
+insert into medicao(id_sensor,umidade,data_hora,alerta)
+value	(6,'35.14','2025-6-07 10:00',0),
+		(7,'35.14','2025-6-03 10:00',0),
+		(8,'45.34','2025-6-27 10:00',null),
+		(9,'34.23','2025-6-18 10:00',0),
+		(10,'42.24','2025-6-01 10:00',null);
+        
+        update medicao set umidade = 45.34 where umidade = 53.43;
+
+  select count(m.alerta) as alerta,s.identificador as sensor
 from medicao as m
 inner join sensor as s on s.id = m.id_sensor
 inner join unidade as u on u.id = s.id_unidade
-where u.id = 1
+where u.id = 1 and data_hora >= DATE_SUB(now(), INTERVAL 1 month ) and alerta = 1 
 group by id_sensor;
 
 
-select avg(m.umidade) as umidade,extract(hour from m.data_hora) as hora 
+	(6,'55.14','2025-1-14 10:00',0),
+	(6,'52.40','2025-2-14 10:00',0),
+	(6,'49.30','2025-3-14 10:00',0),
+    (6,'45.20','2025-4-14 10:00',0),
+	(6,'40.13','2025-5-14 10:00',0);
+    
+    
+insert into medicao(id_sensor,umidade,data_hora,alerta)
+value	(6,'25.14','2025-6-14 15:00',1),
+		(7,'32.14','2025-6-14 15:00',0),
+		(8,'44.34','2025-6-14 15:00',null),
+		(9,'23.23','2025-6-14 15:00',1),
+		(10,'22.24','2025-6-14 15:00',1); 	
+
+insert into medicao(id_sensor,umidade,data_hora,alerta)
+value	(6,'25.14','2025-6-14 13:20',1),
+		(6,'32.14','2025-6-14 15:21',0),
+		(6,'44.34','2025-6-14 15:22',null),
+		(6,'23.23','2025-6-14 15:23',1),
+		(6,'22.24','2025-6-14 15:24',1); 
+	
+
+insert into medicao(id_sensor,umidade,data_hora,alerta)
+value	(10,'21.13','2025-6-14 13:20',1),
+		(10,'35.64','2025-6-14 15:21',0),
+		(10,'45.23','2025-6-14 15:22',null),
+		(10,'13.10','2025-6-14 15:23',1),
+		(10,'22.24','2025-6-14 15:24',1); 
+        
+        select * from medicao where umidade  = 25.14 ;
+        
+        
+        
+insert into medicao(id_sensor,umidade,data_hora,alerta)
+value	(12,'44.64','2025-1-10 10:00',null),
+		(12,'42.24','2025-2-10 10:00',null),
+		(12,'41.74','2025-3-10 10:00',null),
+		(12,'42.63','2025-4-10 10:00',null),
+		(12,'40.24','2025-5-10 10:00',null),
+        (12,'38.94','2025-6-01 10:00',0),
+        (12,'37.42','2025-6-08 10:00',0),
+        (12,'35.56','2025-6-15 10:00',0),
+        (12,'36.34','2025-6-21 10:00',0);
+
+        
+        delete from medicao where id_sensor = 17;
+insert into medicao(id_sensor,umidade,data_hora,alerta)
+value	(17,'65.64','2025-1-10 10:00',null),
+		(17,'63.24','2025-2-10 10:00',null),
+		(17,'61.74','2025-3-10 10:00',null),
+		(17,'53.63','2025-4-10 10:00',null),
+		(17,'67.24','2025-5-10 10:00',null),
+        (17,'68.94','2025-6-01 10:00',null),
+        (17,'65.42','2025-6-08 10:00',null),
+        (17,'63.56','2025-6-15 10:00',null),
+        (17,'60.34','2025-6-21 10:00',null);
+        
+                delete from medicao where id_sensor = 17;
+insert into medicao(id_sensor,umidade,data_hora,alerta)
+value   (19,'68.94','2025-6-01 10:00',null),
+        (19,'40.42','2025-6-08 10:00',null),
+        (20,'63.56','2025-6-15 15:00',null),
+        (19,'35.34','2025-6-21 15:00',0),
+         (18,'68.94','2025-6-01 15:00',null),
+        (17,'65.42','2025-6-08 14:00',null),
+        (17,'63.56','2025-6-15 13:00',null),
+        (20,'40.00','2025-6-21 12:00',0),
+         (19,'68.94','2025-6-01 15:00',null),
+        (19,'65.42','2025-6-08 10:00',null),
+        (20,'39.56','2025-6-15 16:00',0),
+        (20,'60.34','2025-6-21 16:00',null),
+         (19,'68.94','2025-6-01 12:00',null),
+        (19,'65.42','2025-6-08 12:00',null),
+        (20,'39.56','2025-6-15 08:30',0),
+        (20,'34.34','2025-6-21 10:30',0),
+        (16,'39.56','2025-6-14 16:00',0),
+        (16,'60.34','2025-6-21 16:00',null),
+         (16,'68.94','2025-6-01 12:00',null),
+        (16,'65.42','2025-6-08 12:00',null),
+        (16,'39.56','2025-6-14 08:30',0),
+        (16,'34.34','2025-6-14 10:30',0);
+        
+        
+           select count(m.alerta) as alerta,s.identificador as sensor
 from medicao as m
 inner join sensor as s on s.id = m.id_sensor
 inner join unidade as u on u.id = s.id_unidade
-where s.id = 1
-group by hora
-order by hora desc
-limit 24;
+where u.id = 2 and data_hora >= DATE_SUB(now(), INTERVAL 1 month ) and alerta = 1 or
+ u.id = 2 and data_hora >= DATE_SUB(now(), INTERVAL 1 month ) and alerta = 0
+group by id_sensor;
 
-select * from usuario;
+
+-- Sensor ID: 6
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 45.23, '2025-06-14 10:05:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 38.76, '2025-06-14 10:06:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 25.10, '2025-06-14 10:07:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 55.99, '2025-06-14 10:08:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 32.50, '2025-06-14 10:09:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 60.01, '2025-06-14 10:10:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 29.80, '2025-06-14 10:11:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 41.22, '2025-06-14 10:12:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 35.67, '2025-06-14 10:13:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 70.00, '2025-06-14 10:14:00', NULL);
+
+-- Sensor ID: 7
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 50.00, '2025-06-14 10:15:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 39.12, '2025-06-14 10:16:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 28.50, '2025-06-14 10:17:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 65.43, '2025-06-14 10:18:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 30.15, '2025-06-14 10:19:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 42.88, '2025-06-14 10:20:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 22.00, '2025-06-14 10:21:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 58.76, '2025-06-14 10:22:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 37.90, '2025-06-14 10:23:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 75.20, '2025-06-14 10:24:00', NULL);
+
+-- Sensor ID: 8
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 48.10, '2025-06-14 10:25:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 36.55, '2025-06-14 10:26:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 27.05, '2025-06-14 10:27:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 52.33, '2025-06-14 10:28:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 34.00, '2025-06-14 10:29:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 68.91, '2025-06-14 10:30:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 21.50, '2025-06-14 10:31:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 40.00, '2025-06-14 10:32:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 31.78, '2025-06-14 10:33:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 62.45, '2025-06-14 10:34:00', NULL);
+
+-- Sensor ID: 9
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 58.20, '2025-06-14 10:35:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 30.00, '2025-06-14 10:36:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 29.99, '2025-06-14 10:37:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 63.14, '2025-06-14 10:38:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 39.50, '2025-06-14 10:39:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 47.01, '2025-06-14 10:40:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 24.18, '2025-06-14 10:41:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 51.66, '2025-06-14 10:42:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 33.20, '2025-06-14 10:43:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 71.30, '2025-06-14 10:44:00', NULL);
+
+-- Sensor ID: 10
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 41.00, '2025-06-14 10:45:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 31.00, '2025-06-14 10:46:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 20.00, '2025-06-14 10:47:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 59.87, '2025-06-14 10:48:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 39.99, '2025-06-14 10:49:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 66.22, '2025-06-14 10:50:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 26.70, '2025-06-14 10:51:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 44.50, '2025-06-14 10:52:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 35.05, '2025-06-14 10:53:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 72.80, '2025-06-14 10:54:00', NULL);
+
+-- Sensor ID: 11
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 49.30, '2025-06-14 10:55:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 37.10, '2025-06-14 10:56:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 23.45, '2025-06-14 10:57:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 54.67, '2025-06-14 10:58:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 38.00, '2025-06-14 10:59:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 61.11, '2025-06-14 11:00:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 28.00, '2025-06-14 11:01:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 46.50, '2025-06-14 11:02:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 30.50, '2025-06-14 11:03:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 73.99, '2025-06-14 11:04:00', NULL);
+
+-- Sensor ID: 12
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 53.00, '2025-06-14 11:05:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 34.80, '2025-06-14 11:06:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 26.00, '2025-06-14 11:07:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 60.50, '2025-06-14 11:08:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 36.00, '2025-06-14 11:09:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 43.10, '2025-06-14 11:10:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 29.00, '2025-06-14 11:11:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 57.25, '2025-06-14 11:12:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 32.10, '2025-06-14 11:13:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 69.00, '2025-06-14 11:14:00', NULL);
+
+-- Sensor ID: 13
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 40.50, '2025-06-14 11:15:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 30.01, '2025-06-14 11:16:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 20.99, '2025-06-14 11:17:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 56.78, '2025-06-14 11:18:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 39.00, '2025-06-14 11:19:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 64.32, '2025-06-14 11:20:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 25.50, '2025-06-14 11:21:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 47.90, '2025-06-14 11:22:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 33.70, '2025-06-14 11:23:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 70.50, '2025-06-14 11:24:00', NULL);
+
+-- Sensor ID: 14
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 51.20, '2025-06-14 11:25:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 38.99, '2025-06-14 11:26:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 24.50, '2025-06-14 11:27:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 62.00, '2025-06-14 11:28:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 31.25, '2025-06-14 11:29:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 45.00, '2025-06-14 11:30:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 27.80, '2025-06-14 11:31:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 59.10, '2025-06-14 11:32:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 35.90, '2025-06-14 11:33:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 67.50, '2025-06-14 11:34:00', NULL);
+
+-- Sensor ID: 15
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 43.70, '2025-06-14 11:35:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 30.80, '2025-06-14 11:36:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 22.10, '2025-06-14 11:37:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 50.05, '2025-06-14 11:38:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 37.00, '2025-06-14 11:39:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 63.88, '2025-06-14 11:40:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 29.50, '2025-06-14 11:41:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 48.00, '2025-06-14 11:42:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 34.40, '2025-06-14 11:43:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 71.00, '2025-06-14 11:44:00', NULL);
+
+
+
+-- Sensor ID: 16
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 54.50, '2025-06-14 11:45:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 61.33, '2025-06-14 11:48:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 42.00, '2025-06-14 11:50:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 55.70, '2025-06-14 11:52:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 68.10, '2025-06-14 11:54:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 31.90, '2025-06-14 11:46:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 28.01, '2025-06-14 11:47:00', 1); -- Alerta 1
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 36.80, '2025-06-14 11:49:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 21.00, '2025-06-14 11:51:00', 1); -- Alerta 1
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 33.15, '2025-06-14 11:53:00', 0); -- Alerta 0
+
+-- Sensor ID: 17
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 46.10, '2025-06-14 11:55:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 58.00, '2025-06-14 11:58:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 65.00, '2025-06-14 12:00:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 52.40, '2025-06-14 12:02:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 74.10, '2025-06-14 12:04:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 39.50, '2025-06-14 11:56:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 29.00, '2025-06-14 11:57:00', 1); -- Alerta 1
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 30.10, '2025-06-14 11:59:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 24.90, '2025-06-14 12:01:00', 1); -- Alerta 1
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 37.50, '2025-06-14 12:03:00', 0); -- Alerta 0
+
+-- Sensor ID: 18
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 44.00, '2025-06-14 12:05:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 57.00, '2025-06-14 12:08:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 60.00, '2025-06-14 12:10:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 49.00, '2025-06-14 12:12:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 70.00, '2025-06-14 12:14:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 32.80, '2025-06-14 12:06:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 25.00, '2025-06-14 12:07:00', 1); -- Alerta 1
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 38.50, '2025-06-14 12:09:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 26.50, '2025-06-14 12:11:00', 1); -- Alerta 1
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 34.00, '2025-06-14 12:13:00', 0); -- Alerta 0
+
+-- Sensor ID: 19
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 42.50, '2025-06-14 12:15:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 53.00, '2025-06-14 12:18:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 62.00, '2025-06-14 12:20:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 47.00, '2025-06-14 12:22:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 75.00, '2025-06-14 12:24:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 30.50, '2025-06-14 12:16:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 21.70, '2025-06-14 12:17:00', 1); -- Alerta 1
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 39.00, '2025-06-14 12:19:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 28.50, '2025-06-14 12:21:00', 1); -- Alerta 1
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 36.00, '2025-06-14 12:23:00', 0); -- Alerta 0
+
+-- Sensor ID: 20
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 50.50, '2025-06-14 12:25:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 64.00, '2025-06-14 12:28:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 48.50, '2025-06-14 12:30:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 56.00, '2025-06-14 12:32:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 69.50, '2025-06-14 12:34:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 37.00, '2025-06-14 12:26:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 23.00, '2025-06-14 12:27:00', 1); -- Alerta 1
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 31.50, '2025-06-14 12:29:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 29.80, '2025-06-14 12:31:00', 1); -- Alerta 1
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 35.50, '2025-06-14 12:33:00', 0); -- Alerta 0
+
+
+select * from sensor where ativo = 1;
+
+delete from medicao where id_sensor = 20;
+
+update sensor set ativo = 1 where ativo = 0;
