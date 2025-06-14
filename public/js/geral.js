@@ -162,7 +162,7 @@ function criarElementoCartao(unidade) {
 function definirCorPorUmidade(valor) {
     if (valor == null) return 'gray';
     if (valor > 50) return 'green';
-    if (valor > 30) return 'yellow';
+    if (valor > 30) return 'orange';
     return 'red';
 }
 
