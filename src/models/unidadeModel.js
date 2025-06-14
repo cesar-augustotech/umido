@@ -184,23 +184,24 @@ async function buscarIndicadoresPorUnidade(idUsuario, idUnidade) {
           AND u.id = ${idUnidade}
       ) AS quantidade_alerta,
 
-      (SELECT ROUND(AVG(ultimas.umidade), 2)
-         FROM (
-           SELECT m.umidade
-           FROM sensor s
-           JOIN unidade u ON s.id_unidade = u.id
-           JOIN unidade_usuario uu ON uu.id_unidade = u.id
-           JOIN medicao m ON m.id_sensor = s.id
-           WHERE uu.id_usuario = ${idUsuario}
-             AND u.id = ${idUnidade}
-             AND s.ativo = true
-             AND m.id = (
-               SELECT MAX(m2.id)
-               FROM medicao m2
-               WHERE m2.id_sensor = s.id
-             )
-         ) AS ultimas
-      ) AS umidade_media,
+      (
+  SELECT ROUND(MIN(ultimas.umidade), 2) AS umidade_minima
+  FROM (
+    SELECT m.umidade
+    FROM sensor s
+    JOIN unidade u ON s.id_unidade = u.id
+    JOIN unidade_usuario uu ON uu.id_unidade = u.id
+    JOIN medicao m ON m.id_sensor = s.id
+    WHERE uu.id_usuario = ${idUsuario}
+      AND u.id = ${idUnidade}
+      AND s.ativo = TRUE
+      AND m.id = (
+        SELECT MAX(m2.id)
+        FROM medicao m2
+        WHERE m2.id_sensor = s.id
+      )
+  ) AS ultimas
+) AS umidade_media,
 
       (SELECT COUNT(*)
          FROM medicao m

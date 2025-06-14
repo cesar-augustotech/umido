@@ -258,8 +258,7 @@ async function criar_kpis(idUnidadeSelecionada) {
         const response = await fetch(`/unidades/${idUnidadeSelecionada}/indicadores/${idUsuario}`);
         const dados = await response.json();
         let umidade_media = dados.umidade_media
-        if (typeof umidade_media != "number")
-            umidade_media = 0
+       
         let dadosIndicadores = [
             [umidade_media, "Minima medição Atual", "(Tempo real)", "div_media"],
             [dados.quantidade_alerta, "incidentes", "(Mês atual)", "div_alerta"],
@@ -527,13 +526,15 @@ function select_unidade() {
     graficoUmidadeMedia?.destroy()
 
 
-
+    console.log("Unidade selecionada:", idUnidadeSelecionada);
     buscarQuantidadeDeAlertas(idUnidadeSelecionada)
     buscarUmidadePorSensor(idUnidadeSelecionada)
     buscarUmidadeMediaUltimasSemanas(idUnidadeSelecionada)
     buscarUmidadeMediaUnidade(idUnidadeSelecionada)
     buscarListaAlertas(idUnidadeSelecionada)
     criar_kpis(idUnidadeSelecionada)
+        buscarListaAlertas(idUnidadeSelecionada)
+
 
 }
 
@@ -551,6 +552,7 @@ buscarQuantidadeDeAlertas(idUnidade)
 buscarUmidadePorSensor(idUnidade)
 buscarUmidadeMediaUltimasSemanas(idUnidade)
 buscarUmidadeMediaUnidade(idUnidade)
+buscarListaAlertas(idUnidade)
 let ultima = ""
 let hora = ""
 setInterval(async () => {
@@ -567,8 +569,7 @@ setInterval(async () => {
         ultima = res[0].umidade
         data = res[0].data_hora
         umidade_sensor.innerHTML = ultima
-        div_media.innerHTML = ultima
-        document.querySelector("#div_media").innerHTML = ultima
+      
         if (res[0].alerta == "1" || res[0].alerta == 1) {
             let valor = Number(div_alerta.innerHTML) + 1
             div_alerta.innerHTML=valor
@@ -577,7 +578,7 @@ setInterval(async () => {
     }
 }, 1000)
 setInterval(() => {
-    buscarListaAlertas(idUnidade)
+  
 }, 1000)
 setTimeout(() => {
     if (id >= 0 && id) {
