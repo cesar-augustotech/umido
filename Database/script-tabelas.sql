@@ -69,7 +69,7 @@ delete from medicao;
 delete from empresa;
 delete from unidade;
 delete from unidade_usuario;
-delete from sen sor;
+delete from sensor;
 
 
 
