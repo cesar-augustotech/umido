@@ -55,9 +55,15 @@ function buscarUmidadePorSensor(idUnidade) {
                 response.json().then(function (resposta) {
                     let sensores = [];
                     lista_sensores.innerHTML = "";
-
+                    let minimo = {
+                        id: 0,
+                        medicao: 0
+                    }
                     resposta.forEach(u => {
-
+                        if (minimo.id == 0 || parseFloat(u.umidade) < minimo) {
+                            minimo.id = u.id
+                            minimo = parseFloat(u.umidade)
+                        }
                         if (!sensores.includes(u.identificador)) {
 
                             const pendente = !u.data_hora || u.umidade == null;
@@ -81,6 +87,9 @@ function buscarUmidadePorSensor(idUnidade) {
                             dadosSensores[u.id_sensor].medicoes.push({ data: u.data_hora, medicao: u.umidade, status: u.alerta });
                         }
                     });
+                    setTimeout(() => {
+                        div_media.innerHTML = minimo
+                    }, 1000)
                 });
             }
         });
@@ -258,7 +267,7 @@ async function criar_kpis(idUnidadeSelecionada) {
         const response = await fetch(`/unidades/${idUnidadeSelecionada}/indicadores/${idUsuario}`);
         const dados = await response.json();
         let umidade_media = dados.umidade_media
-       
+
         let dadosIndicadores = [
             [umidade_media, "Minima medição Atual", "(Tempo real)", "div_media"],
             [dados.quantidade_alerta, "incidentes", "(Mês atual)", "div_alerta"],
@@ -516,6 +525,7 @@ function botao_abrir_fechar_menu() {
 }
 
 function select_unidade() {
+    idUnidade = selecionar_unidade.value
     const select = document.getElementById("selecionar_unidade");
     idUnidadeSelecionada = select.value;
 
@@ -533,7 +543,7 @@ function select_unidade() {
     buscarUmidadeMediaUnidade(idUnidadeSelecionada)
     buscarListaAlertas(idUnidadeSelecionada)
     criar_kpis(idUnidadeSelecionada)
-        buscarListaAlertas(idUnidadeSelecionada)
+    buscarListaAlertas(idUnidadeSelecionada)
 
 
 }
@@ -556,29 +566,51 @@ buscarListaAlertas(idUnidade)
 let ultima = ""
 let hora = ""
 setInterval(async () => {
-    let res = await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}/1`, { cache: 'no-store' })
-    res = await res.json()
-    if (res[0].umidade != ultima || res[0].data_hora != data) {
-        try {
-            window.graficoHistoricoSensor.data.labels.shift();
-            window.graficoHistoricoSensor.data.datasets[0].data.shift();
-            window.graficoHistoricoSensor.data.labels.push(res[0].data_hora.split("T")[1].replace(".000Z", ""));
-            window.graficoHistoricoSensor.data.datasets[0].data.push(parseFloat(res[0].umidade));
-            window.graficoHistoricoSensor.update();
-        } catch (e) { }
-        ultima = res[0].umidade
-        data = res[0].data_hora
-        umidade_sensor.innerHTML = ultima
-      
-        if (res[0].alerta == "1" || res[0].alerta == 1) {
-            let valor = Number(div_alerta.innerHTML) + 1
-            div_alerta.innerHTML=valor
-            alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`)
+    try {
+        let res = await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}/1`, { cache: 'no-store' })
+        res = await res.json()
+        if (res[0].umidade != ultima || res[0].data_hora != data) {
+            try {
+                window.graficoHistoricoSensor.data.labels.shift();
+                window.graficoHistoricoSensor.data.datasets[0].data.shift();
+                window.graficoHistoricoSensor.data.labels.push(res[0].data_hora.split("T")[1].replace(".000Z", ""));
+                window.graficoHistoricoSensor.data.datasets[0].data.push(parseFloat(res[0].umidade));
+                window.graficoHistoricoSensor.update();
+            } catch (e) { }
+            ultima = res[0].umidade
+            data = res[0].data_hora
+            umidade_sensor.innerHTML = ultima
+
+            if (res[0].alerta == "1" || res[0].alerta == 1) {
+                let valor = Number(div_alerta.innerHTML) + 1
+                div_alerta.innerHTML = valor
+                alert(`A unidade ${idUnidade} tem incidente no área ${res[0].identificador}`)
+            }
         }
-    }
+    } catch (e) { }
 }, 1000)
-setInterval(() => {
-  
+setInterval(async () => {
+    await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}`, { cache: 'no-store' })
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    let minimo = {
+                        id: 0,
+                        medicao: 0,
+                        identificador: ""
+                    }
+                    resposta.forEach(u => {
+                        if (minimo.id == 0 || parseFloat(u.umidade) < minimo.medicao) {
+                            minimo.id = u.id
+                            minimo.medicao = parseFloat(u.umidade)
+                            minimo.identificador = u.identificador
+                        }
+                    });
+                    div_media.innerHTML = minimo.medicao
+                });
+            }
+        });
+
 }, 1000)
 setTimeout(() => {
     if (id >= 0 && id) {
