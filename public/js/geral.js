@@ -171,7 +171,7 @@ function definirCorPorUmidade(umidade) {
 // ======= Atualização em tempo real sincronizada =======
 async function atualizarDashboard() {
   
-    await atualizarListaDeAlertas();
+   
 }
 
 
@@ -266,35 +266,7 @@ async function montarListaDeAlertas() {
     }
 }
 
-async function atualizarListaDeAlertas() {
-    try {
-        const resposta = await fetch(`/unidades/alertas/${usuarioId}`);
-        const alertas = await resposta.json();
-        let linhasTabela = '';
 
-        if (alertas.length === 0) {
-            linhasTabela = '<tr><td colspan="4">Nenhum alerta nas últimas 24h</td></tr>';
-        } else {
-            for (let i = 0; i < alertas.length; i++) {
-                const alerta = alertas[i];
-                linhasTabela += `
-                    <tr>
-                        <td>${alerta.unidade_nome}</td>
-                        <td>${alerta.sensor_nome}</td>
-                        <td>${alerta.umidade}%</td>
-                        <td>${new Date(alerta.data_hora).toLocaleString()}</td>
-                    </tr>`;
-            }
-        }
-
-        const tbody = document.getElementById('tbody_alertas');
-        if (tbody) {
-            tbody.innerHTML = linhasTabela;
-        }
-    } catch (erro) {
-        console.error('Erro ao atualizar lista de alertas:', erro);
-    }
-}
 
 // ======= Ações =======
 function abrirRelatorioDaUnidade(idUnidade) {
