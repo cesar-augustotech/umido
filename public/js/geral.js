@@ -159,11 +159,13 @@ function criarElementoCartao(unidade) {
     areaUnidadesDisplay.appendChild(elementoCartao);
 }
 
-function definirCorPorUmidade(valor) {
-    if (valor == null) return 'gray';
-    if (valor > 50) return 'green';
-    if (valor > 30) return 'orange';
-    return 'red';
+function corPorUmidade(umidade) {
+    if (umidade === null || umidade === undefined || isNaN(umidade)) {
+        return 'gray'; 
+    }
+    if (umidade < 30) return 'red';
+    if (umidade < 40) return 'orange';
+    return 'green';
 }
 
 // ======= Atualização em tempo real sincronizada =======
