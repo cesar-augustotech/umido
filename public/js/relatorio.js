@@ -543,7 +543,7 @@ function select_unidade() {
     buscarUmidadeMediaUnidade(idUnidadeSelecionada)
     buscarListaAlertas(idUnidadeSelecionada)
     criar_kpis(idUnidadeSelecionada)
-    buscarListaAlertas(idUnidadeSelecionada)
+    
 
 
 }
