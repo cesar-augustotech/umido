@@ -31,7 +31,7 @@ async function inicializarDashboard() {
 
     setInterval(() => {
         atualizarDashboard();
-    }, 10000);
+    }, 1000);
 }
 
 // ======= Menu =======
@@ -184,6 +184,34 @@ async function atualizarUmidadesDasUnidades() {
             const sensorAtual = unidadeAtual.sensores[indiceSensor];
             sensorAtual.ultimaMedida = await buscarUltimaMedidaDoSensor(sensorAtual.id);
         }
+        await fetch(`/relatorios/buscarUmidadePorSensor/${unidadeAtual.id}`, { cache: 'no-store' })
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        let minimo = {
+                            id: 0,
+                            medicao: 0,
+                            identificador: ""
+                        }
+                        resposta.forEach(u => {
+                            if (minimo.id == 0 || parseFloat(u.umidade) < minimo.medicao) {
+                                minimo.id = u.id
+                                minimo.medicao = parseFloat(u.umidade)
+                                minimo.identificador = u.identificador
+                            }
+                        });
+                        const spanUmidade = document.getElementById(`medicao_${unidadeAtual.id}`);
+                        if (spanUmidade) {
+                            const textoUmidade = (minimo.medicao != null)
+                                ? minimo.medicao + '%'
+                                : 'Sem dados';
+                            spanUmidade.textContent = textoUmidade;
+                            spanUmidade.style.color = definirCorPorUmidade(unidadeAtual.id);
+                        }
+                    });
+                }
+            });
+        /*
         calcularMenorUmidadeDaUnidade(unidadeAtual);
 
         const spanUmidade = document.getElementById(`medicao_${unidadeAtual.id}`);
@@ -194,6 +222,7 @@ async function atualizarUmidadesDasUnidades() {
             spanUmidade.textContent = textoUmidade;
             spanUmidade.style.color = definirCorPorUmidade(unidadeAtual.menorUmidade);
         }
+        */
     }
 
     listaUnidades = listaUnidadesAtualizada;

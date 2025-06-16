@@ -269,7 +269,7 @@ async function criar_kpis(idUnidadeSelecionada) {
         let umidade_media = dados.umidade_media
 
         let dadosIndicadores = [
-            [umidade_media, "Minima medição Atual", "(Tempo real)", "div_media"],
+            [umidade_media, "Minima medição Atual", "(DIA)", "div_media"],
             [dados.quantidade_alerta, "incidentes", "(Mês atual)", "div_alerta"],
             [dados.sensores_desativados, "sensores desativados", "", "div_sensor"],
             [dados.hora_atualizacao, "", "última atualização", "div_hora"]
