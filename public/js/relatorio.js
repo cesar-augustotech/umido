@@ -87,9 +87,11 @@ function buscarUmidadePorSensor(idUnidade) {
                             dadosSensores[u.id_sensor].medicoes.push({ data: u.data_hora, medicao: u.umidade, status: u.alerta });
                         }
                     });
+                    /*
                     setTimeout(() => {
                         div_media.innerHTML = minimo
                     }, 1000)
+                    */
                 });
             }
         });
@@ -269,7 +271,7 @@ async function criar_kpis(idUnidadeSelecionada) {
         let umidade_media = dados.umidade_media
 
         let dadosIndicadores = [
-            [umidade_media, "Minima medição Atual", "DIA", "div_media"],
+            [0, "Minima medição Atual", "DIA", "div_media"],
             [dados.quantidade_alerta, "incidentes", "(Mês atual)", "div_alerta"],
             [dados.sensores_desativados, "sensores desativados", "", "div_sensor"],
             [dados.hora_atualizacao, "", "última atualização", "div_hora"]
@@ -412,7 +414,7 @@ function mostrar_modal_sensor(posicao) {
     modal.style.display = 'block';
     let horas = []
     let dados_grafico = []
-    for (let i = 1; i < 11; i++) {
+    for (let i = 1; i < 10; i++) {
         let pre_data = dados.medicoes[dados.medicoes.length - i].data.split("T")[1].replace(".000Z", "")
         dados_grafico.push(dados.medicoes[dados.medicoes.length - i].medicao)
         horas.push(pre_data)
@@ -565,6 +567,7 @@ buscarUmidadeMediaUnidade(idUnidade)
 buscarListaAlertas(idUnidade)
 let ultima = ""
 let hora = ""
+/*
 setInterval(async () => {
     try {
         let res = await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}/1`, { cache: 'no-store' })
@@ -589,6 +592,7 @@ setInterval(async () => {
         }
     } catch (e) { }
 }, 1000)
+*/
 setInterval(async () => {
     await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}`, { cache: 'no-store' })
         .then(function (response) {
@@ -599,16 +603,44 @@ setInterval(async () => {
                         medicao: 0,
                         identificador: ""
                     }
+                    let listaM = {}
                     resposta.forEach(u => {
+                        listaM[u.identificador] ??= []
+                        listaM[u.identificador].push(parseFloat(u.umidade))
                         if (minimo.id == 0 || parseFloat(u.umidade) < minimo.medicao) {
                             minimo.id = u.id
                             minimo.medicao = parseFloat(u.umidade)
                             minimo.identificador = u.identificador
                         }
+
                     });
-                    console.log(minimo)
+                    for (let u in listaM) {
+                        let dados = []
+                        for (let i = 1; i < 10; i++) {
+                            dados.push(listaM[u][listaM[u].length - i])
+                        }
+                        listaM[u] = dados
+                    }
+
+                    let minimoM = 0
+                    for (let u in listaM) {
+                        console.log(listaM[u])
+                        for (let i in listaM[u]) {
+                            if (minimoM == 0 || listaM[u][i] < minimoM) {
+                                minimoM = listaM[u][i]
+                                console.log(minimoM, 628)
+                                div_media.innerHTML = minimoM
+                            }
+                        }
+                    }
+                    /*
+                    console.log(listaM)
                     DIA.innerHTML = minimo.identificador
-                    div_media.innerHTML = minimo.medicao
+                    let list = []
+                    for (let i = 1; i < 10; i++) {
+                        list.push(dados.medicoes[dados.medicoes.length - i].medicao)
+                    }
+                        */
                 });
             }
         });

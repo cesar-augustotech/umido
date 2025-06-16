@@ -162,7 +162,7 @@ function criarElementoCartao(unidade) {
 function definirCorPorUmidade(valor) {
     if (valor == null) return 'gray';
     if (valor > 50) return 'green';
-    if (valor > 30) return 'orange';
+    if (valor > 29) return 'orange';
     return 'red';
 }
 
@@ -184,6 +184,7 @@ async function atualizarUmidadesDasUnidades() {
             const sensorAtual = unidadeAtual.sensores[indiceSensor];
             sensorAtual.ultimaMedida = await buscarUltimaMedidaDoSensor(sensorAtual.id);
         }
+        let dadosSensores = {}
         await fetch(`/relatorios/buscarUmidadePorSensor/${unidadeAtual.id}`, { cache: 'no-store' })
             .then(function (response) {
                 if (response.ok) {
@@ -193,20 +194,44 @@ async function atualizarUmidadesDasUnidades() {
                             medicao: 0,
                             identificador: ""
                         }
+                        let listaM = {}
                         resposta.forEach(u => {
+                            listaM[u.identificador] ??= []
+                            listaM[u.identificador].push(parseFloat(u.umidade))
                             if (minimo.id == 0 || parseFloat(u.umidade) < minimo.medicao) {
                                 minimo.id = u.id
                                 minimo.medicao = parseFloat(u.umidade)
                                 minimo.identificador = u.identificador
                             }
+                            dadosSensores[u.id_sensor] ??= { medicoes: [], identificador: u.identificador, unidade: unidadeAtual.id };
+                            if (u.data_hora && u.umidade != null) {
+                                dadosSensores[u.id_sensor].medicoes.push({ data: u.data_hora, medicao: u.umidade, status: u.alerta });
+                            }
                         });
+                        for (let u in listaM) {
+                            let dados = []
+                            for (let i = 1; i < 10; i++) {
+                                dados.push(listaM[u][listaM[u].length - i])
+                            }
+                            listaM[u] = dados
+                        }
+
+                        let minimoM = 0
+                        for (let u in listaM) {
+                            for (let i in listaM[u]) {
+                                if (minimoM == 0 || listaM[u][i] < minimoM) {
+                                    minimoM = listaM[u][i]
+                                }
+                            }
+                        }
+                        console.log(dadosSensores, 208)
                         const spanUmidade = document.getElementById(`medicao_${unidadeAtual.id}`);
                         if (spanUmidade) {
-                            const textoUmidade = (minimo.medicao != null)
-                                ? minimo.medicao + '%'
+                            const textoUmidade = (minimoM != null)
+                                ? minimoM + '%'
                                 : 'Sem dados';
                             spanUmidade.textContent = textoUmidade;
-                            spanUmidade.style.color = definirCorPorUmidade(unidadeAtual.id);
+                            spanUmidade.style.color = definirCorPorUmidade(minimoM);
                         }
                     });
                 }

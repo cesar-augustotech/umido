@@ -1,3 +1,4 @@
+ drop database umido;
 -- Criação do banco de dados
 CREATE DATABASE IF NOT EXISTS umido;
 USE umido;
@@ -35,7 +36,7 @@ CREATE TABLE sensor (
     identificador VARCHAR(50) NOT NULL,
     ativo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_unidade) REFERENCES unidade(id)
-);
+) auto_increment = 6;
 
 -- Tabela de medições de umidade
 CREATE TABLE medicao (
@@ -90,7 +91,10 @@ value (1,'Unidade Agrícola Santa Vitória','3124567890123','1'),
 insert into usuario value
 ('1','Fernando Brandão','fernando@email.com','Sptech#2024','admin');
 
-
+insert into unidade_usuario value
+(1,1),
+(2,1),
+(3,1);
 
 insert into sensor (id_unidade,identificador)
 value  (1,'A1'),
@@ -126,7 +130,7 @@ select * from sensor;
 select * from medicao;
 
 
-
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 100.00, '2025-6-07 10:00', NULL);
 insert into medicao(id_sensor,umidade,data_hora,alerta)
 value	(6,'35.14','2025-6-07 10:00',0),
 		(7,'35.14','2025-6-03 10:00',0),
@@ -143,7 +147,8 @@ inner join unidade as u on u.id = s.id_unidade
 where u.id = 1 and data_hora >= DATE_SUB(now(), INTERVAL 1 month ) and alerta = 1 
 group by id_sensor;
 
-
+insert into medicao(id_sensor,umidade,data_hora,alerta)
+value
 	(6,'55.14','2025-1-14 10:00',0),
 	(6,'52.40','2025-2-14 10:00',0),
 	(6,'49.30','2025-3-14 10:00',0),
@@ -170,7 +175,7 @@ insert into medicao(id_sensor,umidade,data_hora,alerta)
 value	(10,'21.13','2025-6-14 13:20',1),
 		(10,'35.64','2025-6-14 15:21',0),
 		(10,'45.23','2025-6-14 15:22',null),
-		(10,'13.10','2025-6-14 15:23',1),
+		(10,'100.10','2025-6-14 15:23',1),
 		(10,'22.24','2025-6-14 15:24',1); 
         
         select * from medicao where umidade  = 25.14 ;
@@ -236,6 +241,20 @@ where u.id = 2 and data_hora >= DATE_SUB(now(), INTERVAL 1 month ) and alerta = 
 group by id_sensor;
 
 
+
+
+
+
+
+
+
+select * from sensor where ativo = 1;
+
+delete from medicao where id_sensor = 20;
+
+
+
+-- case 1
 -- Sensor ID: 6
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 45.23, '2025-06-14 10:05:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 38.76, '2025-06-14 10:06:00', 0);
@@ -246,12 +265,11 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 60.01, '2
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 29.80, '2025-06-14 10:11:00', 1);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 41.22, '2025-06-14 10:12:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 35.67, '2025-06-14 10:13:00', 0);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (6, 70.00, '2025-06-14 10:14:00', NULL);
 
 -- Sensor ID: 7
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 50.00, '2025-06-14 10:15:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 39.12, '2025-06-14 10:16:00', 0);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 28.50, '2025-06-14 10:17:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 38.50, '2025-06-14 10:17:00', 1);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 65.43, '2025-06-14 10:18:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 30.15, '2025-06-14 10:19:00', 0);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (7, 42.88, '2025-06-14 10:20:00', NULL);
@@ -275,7 +293,7 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (8, 62.45, '2
 -- Sensor ID: 9
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 58.20, '2025-06-14 10:35:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 30.00, '2025-06-14 10:36:00', 0);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 29.99, '2025-06-14 10:37:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 39.99, '2025-06-14 10:37:00', 1);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 63.14, '2025-06-14 10:38:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 39.50, '2025-06-14 10:39:00', 0);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 47.01, '2025-06-14 10:40:00', NULL);
@@ -287,7 +305,7 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (9, 71.30, '2
 -- Sensor ID: 10
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 41.00, '2025-06-14 10:45:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 31.00, '2025-06-14 10:46:00', 0);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 20.00, '2025-06-14 10:47:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 19.60, '2025-06-14 10:47:00', 1);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 59.87, '2025-06-14 10:48:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 39.99, '2025-06-14 10:49:00', 0);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 66.22, '2025-06-14 10:50:00', NULL);
@@ -296,6 +314,9 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 44.50, '
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 35.05, '2025-06-14 10:53:00', 0);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (10, 72.80, '2025-06-14 10:54:00', NULL);
 
+
+
+-- case 2
 -- Sensor ID: 11
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 49.30, '2025-06-14 10:55:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (11, 37.10, '2025-06-14 10:56:00', 0);
@@ -315,7 +336,7 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 26.00, '
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 60.50, '2025-06-14 11:08:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 36.00, '2025-06-14 11:09:00', 0);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 43.10, '2025-06-14 11:10:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 29.00, '2025-06-14 11:11:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 39.00, '2025-06-14 11:11:00', 1);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 57.25, '2025-06-14 11:12:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 32.10, '2025-06-14 11:13:00', 0);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 69.00, '2025-06-14 11:14:00', NULL);
@@ -323,11 +344,11 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (12, 69.00, '
 -- Sensor ID: 13
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 40.50, '2025-06-14 11:15:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 30.01, '2025-06-14 11:16:00', 0);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 20.99, '2025-06-14 11:17:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 30.99, '2025-06-14 11:17:00', 1);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 56.78, '2025-06-14 11:18:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 39.00, '2025-06-14 11:19:00', 0);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 64.32, '2025-06-14 11:20:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 25.50, '2025-06-14 11:21:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 35.50, '2025-06-14 11:21:00', 1);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 47.90, '2025-06-14 11:22:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 33.70, '2025-06-14 11:23:00', 0);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (13, 70.50, '2025-06-14 11:24:00', NULL);
@@ -347,80 +368,78 @@ INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (14, 67.50, '
 -- Sensor ID: 15
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 43.70, '2025-06-14 11:35:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 30.80, '2025-06-14 11:36:00', 0);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 22.10, '2025-06-14 11:37:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 32.10, '2025-06-14 11:37:00', 1);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 50.05, '2025-06-14 11:38:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 37.00, '2025-06-14 11:39:00', 0);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 63.88, '2025-06-14 11:40:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 29.50, '2025-06-14 11:41:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 39.50, '2025-06-14 11:41:00', 1);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 48.00, '2025-06-14 11:42:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 34.40, '2025-06-14 11:43:00', 0);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (15, 71.00, '2025-06-14 11:44:00', NULL);
 
 
 
+
+
+-- case 3
+
+
 -- Sensor ID: 16
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 54.50, '2025-06-14 11:45:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 61.33, '2025-06-14 11:48:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 42.00, '2025-06-14 11:50:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 52.00, '2025-06-14 11:50:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 55.70, '2025-06-14 11:52:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 68.10, '2025-06-14 11:54:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 31.90, '2025-06-14 11:46:00', 0); -- Alerta 0
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 28.01, '2025-06-14 11:47:00', 1); -- Alerta 1
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 36.80, '2025-06-14 11:49:00', 0); -- Alerta 0
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 21.00, '2025-06-14 11:51:00', 1); -- Alerta 1
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 33.15, '2025-06-14 11:53:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 50.90, '2025-06-14 11:46:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 53.01, '2025-06-14 11:47:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 51.80, '2025-06-14 11:49:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 51.01, '2025-06-14 11:51:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (16, 53.15, '2025-06-14 11:53:00', 0);
 
 -- Sensor ID: 17
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 46.10, '2025-06-14 11:55:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 56.10, '2025-06-14 11:55:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 58.00, '2025-06-14 11:58:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 65.00, '2025-06-14 12:00:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 52.40, '2025-06-14 12:02:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 74.10, '2025-06-14 12:04:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 39.50, '2025-06-14 11:56:00', 0); -- Alerta 0
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 29.00, '2025-06-14 11:57:00', 1); -- Alerta 1
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 30.10, '2025-06-14 11:59:00', 0); -- Alerta 0
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 24.90, '2025-06-14 12:01:00', 1); -- Alerta 1
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 37.50, '2025-06-14 12:03:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 50.50, '2025-06-14 11:56:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 53.00, '2025-06-14 11:57:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 50.10, '2025-06-14 11:59:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 54.90, '2025-06-14 12:01:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (17, 50.50, '2025-06-14 12:03:00', 0);
 
 -- Sensor ID: 18
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 44.00, '2025-06-14 12:05:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 54.00, '2025-06-14 12:05:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 57.00, '2025-06-14 12:08:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 60.00, '2025-06-14 12:10:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 49.00, '2025-06-14 12:12:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 54.00, '2025-06-14 12:12:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 70.00, '2025-06-14 12:14:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 32.80, '2025-06-14 12:06:00', 0); -- Alerta 0
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 25.00, '2025-06-14 12:07:00', 1); -- Alerta 1
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 38.50, '2025-06-14 12:09:00', 0); -- Alerta 0
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 26.50, '2025-06-14 12:11:00', 1); -- Alerta 1
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 34.00, '2025-06-14 12:13:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 50.80, '2025-06-14 12:06:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 52.00, '2025-06-14 12:07:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 53.50, '2025-06-14 12:09:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 51.50, '2025-06-14 12:11:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (18, 52.00, '2025-06-14 12:13:00', 0);
 
 -- Sensor ID: 19
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 42.50, '2025-06-14 12:15:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 52.50, '2025-06-14 12:15:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 53.00, '2025-06-14 12:18:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 62.00, '2025-06-14 12:20:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 47.00, '2025-06-14 12:22:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 54.00, '2025-06-14 12:22:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 75.00, '2025-06-14 12:24:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 30.50, '2025-06-14 12:16:00', 0); -- Alerta 0
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 21.70, '2025-06-14 12:17:00', 1); -- Alerta 1
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 39.00, '2025-06-14 12:19:00', 0); -- Alerta 0
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 28.50, '2025-06-14 12:21:00', 1); -- Alerta 1
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 36.00, '2025-06-14 12:23:00', 0); -- Alerta 0
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 50.50, '2025-06-14 12:16:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 51.70, '2025-06-14 12:17:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 59.00, '2025-06-14 12:19:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 53.50, '2025-06-14 12:21:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (19, 56.00, '2025-06-14 12:23:00', 0);
 
 -- Sensor ID: 20
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 50.50, '2025-06-14 12:25:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 64.00, '2025-06-14 12:28:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 48.50, '2025-06-14 12:30:00', NULL);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 52.50, '2025-06-14 12:30:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 56.00, '2025-06-14 12:32:00', NULL);
 INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 69.50, '2025-06-14 12:34:00', NULL);
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 37.00, '2025-06-14 12:26:00', 0); -- Alerta 0
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 23.00, '2025-06-14 12:27:00', 1); -- Alerta 1
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 31.50, '2025-06-14 12:29:00', 0); -- Alerta 0
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 29.80, '2025-06-14 12:31:00', 1); -- Alerta 1
-INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 35.50, '2025-06-14 12:33:00', 0); -- Alerta 0
-
-
-select * from sensor where ativo = 1;
-
-delete from medicao where id_sensor = 20;
-
-update sensor set ativo = 1 where ativo = 0;
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 54.00, '2025-06-14 12:26:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 50.00, '2025-06-14 12:27:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 53.50, '2025-06-14 12:29:00', 0);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 52.80, '2025-06-14 12:31:00', 1);
+INSERT INTO medicao (id_sensor, umidade, data_hora, alerta) VALUES (20, 55.50, '2025-06-14 12:33:00', 0);
