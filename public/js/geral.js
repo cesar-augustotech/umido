@@ -170,65 +170,11 @@ function definirCorPorUmidade(umidade) {
 
 // ======= Atualização em tempo real sincronizada =======
 async function atualizarDashboard() {
-    await atualizarUmidadesDasUnidades();
-    await atualizarKPIs();
+  
     await atualizarListaDeAlertas();
 }
 
-async function atualizarUmidadesDasUnidades() {
-    const unidadesTexto = sessionStorage.getItem('UNIDADES');
-    let listaUnidadesAtualizada = unidadesTexto ? JSON.parse(unidadesTexto) : [];
 
-    for (let indiceUnidade = 0; indiceUnidade < listaUnidadesAtualizada.length; indiceUnidade++) {
-        const unidadeAtual = listaUnidadesAtualizada[indiceUnidade];
-        unidadeAtual.sensores = await buscarSensoresDaUnidade(unidadeAtual.id);
-        for (let indiceSensor = 0; indiceSensor < unidadeAtual.sensores.length; indiceSensor++) {
-            const sensorAtual = unidadeAtual.sensores[indiceSensor];
-            sensorAtual.ultimaMedida = await buscarUltimaMedidaDoSensor(sensorAtual.id);
-        }
-        await fetch(`/relatorios/buscarUmidadePorSensor/${unidadeAtual.id}`, { cache: 'no-store' })
-            .then(function (response) {
-                if (response.ok) {
-                    response.json().then(function (resposta) {
-                        let minimo = {
-                            id: 0,
-                            medicao: 0,
-                            identificador: ""
-                        }
-                        resposta.forEach(u => {
-                            if (minimo.id == 0 || parseFloat(u.umidade) < minimo.medicao) {
-                                minimo.id = u.id
-                                minimo.medicao = parseFloat(u.umidade)
-                                minimo.identificador = u.identificador
-                            }
-                        });
-                        const spanUmidade = document.getElementById(`medicao_${unidadeAtual.id}`);
-                        if (spanUmidade) {
-                            const textoUmidade = (minimo.medicao != null)
-                                ? minimo.medicao + '%'
-                                : 'Sem dados';
-                            spanUmidade.textContent = textoUmidade;
-                            spanUmidade.style.color = definirCorPorUmidade(unidadeAtual.id);
-                        }
-                    });
-                }
-            });
-        /*
-        calcularMenorUmidadeDaUnidade(unidadeAtual);
-
-        const spanUmidade = document.getElementById(`medicao_${unidadeAtual.id}`);
-        if (spanUmidade) {
-            const textoUmidade = (unidadeAtual.menorUmidade != null)
-                ? unidadeAtual.menorUmidade.toFixed(2) + '%'
-                : 'Sem dados';
-            spanUmidade.textContent = textoUmidade;
-            spanUmidade.style.color = definirCorPorUmidade(unidadeAtual.menorUmidade);
-        }
-        */
-    }
-
-    listaUnidades = listaUnidadesAtualizada;
-}
 
 // ======= Indicadores (KPIs) =======
 let menorUmidadeExibida = 1000;
@@ -275,31 +221,6 @@ async function montarIndicadores() {
     }
 }
 
-async function atualizarKPIs() {
-    try {
-        const resposta = await fetch(`/unidades/indicadores/${usuarioId}`);
-        const dados = await resposta.json();
-        let valor = (dados.quantidade_alerta * 100 / dados.total_alertas).toFixed(2)
-        let umidade_media = dados.umidade_media
-        if (typeof valor != "number" || isNaN(valor)) valor = 0
-        if (typeof umidade_media != "number" || isNaN(umidade_media)) umidade_media = 0
-
-        menorUmidadeExibida = 1000;
-        for (let i = 0; i < listaUnidades.length; i++) {
-            if (listaUnidades[i].menorUmidade != null && listaUnidades[i].menorUmidade < menorUmidadeExibida) {
-                menorUmidadeExibida = listaUnidades[i].menorUmidade;
-            }
-        }
-        if (menorUmidadeExibida === 1000) menorUmidadeExibida = 0;
-
-        document.querySelector('#kpi_0 .valor_indicador').textContent = valor + '%';
-        document.querySelector('#kpi_1 .valor_indicador').textContent = menorUmidadeExibida + '%';
-        document.querySelector('#kpi_2 .valor_indicador').textContent = dados.sensores_desativados;
-        document.querySelector('#kpi_3 .valor_indicador').textContent = dados.hora_atualizacao;
-    } catch (erro) {
-        console.error('Erro ao atualizar KPIs:', erro);
-    }
-}
 
 // ======= Lista de Alertas =======
 async function montarListaDeAlertas() {
