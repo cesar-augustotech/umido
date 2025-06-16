@@ -159,7 +159,7 @@ function criarElementoCartao(unidade) {
     areaUnidadesDisplay.appendChild(elementoCartao);
 }
 
-function corPorUmidade(umidade) {
+function definirCorPorUmidade(umidade) {
     if (umidade === null || umidade === undefined || isNaN(umidade)) {
         return 'gray'; 
     }
