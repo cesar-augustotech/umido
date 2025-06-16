@@ -269,7 +269,7 @@ async function criar_kpis(idUnidadeSelecionada) {
         let umidade_media = dados.umidade_media
 
         let dadosIndicadores = [
-            [umidade_media, "Minima medição Atual", "(DIA)", "div_media"],
+            [umidade_media, "Minima medição Atual", "DIA", "div_media"],
             [dados.quantidade_alerta, "incidentes", "(Mês atual)", "div_alerta"],
             [dados.sensores_desativados, "sensores desativados", "", "div_sensor"],
             [dados.hora_atualizacao, "", "última atualização", "div_hora"]
@@ -280,7 +280,7 @@ async function criar_kpis(idUnidadeSelecionada) {
         <div class="cartao">
             <div class="valor_indicador" id="${dadosIndicadores[i][3]}">${dadosIndicadores[i][0]}</div>
             <div class="descricao_indicador">${dadosIndicadores[i][1]}</div>
-            <div class="info_adicional">${dadosIndicadores[i][2]}</div>
+            <div class="info_adicional" id="${dadosIndicadores[i][2]}" >${dadosIndicadores[i][2]}</div>
         </div>`;
         }
     } catch (error) {
@@ -606,6 +606,8 @@ setInterval(async () => {
                             minimo.identificador = u.identificador
                         }
                     });
+                    console.log(minimo)
+                    DIA.innerHTML = minimo.identificador
                     div_media.innerHTML = minimo.medicao
                 });
             }
