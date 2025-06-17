@@ -593,6 +593,7 @@ setInterval(async () => {
     } catch (e) { }
 }, 1000)
 */
+let alertas = []
 setInterval(async () => {
     await fetch(`/relatorios/buscarUmidadePorSensor/${idUnidade}`, { cache: 'no-store' })
         .then(function (response) {
@@ -646,6 +647,10 @@ setInterval(async () => {
                                 sen = u
                             }
                         }
+                    }
+                    if (minimoM < 30 && !alertas.includes(minimoM)) {
+                        alertas.push(minimoM)
+                        alert(`A unidade ${idUnidade} tem incidente no área ${sen} MEDIÇÂO: ${minimoM}`)
                     }
                     div_media.innerHTML = minimoM
                     DIA.innerHTML = sen
