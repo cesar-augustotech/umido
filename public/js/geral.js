@@ -320,7 +320,6 @@ async function atualizarKPIs() {
         if (menorUmidadeExibida === 1000) menorUmidadeExibida = 0;
 
         document.querySelector('#kpi_0 .valor_indicador').textContent = valor + '%';
-        document.querySelector('#kpi_1 .valor_indicador').textContent = menorUmidadeExibida + '%';
         document.querySelector('#kpi_2 .valor_indicador').textContent = dados.sensores_desativados;
         document.querySelector('#kpi_3 .valor_indicador').textContent = dados.hora_atualizacao;
     } catch (erro) {
