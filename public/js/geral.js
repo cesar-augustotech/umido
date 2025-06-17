@@ -172,7 +172,7 @@ async function atualizarDashboard() {
     await atualizarKPIs();
     await atualizarListaDeAlertas();
 }
-
+let menorT = 0
 async function atualizarUmidadesDasUnidades() {
     const unidadesTexto = sessionStorage.getItem('UNIDADES');
     let listaUnidadesAtualizada = unidadesTexto ? JSON.parse(unidadesTexto) : [];
@@ -224,6 +224,9 @@ async function atualizarUmidadesDasUnidades() {
                                 }
                             }
                         }
+                        if (menorT == 0 || listaM[u][i] < menorT) {
+                            menorT = listaM[u][i]
+                        }
                         console.log(dadosSensores, 208)
                         const spanUmidade = document.getElementById(`medicao_${unidadeAtual.id}`);
                         if (spanUmidade) {
@@ -233,6 +236,7 @@ async function atualizarUmidadesDasUnidades() {
                             spanUmidade.textContent = textoUmidade;
                             spanUmidade.style.color = definirCorPorUmidade(minimoM);
                         }
+                        document.querySelector('#kpi_1 .valor_indicador').textContent = menorT + '%';
                     });
                 }
             });
