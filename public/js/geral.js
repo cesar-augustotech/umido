@@ -236,7 +236,7 @@ async function atualizarUmidadesDasUnidades() {
                             spanUmidade.textContent = textoUmidade;
                             spanUmidade.style.color = definirCorPorUmidade(minimoM);
                         }
-                        document.querySelector('#kpi_1 .valor_indicador').textContent = menorT + '%';
+                        document.querySelector("#kpi_1 > div.valor_indicador").textContent = menorT + '%';
                     });
                 }
             });
