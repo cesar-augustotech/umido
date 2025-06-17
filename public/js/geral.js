@@ -217,17 +217,19 @@ async function atualizarUmidadesDasUnidades() {
                         }
 
                         let minimoM = 0
+                        let sen = ""
                         for (let u in listaM) {
                             for (let i in listaM[u]) {
                                 if (minimoM == 0 || listaM[u][i] < minimoM) {
                                     minimoM = listaM[u][i]
+                                    sen = u
+                                }
+                                if (menorT == 0 || listaM[u][i] < menorT) {
+                                    menorT = listaM[u][i]
                                 }
                             }
                         }
-                        if (menorT == 0 || listaM[u][i] < menorT) {
-                            menorT = listaM[u][i]
-                        }
-                        console.log(dadosSensores, 208)
+                        console.log(unidadeAtual.id, minimoM, sen)
                         const spanUmidade = document.getElementById(`medicao_${unidadeAtual.id}`);
                         if (spanUmidade) {
                             const textoUmidade = (minimoM != null)

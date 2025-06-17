@@ -545,7 +545,7 @@ function select_unidade() {
     buscarUmidadeMediaUnidade(idUnidadeSelecionada)
     buscarListaAlertas(idUnidadeSelecionada)
     criar_kpis(idUnidadeSelecionada)
-    
+
 
 
 }
@@ -614,6 +614,21 @@ setInterval(async () => {
                         }
 
                     });
+
+
+                    resposta.forEach(u => {
+                        listaM[u.identificador] ??= []
+                        listaM[u.identificador].push(parseFloat(u.umidade))
+                        if (minimo.id == 0 || parseFloat(u.umidade) < minimo.medicao) {
+                            minimo.id = u.id
+                            minimo.medicao = parseFloat(u.umidade)
+                            minimo.identificador = u.identificador
+                        }
+                        dadosSensores[u.id_sensor] ??= { medicoes: [], identificador: u.identificador, unidade: unidadeAtual.id };
+                        if (u.data_hora && u.umidade != null) {
+                            dadosSensores[u.id_sensor].medicoes.push({ data: u.data_hora, medicao: u.umidade, status: u.alerta });
+                        }
+                    });
                     for (let u in listaM) {
                         let dados = []
                         for (let i = 1; i < 10; i++) {
@@ -623,16 +638,23 @@ setInterval(async () => {
                     }
 
                     let minimoM = 0
+                    let sen = ""
                     for (let u in listaM) {
-                        console.log(listaM[u])
                         for (let i in listaM[u]) {
                             if (minimoM == 0 || listaM[u][i] < minimoM) {
                                 minimoM = listaM[u][i]
-                                console.log(minimoM, 628)
-                                div_media.innerHTML = minimoM
+                                sen = u
                             }
                         }
                     }
+                    div_media.innerHTML = minimoM
+                    DIA.innerHTML = sen
+
+
+
+
+
+
                     /*
                     console.log(listaM)
                     DIA.innerHTML = minimo.identificador
